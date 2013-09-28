@@ -1,0 +1,19 @@
+<h1>Edit Research</h1>
+<%= @research.date %>
+<%= form_for [:stock, @research], url: stock_research_path(:id, @research.id), method: :patch do |f| %>
+<table>
+<tr><td>
+<table>
+<tr><td><%= f.date_select :date %></td><td/></tr>
+<tr><td><%= f.date_select :eps_yr2_date %></td>
+<td><%= f.text_field :eps_yr2 %></td></tr>
+<tr><td><%= f.date_select :eps_yr1_date %></td>
+<td><%= f.text_field :eps_yr1 %></td</tr>
+</table>
+</td><td>
+    <%= f.text_area :comment, :cols => "30", :rows => "10" %>
+</td></tr>
+</table>
+
+  <%= f.submit %>
+<% end %>

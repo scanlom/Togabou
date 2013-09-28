@@ -1,0 +1,169 @@
+<%= link_to "Stocks", controller: "stocks" %>
+<form method="GET">
+  <label for="date">Date:</label>
+  <input type="text" name="date" /> 
+  <input type="submit" /> 
+</form>
+<% 
+if params[:date] == nil or params[:date] == ""
+  a = Assets.new 
+else
+  a = Assets.new( Date.parse( params[:date] ) ) 
+end
+%>
+<h2><%= a.date.to_s %></h2>
+<style type="text/css">
+table {
+  border-spacing: 20px 0;
+}
+td.number {
+    text-align: right;
+}
+td.symbol {
+    font-weight: bold;
+}
+</style>
+<table>
+<tr><td colspan=2><table>
+<tr><td/>
+<td class="symbol">Total (ROE)</td>
+<td class="symbol">Total (ROTC)</td>
+<td class="symbol">Self</td>
+<td class="symbol">Managed</td>
+<td class="symbol">Profit</td>
+</tr>
+<tr>
+<td class="symbol">YTD</td>
+<td class="number"><%= number_with_precision(a.ret_ytd_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
+<td class="number"><%= number_with_precision(a.ret_ytd_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
+<td class="number"><%= number_with_precision(a.ret_ytd_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
+<td class="number"><%= number_with_precision(a.ret_ytd_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
+<td class="number"><%= number_with_precision(a.profit, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr>
+<td class="symbol">QTD</td>
+<td class="number"><%= number_with_precision(a.ret_qtd_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
+<td class="number"><%= number_with_precision(a.ret_qtd_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
+<td class="number"><%= number_with_precision(a.ret_qtd_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
+<td class="number"><%= number_with_precision(a.ret_qtd_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
+<td/>
+</tr>
+<tr>
+<td class="symbol">Day</td>
+<td class="number"><%= number_with_precision(a.ret_day_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
+<td class="number"><%= number_with_precision(a.ret_day_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
+<td class="number"><%= number_with_precision(a.ret_day_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
+<td class="number"><%= number_with_precision(a.ret_day_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
+<td/>
+</tr>
+</table></td></tr>
+<tr><td colspan=2>&nbsp</td></tr>
+<tr>
+<td style="vertical-align:top">
+<table>
+<tr>
+<td class="symbol">Total (ROE)</td>
+<td class="number"><%= number_with_precision(a.roe_total, :precision => 2, :delimiter => ",") %></td>
+<td class="number"><%= number_with_precision(a.roe_divisor, :precision => 8, :delimiter => "") %></td>
+<td class="number"><%= number_with_precision(a.roe_index, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr>
+<td class="symbol">Total (ROTC)</td>
+<td class="number"><%= number_with_precision(a.rotc_total, :precision => 2, :delimiter => ",") %></td>
+<td class="number"><%= number_with_precision(a.rotc_divisor, :precision => 8, :delimiter => "") %></td>
+<td class="number"><%= number_with_precision(a.rotc_index, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr><td>&nbsp</td></tr>
+<tr>
+<td class="symbol">CASH</td>
+<td/><td/>
+<td class="number"><%= number_with_precision(a.cash, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr>
+<td class="symbol">DEBT</td>
+<td/><td/>
+<td class="number"><%= number_with_precision(a.debt, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr><td>&nbsp</td></tr>
+<% a.portfolio.positions.each do |position| %>
+<tr>
+<td class="symbol"><%= position.symbol %></td>
+<td class="number"><%= number_with_delimiter(position.quantity) %></td>
+<td class="number"><%= number_with_precision(position.price, :precision => 2, :delimiter => ",") %></td>
+<td class="number"><%= number_with_precision(position.value, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<% end %>
+<tr>
+<td class="symbol">CASH</td>
+<td/><td/>
+<td class="number"><%= number_with_precision(a.portfolio.cash, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr>
+<td class="symbol">TOTAL</td>
+<td/><td/>
+<td class="number"><%= number_with_precision(a.portfolio.total, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr>
+<td/><td/>
+<td class="number"><%= number_with_precision(a.portfolio.divisor, :precision => 8, :delimiter => "") %></td>
+<td class="number"><%= number_with_precision(a.portfolio.index, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr><td>&nbsp</td></tr>
+<% a.managed.positions.each do |position| %>
+<tr>
+<td class="symbol"><%= position.symbol %></td>
+<td class="number"><%= number_with_delimiter(position.quantity) %></td>
+<td class="number"><%= number_with_precision(position.price, :precision => 2, :delimiter => ",") %></td>
+<td class="number"><%= number_with_precision(position.value, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<% end %>
+<tr>
+<td class="symbol">CASH</td>
+<td/><td/>
+<td class="number"><%= number_with_precision(a.managed.cash, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr>
+<td class="symbol">TOTAL</td>
+<td/><td/>
+<td class="number"><%= number_with_precision(a.managed.total, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr>
+<td/><td/>
+<td class="number"><%= number_with_precision(a.managed.divisor, :precision => 8, :delimiter => "") %></td>
+<td class="number"><%= number_with_precision(a.managed.index, :precision => 2, :delimiter => ",") %></td>
+</tr>
+</table>
+</td>
+<td style="vertical-align:top">
+<table>
+<% 
+  allocations = a.get_asset_allocations 
+  allocations.each do |allocation|
+%>
+<tr>
+<td><%= allocation.primary %></td>
+<td class="number"><%= number_with_precision(allocation.primary_sum, :precision => 2) %></td>
+<td><%= allocation.secondary %></td>
+<td class="number"><%= number_with_precision(allocation.secondary_sum, :precision => 2) %></td>
+<td><%= allocation.symbol %></td>
+<td class="number"><%= number_with_precision(allocation.percentage, :precision => 2) %></td>
+</tr>
+<% end %>
+<tr><td>&nbsp</td></tr>
+<% 
+  allocations = a.get_asset_allocations_managed 
+  allocations.each do |allocation|
+%>
+<tr>
+<td><%= allocation.primary %></td>
+<td class="number"><%= number_with_precision(allocation.primary_sum, :precision => 2) %></td>
+<td><%= allocation.secondary %></td>
+<td class="number"><%= number_with_precision(allocation.secondary_sum, :precision => 2) %></td>
+<td><%= allocation.symbol %></td>
+<td class="number"><%= number_with_precision(allocation.percentage, :precision => 2) %></td>
+</tr>
+<% end %>
+</table>
+</td>
+</tr>
+</table>

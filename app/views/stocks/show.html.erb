@@ -1,0 +1,94 @@
+<h1><%= @stock.symbol %></h1>
+
+<%= link_to 'Edit', edit_stock_path %>
+<%= link_to 'Stocks', stocks_path %>
+<%= link_to 'Home', welcome_index_path %>
+<style type="text/css">
+pre {
+ white-space: pre-wrap;       /* css-3 */
+ white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+ white-space: -pre-wrap;      /* Opera 4-6 */
+ white-space: -o-pre-wrap;    /* Opera 7 */
+ word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+table {
+  border-spacing: 20px 0;
+}
+td.number {
+    text-align: right;
+}
+td.symbol {
+    font-weight: bold;
+}
+</style>
+
+<%= form_for :stock, url: stock_path(@stock.id), method: :patch do |f| %>
+<table>
+<tr>
+    <th>EPS</th>
+    <th>Div</th>
+    <th>Growth</th>
+    <th>PE Ter</th>
+    <th>Payout</th>
+    <th>Book</th>
+    <th>ROE</th>
+    <th>%Model</th>
+    <th>Price</th>
+    <th>Div+Growth</th>
+    <th>EYield</th>
+    <th>DYield</th>
+    <th>5 CAGR</th>
+    <th>10 CAGR</th>
+    <th>5 CROE</th>
+    <th>10 CROE</th>
+  </tr>
+  <tr>
+    <td class="number"><%= number_with_precision( @stock.eps, :precision => 2, :delimiter => ",") %></td>
+    <td class="number"><%= number_with_precision( @stock.div, :precision => 2, :delimiter => ",") %></td>
+    <td class="number"><%= @stock.growth*100 %>%</td>
+    <td class="number"><%= @stock.pe_terminal %></td>
+    <td class="number"><%= @stock.payout * 100 %>%</td>
+    <td class="number"><%= number_with_precision( @stock.book, :precision => 2, :delimiter => ",") %></td>
+    <td class="number"><%= @stock.roe * 100 %>%</td>
+    <td class="number"><%= number_with_precision( @stock.model * 100, :precision => 2, :delimiter => ",") %>%</td>
+    <td class="number"><%= number_with_precision( @stock.price, :precision => 2, :delimiter => ",") %></td>
+    <td class="number"><%= number_with_precision( @stock.div_plus_growth * 100, :precision => 2, :delimiter => ",") %>%</td>
+    <td class="number"><%= number_with_precision( @stock.eps_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
+    <td class="number"><%= number_with_precision( @stock.div_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
+    <td class="number"><%= number_with_precision( @stock.five_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
+    <td class="number"><%= number_with_precision( @stock.ten_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
+    <td class="number"><%= number_with_precision( @stock.five_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
+    <td class="number"><%= number_with_precision( @stock.ten_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
+  </tr>
+      <tr>
+        <td> <%= f.text_field :eps, :value => @stock.eps, :size => 4 %></td>
+        <td> <%= f.text_field :div, :value => @stock.div, :size => 4 %></td>
+        <td> <%= f.text_field :growth, :value => @stock.growth, :size => 4 %></td>
+        <td> <%= f.text_field :pe_terminal, :value => @stock.pe_terminal, :size => 4 %></td>
+        <td> <%= f.text_field :payout, :value => @stock.payout, :size => 4 %></td>
+        <td> <%= f.text_field :book, :value => @stock.book, :size => 4 %></td>
+        <td> <%= f.text_field :roe, :value => @stock.roe, :size => 4 %></td>
+        <td> <%= f.text_field :model, :value => @stock.model, :size => 4 %></td>
+      </tr>
+    </table>
+  <p><%= f.submit %></p>
+<% end %>
+
+<%= form_for([@stock, @stock.researches.new]) do |f| %>
+<table>
+<tr><td>
+<table>
+<tr><td><%= f.date_select :date, :default => Date.today %></td><td/></tr>
+<tr><td><%= f.date_select :eps_yr2_date, :default => @stock.researches[0][:eps_yr2_date] %></td>
+<td><%= f.text_field :eps_yr2, :value => @stock.researches[0][:eps_yr2] %></td></tr>
+<tr><td><%= f.date_select :eps_yr1_date, :default => @stock.researches[0][:eps_yr1_date] %></td>
+<td><%= f.text_field :eps_yr1, :value => @stock.researches[0][:eps_yr1] %></td</tr>
+</table>
+</td><td>
+    <%= f.text_area :comment, :cols => "30", :rows => "10" %>
+</td></tr>
+</table>
+    <%= f.submit %>
+<% end %>
+
+<%= render :partial => @stock.researches %>

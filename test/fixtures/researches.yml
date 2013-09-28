@@ -1,0 +1,49 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  symbol: MyText
+  date: 2013-09-23
+  eps: 9.99
+  div: 9.99
+  growth: 9.99
+  pe_terminal: 9.99
+  payout: 9.99
+  book: 9.99
+  roe: 9.99
+  price: 9.99
+  div_plus_growth: 9.99
+  eps_yield: 9.99
+  div_yield: 9.99
+  five_year_cagr: 9.99
+  ten_year_cagr: 9.99
+  five_year_croe: 9.99
+  ten_year_croe: 9.99
+  eps_yr1_date: 2013-09-23
+  eps_yr1: 9.99
+  eps_yr2_date: 2013-09-23
+  eps_yr2: 9.99
+  comment: MyText
+
+two:
+  symbol: MyText
+  date: 2013-09-23
+  eps: 9.99
+  div: 9.99
+  growth: 9.99
+  pe_terminal: 9.99
+  payout: 9.99
+  book: 9.99
+  roe: 9.99
+  price: 9.99
+  div_plus_growth: 9.99
+  eps_yield: 9.99
+  div_yield: 9.99
+  five_year_cagr: 9.99
+  ten_year_cagr: 9.99
+  five_year_croe: 9.99
+  ten_year_croe: 9.99
+  eps_yr1_date: 2013-09-23
+  eps_yr1: 9.99
+  eps_yr2_date: 2013-09-23
+  eps_yr2: 9.99
+  comment: MyText

@@ -1,0 +1,17 @@
+<h1>New Research</h1>
+
+<%= form_for :research, url: researches_path do |f| %>
+  <p>
+    <%= f.label :symbol %><br>
+    <%= f.text_field :symbol %>
+  </p>
+ 
+  <p>
+    <%= f.label :comment %><br>
+    <%= f.text_area :comment %>
+  </p>
+ 
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>

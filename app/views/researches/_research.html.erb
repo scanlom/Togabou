@@ -1,0 +1,54 @@
+<% if research.growth != nil %>
+<h2><%= research.date %></h2>
+<table>
+<tr>
+    <th>EPS</th>
+    <th>Div</th>
+    <th>Growth</th>
+    <th>PE Ter</th>
+    <th>Payout</th>
+    <th>Book</th>
+    <th>ROE</th>
+    <th>Price</th>
+    <th>Div+Growth</th>
+    <th>EYield</th>
+    <th>DYield</th>
+    <th>5 CAGR</th>
+    <th>10 CAGR</th>
+    <th>5 CROE</th>
+    <th>10 CROE</th>
+  </tr>
+  <tr>
+    <td class="number"><%= number_with_precision( research.eps, :precision => 2, :delimiter => ",") %></td>
+    <td class="number"><%= number_with_precision( research.div, :precision => 2, :delimiter => ",") %></td>
+    <td class="number"><%= research.growth * 100 %>%</td>
+    <td class="number"><%= research.pe_terminal %></td>
+    <td class="number"><%= research.payout * 100 %>%</td>
+    <td class="number"><%= number_with_precision( research.book, :precision => 2, :delimiter => ",") %></td>
+    <td class="number"><%= research.roe * 100 %>%</td>
+    <td class="number"><%= number_with_precision( research.price, :precision => 2, :delimiter => ",") %></td>
+    <td class="number"><%= number_with_precision( research.div_plus_growth * 100, :precision => 2, :delimiter => ",") %>%</td>
+    <td class="number"><%= number_with_precision( research.eps_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
+    <td class="number"><%= number_with_precision( research.div_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
+    <td class="number"><%= number_with_precision( research.five_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
+    <td class="number"><%= number_with_precision( research.ten_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
+    <td class="number"><%= number_with_precision( research.five_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
+    <td class="number"><%= number_with_precision( research.ten_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
+  </tr>
+</table>  
+
+<table style="width: 100%;">
+  <tr>
+    <td>
+      <table>
+        <tr><td><%= research.eps_yr2_date %></td><td><%= research.eps_yr2 %></td><td/></tr>
+        <tr><td><%= research.eps_yr1_date %></td><td><%= research.eps_yr1 %></td><td/></tr>
+      </table>
+    </td>
+    <td style="word-wrap: break-word"><pre><div style="word-wrap: break-word;"><%= research.comment %></div></pre></td>
+  </tr>
+</table>
+
+<%= link_to 'Edit', edit_stock_research_path(@stock, research) %> |
+<%= button_to "Delete", stock_research_path(@stock, research), :method => :delete, :confirm => "Are you sure?" %>
+<% end %>

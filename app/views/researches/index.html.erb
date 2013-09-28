@@ -1,0 +1,15 @@
+<h1>Listing researches</h1>
+ 
+<table>
+  <tr>
+    <th>Symbol</th>
+    <th>Comment</th>
+  </tr>
+ 
+  <% @researches.each do |research| %>
+    <tr>
+      <td><%= research.symbol %></td>
+      <td><%= research.comment %></td>
+    </tr>
+  <% end %>
+</table>
