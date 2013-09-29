@@ -65,7 +65,7 @@ class Portfolio
       @positions << Position.new( row[0], row[1], row[2], row[3] )      
     end
     
-    #Download scalars
+    # Download scalars
     @cash = get_scalar( conn, sprintf( "select value from portfolio_history where date='%s' and type=%s and symbol='CASH'", date.to_s(:db), type.to_s ) )
     @total = get_scalar( conn, sprintf( "select value from balances_history where date='%s' and type=%s", date.to_s(:db), balance_type.to_s ) )
     @divisor = get_scalar( conn, sprintf( "select value from divisors_history where date='%s' and type=%s", date.to_s(:db), index_type.to_s ) )
@@ -213,7 +213,7 @@ class Assets
   end
 
   def calculate_return( current, base )
-    ret = nil
+    ret = 0
     if base.to_f > 0
       ret = ( current.to_f / base.to_f ) - 1
     end

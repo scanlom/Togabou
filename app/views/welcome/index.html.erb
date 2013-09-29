@@ -5,11 +5,7 @@
   <input type="submit" /> 
 </form>
 <% 
-if params[:date] == nil or params[:date] == ""
-  a = Assets.new 
-else
-  a = Assets.new( Date.parse( params[:date] ) ) 
-end
+  a = controller.get_assets( params[:date] ) 
 %>
 <h2><%= a.date.to_s %></h2>
 <style type="text/css">
