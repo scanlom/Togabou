@@ -222,17 +222,22 @@ class Assets
 
   def get_ytd_base( conn, index )
     date = "01/01/" + self.date.year.to_s
+    if self.date.month == 1 && self.date..day == 1
+        date = "01/01/" + (self.date.year - 1).to_s
+    end
     get_scalar( conn, sprintf( "select * from index_history where type=%s and date='%s'", index, date ) )    
   end
  
   def get_qtd_base( conn, index )
-    date = "01/01/" + self.date.year.to_s
-    if self.date.month > 9
+    date = "10/01/" + (self.date.year - 1).to_s
+    if self.date.month > 9 && !(self.date.month == 10 && self.date.day == 1)
         date = "10/01/" + self.date.year.to_s
-    elsif self.date.month > 6
+    elsif self.date.month > 6 && !(self.date.month == 7 && self.date.day == 1)
         date = "07/01/" + self.date.year.to_s
-    elsif self.date.month > 3
+    elsif self.date.month > 3 && !(self.date.month == 4 && self.date.day == 1)
         date = "04/01/" + self.date.year.to_s
+    elsif !(self.date.month == 1 && self.date.day == 1)
+        date = "01/01/" + self.date.year.to_s
     end
     get_scalar( conn, sprintf( "select * from index_history where type=%s and date='%s'", index, date ) )    
   end
