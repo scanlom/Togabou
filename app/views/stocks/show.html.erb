@@ -73,6 +73,50 @@ td.symbol {
   <p><%= f.submit %></p>
 <% end %>
 
+<table>
+<tr>
+    <th>Date</th>
+    <th>EPS</th>
+    <th>Div</th>
+    <th>PE</th>
+    <th>PE High</th>
+    <th>PE Low</th>
+    <th>ROE</th>
+    <th>ROA</th>
+    <th>Market Cap</th>
+    <th>Shares Out</th>
+</tr>
+<% @stock.fundamentals.each do |fundamental| %>
+<tr>
+  <td><%= fundamental.date %></td>
+  <td class="number"><%= number_with_precision( fundamental.eps, :precision => 2, :delimiter => ",") %></td>
+  <td class="number"><%= number_with_precision( fundamental.div, :precision => 2, :delimiter => ",") %></td>
+  <td class="number"><%= number_with_precision( fundamental.pe, :precision => 0, :delimiter => ",") %></td>
+  <td class="number"><%= number_with_precision( fundamental.pe_high, :precision => 0, :delimiter => ",") %></td>
+  <td class="number"><%= number_with_precision( fundamental.pe_low, :precision => 0, :delimiter => ",") %></td>
+  <td class="number"><%= number_with_precision( fundamental.roe*100, :precision => 2, :delimiter => ",") %>%</td>
+  <td class="number"><%= number_with_precision( fundamental.roa*100, :precision => 2, :delimiter => ",") %>%</td>
+  <td class="number"><%= number_with_precision( fundamental.mkt_cap, :precision => 0, :delimiter => ",") %></td>
+  <td class="number"><%= number_with_precision( fundamental.shrs_out, :precision => 0, :delimiter => ",") %></td>
+</tr>
+<% end %>
+<%= form_for([@stock, @stock.fundamentals.new]) do |f| %>
+<tr>
+  <td><%= f.date_select :date, :default => Date.today %></td>
+  <td><%= f.text_field :eps, :size => 4 %></td>
+  <td><%= f.text_field :div, :size => 4 %></td>
+  <td><%= f.text_field :pe, :size => 4 %></td>
+  <td><%= f.text_field :pe_high, :size => 4 %></td>
+  <td><%= f.text_field :pe_low, :size => 4 %></td>
+  <td><%= f.text_field :roe, :size => 4 %></td>
+  <td><%= f.text_field :roa, :size => 4 %></td>
+  <td><%= f.text_field :mkt_cap, :size => 4 %></td>
+  <td><%= f.text_field :shrs_out, :size => 4 %></td>
+</tr>
+</table>
+<%= f.submit %>
+<% end %>
+
 <%= form_for([@stock, @stock.researches.new]) do |f| %>
 <table>
 <tr><td>
@@ -87,7 +131,7 @@ td.symbol {
     <%= f.text_area :comment, :cols => "80", :rows => "10" %>
 </td></tr>
 </table>
-    <%= f.submit %>
+<%= f.submit %>
 <% end %>
 
 <%= render :partial => @stock.researches %>

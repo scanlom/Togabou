@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130924022929) do
+ActiveRecord::Schema.define(version: 20131001213919) do
 
   create_table "accounts", id: false, force: true do |t|
     t.text    "name"
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 20130924022929) do
     t.integer "type",        null: false
     t.text    "description"
     t.text    "id"
+    t.boolean "download"
   end
 
   create_table "allocations", id: false, force: true do |t|
@@ -68,6 +69,23 @@ ActiveRecord::Schema.define(version: 20130924022929) do
   create_table "divisors_types", id: false, force: true do |t|
     t.integer "type",        null: false
     t.text    "description"
+  end
+
+  create_table "fundamentals", force: true do |t|
+    t.date     "date"
+    t.text     "symbol"
+    t.decimal  "eps"
+    t.decimal  "div"
+    t.decimal  "pe"
+    t.decimal  "pe_high"
+    t.decimal  "pe_low"
+    t.decimal  "roe"
+    t.decimal  "roa"
+    t.decimal  "mkt_cap"
+    t.decimal  "shrs_out"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "stock_id"
   end
 
   create_table "history", id: false, force: true do |t|

@@ -11,6 +11,7 @@ end
 
 class Stock < ActiveRecord::Base
   has_many :researches, :order => "date DESC"
+  has_many :fundamentals, :order => "date DESC"
 
   DIV_GROWTH = 0.05
 

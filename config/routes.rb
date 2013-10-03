@@ -1,6 +1,7 @@
 Myapp::Application.routes.draw do
   resources :stocks do 
     resources :researches
+    resources :fundamentals
   end
 
   get "welcome/index"
