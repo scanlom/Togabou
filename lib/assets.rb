@@ -1,3 +1,4 @@
+
 def get_scalar( conn, sql )
   res = conn.execute( sql )
   if res == nil or res.first == nil

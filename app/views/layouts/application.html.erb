@@ -8,7 +8,10 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-
+<%= link_to 'Home', welcome_index_path %>
+<%= link_to "Stocks", stocks_path %>
+<%= link_to "Accounts", accounts_page_path(1) %>
+<%= link_to "Graphs", graphs_page_path(1) %>
 <%= yield %>
 
 </body>

@@ -65,7 +65,7 @@ td.symbol {
       <td class="number"><%= number_with_precision( stock.ten_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
     </tr>
   <% end %>
-  <tr><td/><td/><td/><td/><td/><td/><td/><td/><td/><td class="symbol">CASH</td><td class="number"><%= number_with_precision( controller.portfolio_cash, :precision => 2, :delimiter => ",") %></td></td><td class="number"><%= number_with_precision( controller.portfolio_cash_percent * 100, :precision => 2, :delimiter => ",") %>%</td><td/><td class="number"><%= number_with_precision( controller.portfolio_eps_wtd_total * 100, :precision => 2, :delimiter => ",") %>%</td><td/><td class="number"><%= number_with_precision( controller.portfolio_div_wtd_total * 100, :precision => 2, :delimiter => ",") %>%</td>
+  <tr><td/><td/><td/><td/><td/><td/><td/><td/><td/><td class="symbol">CASH</td><td class="number"><%= number_with_precision( controller.portfolio_cash, :precision => 2, :delimiter => ",") %></td></td><td class="number"><%= number_with_precision( controller.portfolio_cash_percent * 100, :precision => 2, :delimiter => ",") %>%</td><td/><td/><td/><td class="number"><%= number_with_precision( controller.portfolio_eps_wtd_total * 100, :precision => 2, :delimiter => ",") %>%</td><td/><td class="number"><%= number_with_precision( controller.portfolio_div_wtd_total * 100, :precision => 2, :delimiter => ",") %>%</td>
   <tr><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td class="symbol">CHECK</td></td><td class="number"><%= number_with_precision( controller.portfolio_check * 100, :precision => 2, :delimiter => ",") %>%</td>
   <tr><td>&nbsp</td></tr>
   <% controller.watch_list.each do |stock| %>

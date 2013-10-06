@@ -31,10 +31,6 @@ class Stock < ActiveRecord::Base
   after_initialize :initialize_members
   def initialize_members
 
-    # Populate price from yahoo
-    url = sprintf("http://finance.yahoo.com/d/quotes.csv?s=%s&f=%s", self.symbol, "l1")
-    @price = open(url).readline
-
     # Populate value and percentage from db
     conn = ActiveRecord::Base.connection   
     @value = get_scalar( conn, sprintf( "select value from portfolio where symbol='%s'", self.symbol ) )

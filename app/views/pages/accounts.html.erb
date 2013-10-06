@@ -1,5 +1,4 @@
 <h1>Accounts</h1>
-<%= link_to 'Home', welcome_index_path %>
 <style type="text/css">
 table {
   border-spacing: 20px 0;
@@ -62,12 +61,12 @@ td.symbol {
 </tr>
 <tr>
   <td class = "symbol">Recon</td>
-  <td class="number"><%= number_with_precision( a.total_cash - as.cash - as.portfolio.cash, :precision => 2, :delimiter => ",") %></td>
+  <td class="number"><%= number_with_precision( a.total_cash.to_f - as.cash.to_f - as.portfolio.cash.to_f, :precision => 2, :delimiter => ",") %></td>
 </tr>
 </table></td>
 <td style="vertical-align:top"><table><tr>
   <td class = "symbol">Total</td>
-  <td class="number"><%= number_with_precision( as.cash + as.portfolio.cash, :precision => 2, :delimiter => ",") %></td>
+  <td class="number"><%= number_with_precision( as.cash.to_f + as.portfolio.cash.to_f, :precision => 2, :delimiter => ",") %></td>
 </tr></table></td>
 <td><table>
 <tr>
