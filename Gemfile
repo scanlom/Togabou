@@ -3,6 +3,9 @@ source 'https://rubygems.org'
 # Javascript runtime
 gem 'therubyracer'
 
+# Lazy High Charts
+gem 'lazy_high_charts'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
 

@@ -1,0 +1,103 @@
+<h1>Accounts</h1>
+<%= link_to 'Home', welcome_index_path %>
+<style type="text/css">
+table {
+  border-spacing: 20px 0;
+}
+td.heading {
+    text-align: center;
+    font-weight: bold;
+}
+td.number {
+    text-align: right;
+}
+td.symbol {
+    font-weight: bold;
+}
+</style>
+<% a = controller.get_accounts %>
+<% as = controller.get_assets %>
+<table>
+<tr><td class="heading">Cash Pos</td><td class = "heading">Cash Neg</td><td class="heading">Budget Pos</td><td class="heading">Budget Neg</td></tr>
+<tr>
+  <td style="vertical-align:top"><table>
+    <% a.balances_recon_cash.each do |balance| %>
+    <tr>
+      <td><%= balance.description %></td>
+      <td class="number"><%= number_with_precision( balance.value, :precision => 2, :delimiter => ",") %></td>
+    </tr>
+    <% end %>
+  </table></td>
+  <td style="vertical-align:top"><table>
+    <tr>
+      <td>Cash Total</td>
+      <td class="number"><%= number_with_precision( as.cash, :precision => 2, :delimiter => ",") %></td>
+    </tr>
+    <tr>
+      <td>Cash Portfolio</td>
+      <td class="number"><%= number_with_precision( as.portfolio.cash, :precision => 2, :delimiter => ",") %></td>
+    </tr>
+  </table></td>
+  <td style="vertical-align:top"><table>
+    <% a.balances_recon_budget_pos.each do |balance| %>
+    <tr>
+      <td><%= balance.description %></td></td>
+      <td class="number"><%= number_with_precision( balance.value, :precision => 2, :delimiter => ",") %></td>
+    </tr>
+    <% end %>
+  </table></td>
+  <td style="vertical-align:top"><table>
+    <% a.balances_recon_budget_neg.each do |balance| %>
+    <tr>
+      <td><%= balance.description %></td></td>
+      <td class="number"><%= number_with_precision( balance.value, :precision => 2, :delimiter => ",") %></td>
+    </tr>
+    <% end %>
+  </table></td>
+</tr>
+<tr><td style="vertical-align:top"><table>
+<tr>
+  <td class = "symbol">Total</td>
+  <td class="number"><%= number_with_precision( a.total_cash, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr>
+  <td class = "symbol">Recon</td>
+  <td class="number"><%= number_with_precision( a.total_cash - as.cash - as.portfolio.cash, :precision => 2, :delimiter => ",") %></td>
+</tr>
+</table></td>
+<td style="vertical-align:top"><table><tr>
+  <td class = "symbol">Total</td>
+  <td class="number"><%= number_with_precision( as.cash + as.portfolio.cash, :precision => 2, :delimiter => ",") %></td>
+</tr></table></td>
+<td><table>
+<tr>
+  <td class = "symbol">Total</td>
+  <td class="number"><%= number_with_precision( a.total_budget_pos, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr>
+  <td class = "symbol">Recon</td>
+  <td class="number"><%= number_with_precision( a.total_budget_pos - a.total_budget_neg, :precision => 2, :delimiter => ",") %></td>
+</tr>
+</table></td>
+<td style="vertical-align:top"><table><tr>
+  <td class = "symbol">Total</td>
+  <td class="number"><%= number_with_precision( a.total_budget_neg, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr>
+  <td class = "symbol">Fumi</td>
+  <td class="number"><%= number_with_precision( a.fumi_budget, :precision => 2, :delimiter => ",") %></td>
+</tr>
+</table></td></tr>
+</table>
+<p/>
+<table>
+  <% a.txns.each do |txn| %>
+  <tr>
+    <td><%= txn.date %></td>
+    <td class="number"><%= number_with_precision( txn.amount, :precision => 2, :delimiter => ",") %></td>
+    <td><%= txn.description %></td>
+    <td><%= txn.type %></td>
+    <td><%= txn.source %></td>
+  </tr>
+  <% end %>
+</table>

@@ -4,6 +4,13 @@ Myapp::Application.routes.draw do
     resources :fundamentals
   end
 
+  resources :pages do
+    member do
+      get 'accounts'
+      get 'graphs'
+    end
+  end
+
   get "welcome/index"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
