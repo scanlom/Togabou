@@ -6,7 +6,8 @@ class StocksController < ApplicationController
   attr_accessor :watch_list
 
   def initialize
-      @assets = Assets.new
+    @assets = Assets.new
+    super
   end
 
   def lazy_initialize

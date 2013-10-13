@@ -1,6 +1,4 @@
-<h1>Listing stocks</h1>
-<%= link_to 'New Stock', new_stock_path %>
-<%= link_to 'Home', welcome_index_path %>
+<h1>Stocks</h1>
 <style type="text/css">
 table {
   border-spacing: 20px 0;
@@ -94,4 +92,6 @@ td.symbol {
       <td class="number"><%= number_with_precision( stock.ten_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
     </tr>
   <% end %>
+  <tr><td class="symbol"><%= link_to 'New', new_stock_path %></td></tr>
 </table>
+<p/>

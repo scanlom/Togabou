@@ -1,7 +1,4 @@
 <h1><%= @stock.symbol %></h1>
-
-<%= link_to 'Stocks', stocks_path %>
-<%= link_to 'Home', welcome_index_path %>
 <style type="text/css">
 pre {
  white-space: pre-wrap;       /* css-3 */
@@ -98,11 +95,13 @@ td.symbol {
   <td class="number"><%= number_with_precision( fundamental.roa*100, :precision => 2, :delimiter => ",") %>%</td>
   <td class="number"><%= number_with_precision( fundamental.mkt_cap, :precision => 0, :delimiter => ",") %></td>
   <td class="number"><%= number_with_precision( fundamental.shrs_out, :precision => 0, :delimiter => ",") %></td>
+<td><%= link_to 'Edit', edit_stock_fundamental_path(@stock, fundamental) %></td>
+<td><%= link_to 'Delete', stock_fundamental_path(@stock, fundamental), :confirm => 'Are you sure?', :method => :delete %></td>
 </tr>
 <% end %>
 <%= form_for([@stock, @stock.fundamentals.new]) do |f| %>
 <tr>
-  <td><%= f.date_select :date, :default => Date.today %></td>
+  <td><%= f.date_select :date, :default => Date.today, :start_year => 1980 %></td>
   <td><%= f.text_field :eps, :size => 4 %></td>
   <td><%= f.text_field :div, :size => 4 %></td>
   <td><%= f.text_field :pe, :size => 4 %></td>

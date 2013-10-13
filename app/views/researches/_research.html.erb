@@ -49,6 +49,5 @@
   </tr>
 </table>
 
-<%= link_to 'Edit', edit_stock_research_path(@stock, research) %> |
-<%= button_to "Delete", stock_research_path(@stock, research), :method => :delete, :confirm => "Are you sure?" %>
+<%= link_to 'Edit', edit_stock_research_path(@stock, research) %> | <%= link_to 'Delete', stock_research_path(@stock, research), :confirm => 'Are you sure?', :method => :delete %>
 <% end %>

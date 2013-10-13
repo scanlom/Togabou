@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  date: 2013-10-01
+  symbol: MyText
+  eps: 9.99
+  div: 9.99
+  pe: 9.99
+  pe_high: 9.99
+  pe_low: 9.99
+  roe: 9.99
+  roa: 9.99
+  mkt_cap: 9.99
+  shrs_out: 9.99
+
+two:
+  date: 2013-10-01
+  symbol: MyText
+  eps: 9.99
+  div: 9.99
+  pe: 9.99
+  pe_high: 9.99
+  pe_low: 9.99
+  roe: 9.99
+  roa: 9.99
+  mkt_cap: 9.99
+  shrs_out: 9.99

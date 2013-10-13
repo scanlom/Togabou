@@ -1,0 +1,17 @@
+<h1>Edit Fundamental</h1>
+<%= @fundamental.symbol %> - <%= @fundamental.date %>
+<%= form_for [:stock, @fundamental], url: stock_fundamental_path(:id, @fundamental.id), method: :patch do |f| %>
+<table>
+<tr><td>Date</td> <td><%= f.date_select :date, :default => Date.today, :start_year => 1980 %></td></tr>
+<tr><td><%= f.text_field :eps, :size => 4 %></td></tr>
+<tr><td><%= f.text_field :div, :size => 4 %></td></tr>
+<tr><td><%= f.text_field :pe, :size => 4 %></td></tr>
+<tr><td><%= f.text_field :pe_high, :size => 4 %></td></tr>
+<tr><td><%= f.text_field :pe_low, :size => 4 %></td></tr>
+<tr><td><%= f.text_field :roe, :size => 4 %></td></tr>
+<tr><td><%= f.text_field :roa, :size => 4 %></td></tr>
+<tr><td><%= f.text_field :mkt_cap, :size => 4 %></td></tr>
+<tr><td><%= f.text_field :shrs_out, :size => 4 %></td></tr>
+</table>
+  <%= f.submit %>
+<% end %>
