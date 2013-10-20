@@ -31,7 +31,7 @@ class FundamentalsController < ApplicationController
     @fundamental = Fundamental.find(params[:id])
     @stock = @fundamental.stock
 
-    if @fundamental.update(params[:fundamental].permit(:date, :symbol ) )
+    if @fundamental.update(params[:fundamental].permit( :date, :eps, :div, :pe, :pe_high, :pe_low, :roe, :roa, :mkt_cap, :shrs_out ) )
       redirect_to @stock
     else
       render 'edit'

@@ -30,6 +30,7 @@ td.symbol {
     <th>ROE</th>
     <th>%Model</th>
     <th>Price</th>
+    <th>PE</th>
     <th>Div+Growth</th>
     <th>EYield</th>
     <th>DYield</th>
@@ -48,6 +49,7 @@ td.symbol {
     <td class="number"><%= @stock.roe * 100 %>%</td>
     <td class="number"><%= number_with_precision( @stock.model * 100, :precision => 2, :delimiter => ",") %>%</td>
     <td class="number"><%= number_with_precision( @stock.price, :precision => 2, :delimiter => ",") %></td>
+    <td class="number"><%= number_with_precision( @stock.pe, :precision => 2, :delimiter => ",") %></td>
     <td class="number"><%= number_with_precision( @stock.div_plus_growth * 100, :precision => 2, :delimiter => ",") %>%</td>
     <td class="number"><%= number_with_precision( @stock.eps_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
     <td class="number"><%= number_with_precision( @stock.div_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
