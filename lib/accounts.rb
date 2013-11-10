@@ -95,6 +95,6 @@ order by s.date desc" )
   end
 
   def fumi_budget
-    total_budget_pos + 23043.67 - total_budget_neg
+    total_budget_pos + 20559.90 - total_budget_neg
   end
 end

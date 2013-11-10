@@ -9,6 +9,14 @@ td.number {
 td.symbol {
     font-weight: bold;
 }
+td.symbol_yellow {
+    font-weight: bold;
+    background-color: yellow;
+}
+td.symbol_red {
+    font-weight: bold;
+    background-color: red;
+}
 </style>
 <table>
   <tr><td class="symbol">Total</td><td class="number"><%= number_with_precision( controller.portfolio_total, :precision => 2, :delimiter => "," ) %></td><td class="number"><%= number_with_precision( controller.portfolio_total_percent * 100, :precision => 2, :delimiter => ",") %>%</td></tr>
@@ -39,7 +47,7 @@ td.symbol {
  
   <% controller.portfolio.each do |stock| %>
     <tr>
-      <td class="symbol"><%= link_to stock.symbol, stock_path(stock) %></td>
+      <td class="<%= if stock.reminder == 0 then "symbol" elsif stock.reminder == 1 then "symbol_yellow" else "symbol_red" end %>"><%= link_to stock.symbol, stock_path(stock) %></td>
       <td class="number"><%= number_with_precision( stock.eps, :precision => 2, :delimiter => ",") %></td>
       <td class="number"><%= number_with_precision( stock.div, :precision => 2, :delimiter => ",") %></td>
       <td class="number"><%= stock.growth*100 %>%</td>

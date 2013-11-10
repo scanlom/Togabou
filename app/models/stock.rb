@@ -85,4 +85,68 @@ class Stock < ActiveRecord::Base
     end
     ((((eps.to_f * self.pe_terminal.to_f) + div_bucket.to_f) / self.price.to_f) ** (1.to_f/years.to_f)) - 1.to_f
   end
+
+  def reminder
+    ret = 0
+    if self.researches.length <= 0
+      ret = 2
+    elsif self.researches[ 0 ].date > 1.month.ago
+      ret = 0
+    elsif self.researches[ 0 ].date > 3.months.ago
+      ret = 1
+    else
+      ret = 2
+    end
+    ret
+  end
+
+  def two_year_eps
+    ret = 0
+    if self.researches.length <= 0 or self.fundamentals.length <= 0 or self.researches[0].eps_yr2 <= 0 or self.fundamentals[0].eps <= 0
+      ret = 0
+    else
+      ret = ( self.researches[0].eps_yr2 / self.fundamentals[0].eps ) ** 0.5 - 1
+    end
+    ret
+  end
+
+  def x_year_eps( year )
+    ret = 0
+    if self.fundamentals.length <= year
+      ret = 0
+    else
+      ret = ( self.fundamentals[0].eps / self.fundamentals[ year ].eps ) ** ( 1 / year.to_f ) - 1
+    end
+    ret
+  end
+
+  def average_roe( year )
+    ret = 0
+    if self.fundamentals.length <= year
+      ret = 0
+    else
+      ret = self.fundamentals[0, year].inject(0.0){ |sum,e| sum += e.roe } / year.to_f
+    end
+    ret
+  end
+  
+  def average_pe_high( year )
+    ret = 0
+    if self.fundamentals.length <= year
+      ret = 0
+    else
+      ret = self.fundamentals[0, year].inject(0.0){ |sum,e| sum += e.pe_high } / year.to_f
+    end
+    ret
+  end
+  
+  def average_pe_low( year )
+    ret = 0
+    if self.fundamentals.length <= year
+      ret = 0
+    else
+      ret = self.fundamentals[0, year].inject(0.0){ |sum,e| sum += e.pe_low } / year.to_f
+    end
+    ret
+  end
 end

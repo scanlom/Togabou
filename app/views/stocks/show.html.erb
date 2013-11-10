@@ -74,6 +74,26 @@ td.symbol {
 
 <table>
 <tr>
+  <th>2 Yr EPS</th>
+  <th>5 Yr EPS</th>
+  <th>10 Yr EPS</th>
+  <th>5 Yr ROE</th>
+  <th>5 Yr PE High</th>
+  <th>5 Yr PE Low</th>
+</tr>
+<tr>
+  <td class="number"><%= number_with_precision( @stock.two_year_eps*100, :precision => 2, :delimiter => ",") %>%</td>
+  <td class="number"><%= number_with_precision( @stock.x_year_eps(5)*100, :precision => 2, :delimiter => ",") %>%</td>
+  <td class="number"><%= number_with_precision( @stock.x_year_eps(10)*100, :precision => 2, :delimiter => ",") %>%</td>
+  <td class="number"><%= number_with_precision( @stock.average_roe(5)*100, :precision => 2, :delimiter => ",") %>%</td>
+  <td class="number"><%= number_with_precision( @stock.average_pe_high(5), :precision => 2, :delimiter => ",") %></td>
+  <td class="number"><%= number_with_precision( @stock.average_pe_low(5), :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr><td>&nbsp</td></tr>
+</table>
+
+<table>
+<tr>
     <th>Date</th>
     <th>EPS</th>
     <th>Div</th>
