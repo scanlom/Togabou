@@ -102,7 +102,7 @@ class Stock < ActiveRecord::Base
 
   def two_year_eps
     ret = 0
-    if self.researches.length <= 0 or self.fundamentals.length <= 0 or self.researches[0].eps_yr2 <= 0 or self.fundamentals[0].eps <= 0
+    if self.researches.length <= 0 or self.fundamentals.length <= 0 or self.researches[0].eps_yr2.nil? or self.fundamentals[0].eps.nil? or self.fundamentals[0].eps <= 0
       ret = 0
     else
       ret = ( self.researches[0].eps_yr2 / self.fundamentals[0].eps ) ** 0.5 - 1
@@ -110,6 +110,16 @@ class Stock < ActiveRecord::Base
     ret
   end
 
+  def seven_year_eps
+    ret = 0
+    if self.researches.length <= 0 or self.fundamentals.length <= 5 or self.researches[0].eps_yr2.nil? or self.fundamentals[5].eps.nil? or self.fundamentals[5].eps <= 0
+      ret = 0
+    else
+      ret = ( self.researches[0].eps_yr2 / self.fundamentals[ 5 ].eps ) ** ( 1 / 7.0 ) - 1
+    end
+    ret
+  end
+  
   def x_year_eps( year )
     ret = 0
     if self.fundamentals.length <= year
@@ -132,7 +142,7 @@ class Stock < ActiveRecord::Base
   
   def average_pe_high( year )
     ret = 0
-    if self.fundamentals.length <= year
+    if self.fundamentals.length < year
       ret = 0
     else
       ret = self.fundamentals[0, year].inject(0.0){ |sum,e| sum += e.pe_high } / year.to_f
@@ -142,7 +152,7 @@ class Stock < ActiveRecord::Base
   
   def average_pe_low( year )
     ret = 0
-    if self.fundamentals.length <= year
+    if self.fundamentals.length < year
       ret = 0
     else
       ret = self.fundamentals[0, year].inject(0.0){ |sum,e| sum += e.pe_low } / year.to_f

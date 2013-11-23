@@ -76,7 +76,7 @@ td.symbol_red {
   <tr><td>&nbsp</td></tr>
   <% controller.watch_list.each do |stock| %>
     <tr>
-      <td class="symbol"><%= link_to stock.symbol, stock_path(stock) %></td>
+      <td class="<%= if stock.reminder == 0 then "symbol" elsif stock.reminder == 1 then "symbol_yellow" else "symbol_red" end %>"><%= link_to stock.symbol, stock_path(stock) %></td>
       <td class="number"><%= number_with_precision( stock.eps, :precision => 2, :delimiter => ",") %></td>
       <td class="number"><%= number_with_precision( stock.div, :precision => 2, :delimiter => ",") %></td>
       <td class="number"><%= stock.growth*100 %>%</td>
