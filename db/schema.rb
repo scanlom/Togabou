@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131001213919) do
+ActiveRecord::Schema.define(version: 20131130112107) do
 
   create_table "accounts", id: false, force: true do |t|
     t.text    "name"
@@ -197,6 +197,13 @@ ActiveRecord::Schema.define(version: 20131001213919) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.decimal  "price"
+    t.decimal  "day_change"
+    t.decimal  "week_change"
+    t.decimal  "month_change"
+    t.decimal  "three_month_change"
+    t.decimal  "year_change"
+    t.decimal  "five_year_change"
+    t.decimal  "ten_year_change"
   end
 
 end

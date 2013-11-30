@@ -2,6 +2,7 @@
 <style type="text/css">
 table {
   border-spacing: 20px 0;
+  white-space: nowrap;
 }
 td.number {
     text-align: right;
@@ -18,6 +19,25 @@ td.symbol_red {
     background-color: red;
 }
 </style>
+<a href="#" id="link_main">Main</a>
+<a href="#" id="link_change">Returns</a>
+<script type="text/javascript">
+$(document).ready(function(){
+
+  $('#div_change').hide();
+
+  $('#link_change').click(function(){ 
+      $('#div_main').hide();
+      $('#div_change').show();
+  });
+
+  $('#link_main').click(function(){ 
+      $('#div_change').hide();
+      $('#div_main').show();
+  }); 
+});
+</script>
+<div id="div_main">
 <table>
   <tr><td class="symbol">Total</td><td class="number"><%= number_with_precision( controller.portfolio_total, :precision => 2, :delimiter => "," ) %></td><td class="number"><%= number_with_precision( controller.portfolio_total_percent * 100, :precision => 2, :delimiter => ",") %>%</td></tr>
   <tr>
@@ -102,4 +122,47 @@ td.symbol_red {
   <% end %>
   <tr><td class="symbol"><%= link_to 'New', new_stock_path %></td></tr>
 </table>
+</div>
+<div id="div_change">
+<table>
+  <tr><td class="symbol">Total</td><td class="number"><%= number_with_precision( controller.portfolio_total, :precision => 2, :delimiter => "," ) %></td><td class="number"><%= number_with_precision( controller.portfolio_total_percent * 100, :precision => 2, :delimiter => ",") %>%</td></tr>
+  <tr>
+    <th>Symbol</th>
+    <th>Day</th>
+    <th>Week</th>
+    <th>Month</th>
+    <th>Three Months</th>
+    <th>Year</th>
+    <th>Five Years</th>
+    <th>Ten Years</th>
+  </tr>
+  <% controller.portfolio.each do |stock| %>
+    <tr>
+      <td class="<%= if stock.reminder == 0 then "symbol" elsif stock.reminder == 1 then "symbol_yellow" else "symbol_red" end %>"><%= link_to stock.symbol, stock_path(stock) %></td>
+      <td class="number"><%= number_with_precision( stock.day_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.week_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.month_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.three_month_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.five_year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.ten_year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	</tr>
+  <% end %>
+  <tr><td>&nbsp</td></tr>
+  <tr><td>&nbsp</td></tr>
+  <tr><td>&nbsp</td></tr>
+  <% controller.watch_list.each do |stock| %>
+    <tr>
+      <td class="<%= if stock.reminder == 0 then "symbol" elsif stock.reminder == 1 then "symbol_yellow" else "symbol_red" end %>"><%= link_to stock.symbol, stock_path(stock) %></td>
+      <td class="number"><%= number_with_precision( stock.day_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.week_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.month_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.three_month_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.five_year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.ten_year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	</tr>
+  <% end %>
+</table>
+</div>
 <p/>
