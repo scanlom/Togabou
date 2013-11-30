@@ -82,6 +82,7 @@ class Assets
   attr_accessor :cash
   attr_accessor :debt
   attr_accessor :roe_total
+  attr_accessor :roe_base
   attr_accessor :roe_divisor
   attr_accessor :roe_index
   attr_accessor :rotc_total
@@ -140,11 +141,11 @@ class Assets
     @ret_day_portfolio = calculate_return( self.portfolio.index, get_day_base( conn, 1 ) )
     @ret_day_managed = calculate_return( self.managed.index, get_day_base( conn, 4 ) )
     savings = get_scalar( conn, sprintf( "select value from balances_history where date='%s' and type=17", @date.to_s(:db) ) )
-    profit_base = get_ytd_balance_base( conn, 12 ).to_f
-    if profit_base <= 0
+    @roe_base = get_ytd_balance_base( conn, Myapp::BALANCES_TOTAL_ROE ).to_f
+    if @roe_base <= 0
       @profit = 0
     else
-      @profit = self.roe_total.to_f - profit_base - savings.to_f
+      @profit = self.roe_total.to_f - @roe_base - savings.to_f
     end
   end
 
@@ -253,9 +254,9 @@ class Assets
     get_scalar( conn, sprintf( "select * from index_history where type=%s and date='%s'", index, date ) )    
   end
  
-  def get_ytd_balance_base( conn, balance )
+  def get_ytd_balance_base( conn, type )
     date = "01/01/" + self.date.year.to_s
-    get_scalar( conn, sprintf( "select * from balances_history where type=%s and date='%s'", balance, date ) )    
+    get_scalar( conn, sprintf( "select * from balances_history where type=%d and date='%s'", type, date ) )    
   end
 end
 

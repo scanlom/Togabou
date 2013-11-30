@@ -7,6 +7,7 @@ Myapp::Application.routes.draw do
   resources :pages do
     member do
       get 'accounts'
+      get 'reports'
       get 'graphs'
     end
   end

@@ -145,7 +145,8 @@ class Stock < ActiveRecord::Base
     if self.fundamentals.length < year
       ret = 0
     else
-      ret = self.fundamentals[0, year].inject(0.0){ |sum,e| sum += e.pe_high } / year.to_f
+      sorted = self.fundamentals[0, year].sort
+      ret = year % 2 == 1 ? sorted[year/2].pe_high : (sorted[year/2 - 1].pe_high + sorted[year/2]).pe_high.to_f / 2
     end
     ret
   end
@@ -155,7 +156,8 @@ class Stock < ActiveRecord::Base
     if self.fundamentals.length < year
       ret = 0
     else
-      ret = self.fundamentals[0, year].inject(0.0){ |sum,e| sum += e.pe_low } / year.to_f
+      sorted = self.fundamentals[0, year].sort
+      ret = year % 2 == 1 ? sorted[year/2].pe_low : (sorted[year/2 - 1].pe_low + sorted[year/2]).pe_low.to_f / 2
     end
     ret
   end

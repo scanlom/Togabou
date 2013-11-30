@@ -1,0 +1,77 @@
+<h1>Reports</h1>
+<style type="text/css">
+table {
+  border-spacing: 20px 0;
+}
+td.heading {
+    text-align: center;
+    font-weight: bold;
+}
+td.number {
+    text-align: right;
+}
+td.symbol {
+    font-weight: bold;
+}
+</style>
+<% 
+	a = controller.get_accounts 
+	paid = a.get_balance_value( Myapp::BALANCES_PAID )
+	tax = a.get_balance_value( Myapp::BALANCES_TAX )
+	savings = a.get_balance_value( Myapp::BALANCES_SAVINGS )
+	spent = paid - tax - savings
+	as = controller.get_assets
+	base = as.roe_base 
+	spent_projected = 365 / Time.now.yday.to_f * spent
+%>
+<table>
+<tr>
+<td style="vertical-align:top">
+<table>
+<tr>
+	<td class="symbol">Paid</td>
+	<td class="number"><%= number_with_precision( paid, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr>
+	<td class="symbol">Tax</td>
+	<td class="number"><%= number_with_precision( tax, :precision => 2, :delimiter => ",") %></td>
+	<td class="number"><%= number_with_precision( tax / paid * 100, :precision => 2, :delimiter => ",") %>%</td>
+</tr>
+<tr>
+	<td class="symbol">Savings</td>
+	<td class="number"><%= number_with_precision( savings, :precision => 2, :delimiter => ",") %></td>
+	<td class="number"><%= number_with_precision( savings / paid * 100, :precision => 2, :delimiter => ",") %>%</td>
+</tr>
+<tr>
+	<td class="symbol">Spent</td>
+	<td class="number"><%= number_with_precision( spent, :precision => 2, :delimiter => ",") %></td>
+	<td class="number"><%= number_with_precision( spent / paid * 100, :precision => 2, :delimiter => ",") %>%</td>
+</tr>
+<tr><td>&nbsp</td></tr>
+<tr>
+	<td class="symbol">Base</td>
+	<td class="number"><%= number_with_precision( base, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr>
+	<td class="symbol">Spent (Projected)</td>
+	<td class="number"><%= number_with_precision( spent_projected, :precision => 2, :delimiter => ",") %></td>
+	<td class="number"><%= number_with_precision( spent_projected / base * 100, :precision => 2, :delimiter => ",") %>%</td>
+</tr>
+</table>
+</td>
+<td style="vertical-align:top">
+<table>
+  <tr>
+  	<th class="symbol">Date</th>
+	<th class="symbol">Savings</th>
+  </tr>
+  <% a.entries.each do |entry| %>
+  <tr>
+    <td><%= entry.date %></td>
+    <td class="number"><%= number_with_precision( entry.value, :precision => 2, :delimiter => ",") %></td>
+  </tr>
+  <% end %>
+</table>
+</td>
+</tr>
+</table>

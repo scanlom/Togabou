@@ -1,4 +1,15 @@
 
+class Entry
+  attr_accessor :date
+  attr_accessor :type
+  attr_accessor :value
+  def initialize( date, type, value )
+    @date = date
+    @type = type
+    @value = value
+  end
+end
+
 class Txn
   attr_accessor :date
   attr_accessor :amount
@@ -47,10 +58,12 @@ end
 class Accounts
   attr_accessor :balances
   attr_accessor :txns
+  attr_accessor :entries
   
   def initialize
     @balances = Array.new
     @txns = Array.new
+    @entries = Array.new
     conn = ActiveRecord::Base.connection
     res = conn.execute( "select * from balances order by value desc" )
     res.values().each do |row|
@@ -64,6 +77,19 @@ order by s.date desc" )
     res.values().each do |row|
       @txns << Txn.new( row[0], row[1], row[2], row[3], row[4] )
     end
+    res = conn.execute( sprintf( "select h.date, h.type, h.value1 from history h where 
+  h.date > '01/01/%s' and
+  h.type = %d
+  order by h.date asc", Time.now.year, Myapp::HISTORY_SAVINGS ) )
+    res.values().each do |row|
+      @entries << Entry.new( row[0], row[1], row[2] )
+    end
+
+  end
+  
+  def get_balance_value( type )
+    balance = self.balances.find {|x| x.type == type}
+    balance.value
   end
 
   def balances_recon_cash
@@ -95,6 +121,6 @@ order by s.date desc" )
   end
 
   def fumi_budget
-    total_budget_pos + 20559.90 - total_budget_neg
+    total_budget_pos + 16432.70 - total_budget_neg
   end
 end
