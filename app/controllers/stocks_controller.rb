@@ -4,6 +4,7 @@ class StocksController < ApplicationController
   attr_accessor :assets
   attr_accessor :portfolio
   attr_accessor :watch_list
+  attr_accessor :monitor_list
 
   def initialize
     @assets = Assets.new
@@ -14,8 +15,10 @@ class StocksController < ApplicationController
     if @portfolio == nil
       @portfolio = Stock.where("model > 0")
       @portfolio.sort! { |a,b| [ b.value.to_f ] <=> [ a.value.to_f ] }
-      @watch_list = Stock.where("model <= 0")
+      @watch_list = Stock.where("model = 0")
       @watch_list.sort! { |a,b| [ b.five_year_cagr.to_f ] <=> [ a.five_year_cagr.to_f ] }
+      @monitor_list = Stock.where("model < 0")
+      @monitor_list.sort! { |a,b| [ a.id.to_f ] <=> [ b.id.to_f ] }
     end
   end
 
@@ -27,6 +30,11 @@ class StocksController < ApplicationController
   def watch_list
     lazy_initialize
     @watch_list
+  end
+
+  def monitor_list
+    lazy_initialize
+    @monitor_list
   end
 
   def new

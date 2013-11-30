@@ -163,6 +163,19 @@ $(document).ready(function(){
 	  <td class="number"><%= number_with_precision( stock.ten_year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
 	</tr>
   <% end %>
+  <tr><td>&nbsp</td></tr>
+  <% controller.monitor_list.each do |stock| %>
+    <tr>
+      <td class="symbol"><%= stock.symbol %></td>
+      <td class="number"><%= number_with_precision( stock.day_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.week_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.month_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.three_month_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.five_year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number"><%= number_with_precision( stock.ten_year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	</tr>
+  <% end %>
 </table>
 </div>
 <p/>
