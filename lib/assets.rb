@@ -101,7 +101,31 @@ class Assets
   attr_accessor :ret_day_portfolio
   attr_accessor :ret_day_managed
   attr_accessor :profit
-
+  attr_accessor :ret_week_roe
+  attr_accessor :ret_week_rotc
+  attr_accessor :ret_week_portfolio
+  attr_accessor :ret_week_managed
+  attr_accessor :ret_month_roe
+  attr_accessor :ret_month_rotc
+  attr_accessor :ret_month_portfolio
+  attr_accessor :ret_month_managed
+  attr_accessor :ret_three_month_roe
+  attr_accessor :ret_three_month_rotc
+  attr_accessor :ret_three_month_portfolio
+  attr_accessor :ret_three_month_managed
+  attr_accessor :ret_year_roe
+  attr_accessor :ret_year_rotc
+  attr_accessor :ret_year_portfolio
+  attr_accessor :ret_year_managed
+  attr_accessor :ret_five_year_roe
+  attr_accessor :ret_five_year_rotc
+  attr_accessor :ret_five_year_portfolio
+  attr_accessor :ret_five_year_managed
+  attr_accessor :ret_ten_year_roe
+  attr_accessor :ret_ten_year_rotc
+  attr_accessor :ret_ten_year_portfolio
+  attr_accessor :ret_ten_year_managed
+  
   def initialize(date = nil)
     conn = ActiveRecord::Base.connection
    
@@ -147,6 +171,32 @@ class Assets
     else
       @profit = self.roe_total.to_f - @roe_base - savings.to_f
     end
+    
+    # More returns
+    @ret_week_roe = calculate_return( self.roe_index, get_base( conn, 2, @date - 1.week ) )
+    @ret_week_rotc = calculate_return( self.rotc_index, get_base( conn, 3, @date - 1.week ) )
+    @ret_week_portfolio = calculate_return( self.portfolio.index, get_base( conn, 1, @date - 1.week ) )
+    @ret_week_managed = calculate_return( self.managed.index, get_base( conn, 4, @date - 1.week ) )
+    @ret_month_roe = calculate_return( self.roe_index, get_base( conn, 2, @date - 1.month ) )
+    @ret_month_rotc = calculate_return( self.rotc_index, get_base( conn, 3, @date - 1.month ) )
+    @ret_month_portfolio = calculate_return( self.portfolio.index, get_base( conn, 1, @date - 1.month ) )
+    @ret_month_managed = calculate_return( self.managed.index, get_base( conn, 4, @date - 1.month ) )
+    @ret_three_month_roe = calculate_return( self.roe_index, get_base( conn, 2, @date - 3.months ) )
+    @ret_three_month_rotc = calculate_return( self.rotc_index, get_base( conn, 3, @date - 3.months ) )
+    @ret_three_month_portfolio = calculate_return( self.portfolio.index, get_base( conn, 1, @date - 3.months ) )
+    @ret_three_month_managed = calculate_return( self.managed.index, get_base( conn, 4, @date - 3.months ) )
+    @ret_year_roe = calculate_return( self.roe_index, get_base( conn, 2, @date - 1.year ) )
+    @ret_year_rotc = calculate_return( self.rotc_index, get_base( conn, 3, @date - 1.year ) )
+    @ret_year_portfolio = calculate_return( self.portfolio.index, get_base( conn, 1, @date - 1.year ) )
+    @ret_year_managed = calculate_return( self.managed.index, get_base( conn, 4, @date - 1.year ) )
+    @ret_five_year_roe = calculate_return( self.roe_index, get_base( conn, 2, @date - 5.years ), 5 )
+    @ret_five_year_rotc = calculate_return( self.rotc_index, get_base( conn, 3, @date - 5.years ), 5 )
+    @ret_five_year_portfolio = calculate_return( self.portfolio.index, get_base( conn, 1, @date - 5.years ), 5 )
+    @ret_five_year_managed = calculate_return( self.managed.index, get_base( conn, 4, @date - 5.years ), 5 )
+    @ret_ten_year_roe = calculate_return( self.roe_index, get_base( conn, 2, @date - 10.years ), 10 )
+    @ret_ten_year_rotc = calculate_return( self.rotc_index, get_base( conn, 3, @date - 10.years ), 10 )
+    @ret_ten_year_portfolio = calculate_return( self.portfolio.index, get_base( conn, 1, @date - 10.years ), 10 )
+    @ret_ten_year_managed = calculate_return( self.managed.index, get_base( conn, 4, @date - 10.years ), 10 )
   end
 
   def normalize_allocations( allocations )
@@ -219,12 +269,17 @@ class Assets
     allocations 
   end
 
-  def calculate_return( current, base )
+  def calculate_return( current, base, years = 1 )
     ret = 0
     if base.to_f > 0
-      ret = ( current.to_f / base.to_f ) - 1
+      ret = ( current.to_f / base.to_f ) ** ( 1 / years.to_f ) - 1
     end
     ret
+  end
+
+  def get_base( conn, index, date )
+    get_scalar( conn, sprintf( "select * from index_history where type=%s and 
+      date = ( select max(date) from index_history where date <= '%s' )", index, date.to_s(:db) ) )
   end
 
   def get_ytd_base( conn, index )
