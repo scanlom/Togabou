@@ -1,4 +1,4 @@
-Myapp::Application.routes.draw do
+Togabou::Application.routes.draw do
   resources :stocks do 
     resources :researches
     resources :fundamentals

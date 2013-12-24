@@ -145,7 +145,7 @@ class Stock < ActiveRecord::Base
     if self.fundamentals.length < year
       ret = 0
     else
-      sorted = self.fundamentals[0, year].sort
+      sorted = self.fundamentals[0, year].sort {|a,b| a.pe_high <=> b.pe_high }
       ret = year % 2 == 1 ? sorted[year/2].pe_high : (sorted[year/2 - 1].pe_high + sorted[year/2]).pe_high.to_f / 2
     end
     ret
@@ -156,7 +156,7 @@ class Stock < ActiveRecord::Base
     if self.fundamentals.length < year
       ret = 0
     else
-      sorted = self.fundamentals[0, year].sort
+      sorted = self.fundamentals[0, year].sort {|a,b| a.pe_low <=> b.pe_low }
       ret = year % 2 == 1 ? sorted[year/2].pe_low : (sorted[year/2 - 1].pe_low + sorted[year/2]).pe_low.to_f / 2
     end
     ret

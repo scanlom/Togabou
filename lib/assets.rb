@@ -165,7 +165,7 @@ class Assets
     @ret_day_portfolio = calculate_return( self.portfolio.index, get_day_base( conn, 1 ) )
     @ret_day_managed = calculate_return( self.managed.index, get_day_base( conn, 4 ) )
     savings = get_scalar( conn, sprintf( "select value from balances_history where date='%s' and type=17", @date.to_s(:db) ) )
-    @roe_base = get_ytd_balance_base( conn, Myapp::BALANCES_TOTAL_ROE ).to_f
+    @roe_base = get_ytd_balance_base( conn, Togabou::BALANCES_TOTAL_ROE ).to_f
     if @roe_base <= 0
       @profit = 0
     else

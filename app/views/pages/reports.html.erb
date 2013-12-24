@@ -16,9 +16,9 @@ td.symbol {
 </style>
 <% 
 	a = controller.get_accounts 
-	paid = a.get_balance_value( Myapp::BALANCES_PAID )
-	tax = a.get_balance_value( Myapp::BALANCES_TAX )
-	savings = a.get_balance_value( Myapp::BALANCES_SAVINGS )
+	paid = a.get_balance_value( Togabou::BALANCES_PAID )
+	tax = a.get_balance_value( Togabou::BALANCES_TAX )
+	savings = a.get_balance_value( Togabou::BALANCES_SAVINGS )
 	spent = paid - tax - savings
 	as = controller.get_assets
 	base = as.roe_base 

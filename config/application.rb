@@ -6,7 +6,7 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
 
-module Myapp
+module Togabou
   BALANCES_TOTAL_ROE  = 12
   BALANCES_PAID       = 15
   BALANCES_TAX        = 16

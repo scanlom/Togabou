@@ -62,7 +62,7 @@ class StocksController < ApplicationController
   def update
     @stock = Stock.find(params[:id])
 
-    if @stock.update(params[:stock].permit(:eps, :div, :growth, :pe_terminal, :payout, :book, :roe, :price ) )
+    if @stock.update(params[:stock].permit(:eps, :div, :growth, :pe_terminal, :payout, :book, :roe, :price, :model ) )
       redirect_to @stock
     else
       render 'edit'
@@ -92,6 +92,11 @@ class StocksController < ApplicationController
   def portfolio_check
     lazy_initialize
     ( self.portfolio.inject(0.0){ |sum,x| sum + x.value.to_f } + portfolio_cash.to_f ) / portfolio_total.to_f
+  end
+  
+  def portfolio_model_check
+    lazy_initialize
+    self.portfolio.inject(0.0){ |sum,x| sum + x.model.to_f }
   end
 
   def portfolio_eps_wtd_total

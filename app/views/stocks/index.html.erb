@@ -56,9 +56,7 @@ $(document).ready(function(){
     <th>%Off</th>
     <th>Div+Growth</th>
     <th>EYield</th>
-    <th>Wtd</th>
     <th>DYield</th>
-    <th>Wtd</th>
     <th>5 CAGR</th>
     <th>10 CAGR</th>
     <th>5 CROE</th>
@@ -82,16 +80,14 @@ $(document).ready(function(){
       <td class="number"><%= number_with_precision( stock.off * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="number"><%= number_with_precision( stock.div_plus_growth * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="number"><%= number_with_precision( stock.eps_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.eps_yield_wtd * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="number"><%= number_with_precision( stock.div_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.div_yield_wtd * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="number"><%= number_with_precision( stock.five_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="number"><%= number_with_precision( stock.ten_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="number"><%= number_with_precision( stock.five_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="number"><%= number_with_precision( stock.ten_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
     </tr>
   <% end %>
-  <tr><td/><td/><td/><td/><td/><td/><td/><td/><td/><td class="symbol">CASH</td><td class="number"><%= number_with_precision( controller.portfolio_cash, :precision => 2, :delimiter => ",") %></td></td><td class="number"><%= number_with_precision( controller.portfolio_cash_percent * 100, :precision => 2, :delimiter => ",") %>%</td><td/><td/><td/><td class="number"><%= number_with_precision( controller.portfolio_eps_wtd_total * 100, :precision => 2, :delimiter => ",") %>%</td><td/><td class="number"><%= number_with_precision( controller.portfolio_div_wtd_total * 100, :precision => 2, :delimiter => ",") %>%</td>
+  <tr><td/><td/><td/><td/><td/><td/><td/><td/><td class="number"><%= number_with_precision( controller.portfolio_model_check * 100, :precision => 1, :delimiter => ",") %>%</td><td class="symbol">CASH</td><td class="number"><%= number_with_precision( controller.portfolio_cash, :precision => 2, :delimiter => ",") %></td></td><td class="number"><%= number_with_precision( controller.portfolio_cash_percent * 100, :precision => 2, :delimiter => ",") %>%</td><td/><td/><td class="number"><%= number_with_precision( controller.portfolio_eps_wtd_total * 100, :precision => 2, :delimiter => ",") %>%</td><td class="number"><%= number_with_precision( controller.portfolio_div_wtd_total * 100, :precision => 2, :delimiter => ",") %>%</td>
   <tr><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td class="symbol">CHECK</td></td><td class="number"><%= number_with_precision( controller.portfolio_check * 100, :precision => 2, :delimiter => ",") %>%</td>
   <tr><td>&nbsp</td></tr>
   <% controller.watch_list.each do |stock| %>
@@ -111,9 +107,7 @@ $(document).ready(function(){
       <td class="number"></td>
       <td class="number"><%= number_with_precision( stock.div_plus_growth * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="number"><%= number_with_precision( stock.eps_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.eps_yield_wtd * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="number"><%= number_with_precision( stock.div_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.div_yield_wtd * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="number"><%= number_with_precision( stock.five_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="number"><%= number_with_precision( stock.ten_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="number"><%= number_with_precision( stock.five_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
