@@ -284,7 +284,7 @@ class Assets
 
   def get_ytd_base( conn, index )
     date = "01/01/" + self.date.year.to_s
-    if self.date.month == 1 && self.date..day == 1
+    if self.date.month == 1 && self.date.day == 1
         date = "01/01/" + (self.date.year - 1).to_s
     end
     get_scalar( conn, sprintf( "select * from index_history where type=%s and date='%s'", index, date ) )    
@@ -311,6 +311,9 @@ class Assets
  
   def get_ytd_balance_base( conn, type )
     date = "01/01/" + self.date.year.to_s
+    if self.date.month == 1 && self.date.day == 1
+        date = "01/01/" + (self.date.year - 1).to_s
+    end
     get_scalar( conn, sprintf( "select * from balances_history where type=%d and date='%s'", type, date ) )    
   end
 end

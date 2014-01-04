@@ -21,8 +21,12 @@ td.symbol {
 	savings = a.get_balance_value( Togabou::BALANCES_SAVINGS )
 	spent = paid - tax - savings
 	as = controller.get_assets
-	base = as.roe_base 
-	spent_projected = 365 / Time.now.yday.to_f * spent
+	base = as.roe_base
+	day = Time.now.yday.to_f
+	if day == 1
+		day = 365
+	end
+	spent_projected = 365 / day * spent
 %>
 <table>
 <tr>

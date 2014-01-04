@@ -77,10 +77,14 @@ order by s.date desc" )
     res.values().each do |row|
       @txns << Txn.new( row[0], row[1], row[2], row[3], row[4] )
     end
+    date = "01/01/" + Time.now.year.to_s
+    if Time.now.month == 1 && Time.now.day == 1
+      date = "01/01/" + (Time.now.year - 1).to_s
+    end
     res = conn.execute( sprintf( "select h.date, h.type, h.value1 from history h where 
-  h.date > '01/01/%s' and
+  h.date > '%s' and
   h.type = %d
-  order by h.date asc", Time.now.year, Togabou::HISTORY_SAVINGS ) )
+  order by h.date asc", date, Togabou::HISTORY_SAVINGS ) )
     res.values().each do |row|
       @entries << Entry.new( row[0], row[1], row[2] )
     end
@@ -121,6 +125,6 @@ order by s.date desc" )
   end
 
   def fumi_budget
-    total_budget_pos + 16432.70 - total_budget_neg
+    total_budget_pos - total_budget_neg
   end
 end
