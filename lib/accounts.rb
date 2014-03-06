@@ -56,16 +56,31 @@ class Balance
 end
 
 class Accounts
+  attr_accessor :date
   attr_accessor :balances
   attr_accessor :txns
   attr_accessor :entries
   
-  def initialize
+  def initialize(date = nil)
+    conn = ActiveRecord::Base.connection
+   
+    # If no date is passed in, use max date
+    date_sql = "select max(b.date) date from balances_history b"
+    if date != nil and date != ""
+      date_sql += " where b.date <= '" + date.to_s(:db) + "'"
+    end
+    res = conn.execute( date_sql ) 
+    @date = Date.parse( res.first['date'] )
+    
     @balances = Array.new
     @txns = Array.new
     @entries = Array.new
     conn = ActiveRecord::Base.connection
-    res = conn.execute( "select * from balances order by value desc" )
+    res = conn.execute( sprintf( "select h.type, b.description, h.value, b.recon_cash, b.recon_budget_pos, b.recon_budget_neg 
+    from balances b, balances_history h 
+    where h.date='%s' and
+      b.type = h.type
+    order by value desc", @date.to_s(:db) ) )
     res.values().each do |row|
       @balances << Balance.new( row[0], row[1], row[2], row[3], row[4], row[5] )
     end
@@ -77,9 +92,9 @@ order by s.date desc" )
     res.values().each do |row|
       @txns << Txn.new( row[0], row[1], row[2], row[3], row[4] )
     end
-    date = "01/01/" + Time.now.year.to_s
-    if Time.now.month == 1 && Time.now.day == 1
-      date = "01/01/" + (Time.now.year - 1).to_s
+    date = "01/01/" + @date.year.to_s
+    if @date.month == 1 && @date.day == 1
+      date = "01/01/" + (@date.year - 1).to_s
     end
     res = conn.execute( sprintf( "select h.date, h.type, h.value1 from history h where 
   h.date > '%s' and

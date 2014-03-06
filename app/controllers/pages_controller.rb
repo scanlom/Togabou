@@ -3,11 +3,24 @@ require 'assets.rb'
 
 class PagesController < ApplicationController
 
-  def get_accounts
-    Accounts.new
+  def get_assets( str_date )
+    ret = nil
+    if str_date == nil or str_date == ""
+      ret = Assets.new
+    else
+      ret = Assets.new( Date.parse( str_date ) )
+    end
+    ret
   end
-  def get_assets
-    Assets.new
+  
+  def get_accounts( str_date )
+    ret = nil
+    if str_date == nil or str_date == ""
+      ret = Accounts.new
+    else
+      ret = Accounts.new( Date.parse( str_date ) )
+    end
+    ret
   end
 
   def get_chart_roe

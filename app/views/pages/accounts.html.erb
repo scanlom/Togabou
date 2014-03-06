@@ -14,8 +14,8 @@ td.symbol {
     font-weight: bold;
 }
 </style>
-<% a = controller.get_accounts %>
-<% as = controller.get_assets %>
+<% a = controller.get_accounts( nil ) %>
+<% as = controller.get_assets( nil ) %>
 <table>
 <tr><td class="heading">Cash Pos</td><td class = "heading">Cash Neg</td><td class="heading">Budget Pos</td><td class="heading">Budget Neg</td></tr>
 <tr>

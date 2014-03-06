@@ -1,4 +1,29 @@
 <h1>Reports</h1>
+<form method="GET">
+  <label for="year">Year:</label>
+  <input type="text" name="year" /> 
+  <input type="submit" /> 
+</form>
+<% 
+	date = nil
+	year = params[:year]
+	if year != nil
+		date = "01/01/" + (year.to_i + 1).to_s
+	end
+	a = controller.get_accounts( date ) 
+	paid = a.get_balance_value( Togabou::BALANCES_PAID )
+	tax = a.get_balance_value( Togabou::BALANCES_TAX )
+	savings = a.get_balance_value( Togabou::BALANCES_SAVINGS )
+	spent = paid - tax - savings
+	as = controller.get_assets( date )
+	base = as.roe_base
+	day = a.date.yday.to_f
+	if day == 1
+		day = 365
+	end
+	spent_projected = 365 / day * spent
+%>
+<h2><%= a.date.to_s %></h2>
 <style type="text/css">
 table {
   border-spacing: 20px 0;
@@ -14,20 +39,6 @@ td.symbol {
     font-weight: bold;
 }
 </style>
-<% 
-	a = controller.get_accounts 
-	paid = a.get_balance_value( Togabou::BALANCES_PAID )
-	tax = a.get_balance_value( Togabou::BALANCES_TAX )
-	savings = a.get_balance_value( Togabou::BALANCES_SAVINGS )
-	spent = paid - tax - savings
-	as = controller.get_assets
-	base = as.roe_base
-	day = Time.now.yday.to_f
-	if day == 1
-		day = 365
-	end
-	spent_projected = 365 / day * spent
-%>
 <table>
 <tr>
 <td style="vertical-align:top">
