@@ -5,6 +5,7 @@ gem 'therubyracer'
 
 # Lazy High Charts
 gem 'lazy_high_charts'
+gem 'htpasswd'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'

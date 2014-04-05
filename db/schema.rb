@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131130112107) do
+ActiveRecord::Schema.define(version: 20140405031646) do
 
   create_table "accounts", id: false, force: true do |t|
     t.text    "name"
@@ -26,6 +26,33 @@ ActiveRecord::Schema.define(version: 20131130112107) do
     t.text    "description"
     t.text    "id"
     t.boolean "download"
+  end
+
+  create_table "actions", force: true do |t|
+    t.date     "date"
+    t.integer  "actions_type_id"
+    t.text     "description"
+    t.decimal  "value1"
+    t.decimal  "value2"
+    t.decimal  "value3"
+    t.decimal  "value4"
+    t.decimal  "value5"
+    t.text     "symbol"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "actions", ["actions_type_id"], name: "index_actions_on_actions_type_id", using: :btree
+
+  create_table "actions_types", force: true do |t|
+    t.text     "description"
+    t.text     "value1"
+    t.text     "value2"
+    t.text     "value3"
+    t.text     "value4"
+    t.text     "value5"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "allocations", id: false, force: true do |t|

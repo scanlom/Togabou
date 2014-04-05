@@ -3,6 +3,8 @@ Togabou::Application.routes.draw do
     resources :researches
     resources :fundamentals
   end
+  
+  resources :actions
 
   resources :pages do
     member do

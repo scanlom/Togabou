@@ -13,6 +13,25 @@ module Togabou
   BALANCES_SAVINGS    = 17
   
   HISTORY_SAVINGS     = 5
+  
+  ACTIONS_TYPE_UNKNOWN  = 0
+  ACTIONS_TYPE_PORT_DIV = 1
+  ACTIONS_TYPE_TOT_INT  = 2
+  ACTIONS_TYPE_PAID     = 3
+  ACTIONS_TYPE_TAX      = 4
+  ACTIONS_TYPE_SAVINGS  = 5
+  ACTIONS_TYPE_DI       = 6
+  ACTIONS_TYPE_MAN_CI   = 7
+  ACTIONS_TYPE_TOT_DIV  = 8
+  ACTIONS_TYPE_FX_DIFF  = 9 # FX - HKD to USD Difference With Cash
+  ACTIONS_TYPE_PORT_CI  = 10
+  ACTIONS_TYPE_PORT_BUY = 11
+  ACTIONS_TYPE_MAN_DIV_REINVEST   = 12
+  ACTIONS_TYPE_MAN_ST_CG_REINVEST = 13
+  ACTIONS_TYPE_MAN_LT_CG_REINVEST = 14
+  ACTIONS_TYPE_MAN_SELL           = 15
+  ACTIONS_TYPE_PORT_SELL          = 16
+  ACTIONS_TYPE_TOT_CI             = 17
     
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
