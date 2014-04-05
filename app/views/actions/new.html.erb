@@ -1,0 +1,27 @@
+<h1>New Action</h1>
+
+<%= form_for @action, as: :foo, url: actions_path do |f| %>
+  <p>
+    <%= f.label :date %><br>
+    <%= f.date_select :date %>
+  </p>
+ 
+  <p>
+    <%= f.label :actions_type_id %><br>
+    <%= f.collection_select :actions_type_id, @actions_types_all, :id, :description %>
+  </p>
+
+  <p>
+    <%= f.label :value1 %><br>
+    <%= f.text_field :value1 %>
+  </p>
+ 
+  <p>
+    <%= f.label :symbol %><br>
+    <%= f.text_field :symbol %>
+  </p>
+ 
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>

@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  date: 2014-04-05
+  actions_type_id: 
+  description: MyText
+  value1: 9.99
+  value2: 9.99
+  value3: 9.99
+  value4: 9.99
+  value5: 9.99
+  symbol: MyText
+
+two:
+  date: 2014-04-05
+  actions_type_id: 
+  description: MyText
+  value1: 9.99
+  value2: 9.99
+  value3: 9.99
+  value4: 9.99
+  value5: 9.99
+  symbol: MyText

@@ -1,0 +1,36 @@
+<h1>Actions</h1>
+<style type="text/css">
+table {
+  border-spacing: 20px 0;
+}
+td.heading {
+    text-align: center;
+    font-weight: bold;
+}
+td.number {
+    text-align: right;
+}
+td.symbol {
+    font-weight: bold;
+}
+</style>
+<p>Remember to run Portfolio.py after each action, and eyeball Togabou for any unexpected differences</p>
+<%= link_to 'New', new_action_path %> | <%= button_to 'Delete', action_path( @actions.first ), :confirm => 'Are you sure?', :method => :delete %>
+<table>
+  <tr>
+    <th>Date</th>
+    <th>Description</th>
+    <th>Amount</th>
+    <th>Symbol</th>
+    <th>Created At</th>
+  </tr>
+  <% @actions.each do |action| %>
+    <tr>
+      <td><%= action.date %></td>
+      <td><%= action.actions_type.description %></td>
+      <td class="number"><%= number_with_precision( action.value1, :precision => 2, :delimiter => ",") %></td>
+      <td><%= action.symbol.to_s %></td>
+      <td><%= action.created_at.to_s %></td>
+    </tr>
+  <% end %>
+</table>
