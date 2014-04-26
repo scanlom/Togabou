@@ -8,9 +8,12 @@
 	date = nil
 	year = params[:year]
 	if year != nil
-		date = "01/01/" + (year.to_i + 1).to_s
+	  date = "01/01/" + (year.to_i + 1).to_s
+	else
+	  year = Time.now.year
 	end
-	a = controller.get_accounts( date ) 
+	a = controller.get_accounts( date )
+	start_date = "01/01/" + year.to_s 
 	paid = a.get_balance_value( Togabou::BALANCES_PAID )
 	tax = a.get_balance_value( Togabou::BALANCES_TAX )
 	savings = a.get_balance_value( Togabou::BALANCES_SAVINGS )
@@ -80,10 +83,10 @@ td.symbol {
   	<th class="symbol">Date</th>
 	<th class="symbol">Savings</th>
   </tr>
-  <% a.entries.each do |entry| %>
+  <% controller.get_actions( Togabou::ACTIONS_TYPE_SAVINGS, start_date, date ).each do |action| %>
   <tr>
-    <td><%= entry.date %></td>
-    <td class="number"><%= number_with_precision( entry.value, :precision => 2, :delimiter => ",") %></td>
+    <td><%= action.date %></td>
+    <td class="number"><%= number_with_precision( action.value1, :precision => 2, :delimiter => ",") %></td>
   </tr>
   <% end %>
 </table>

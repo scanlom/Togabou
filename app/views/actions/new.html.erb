@@ -1,24 +1,67 @@
 <h1>Create Action</h1>
 
+<%
+	actions_type_id = 3
+	if params[:actions_type_id] != nil
+	  actions_type_id = params[:actions_type_id].to_i	  
+	end
+%>
+
+<form method="GET">
+  <label for="actions_type_id">Actions Type:</label>
+  <select name="actions_type_id">
+  <% @actions_types_all.sort { |a,b| a.description <=> b.description }.each do |actions_type| %>
+    <% if actions_type.id == actions_type_id %>
+      <option value="<%= actions_type.id %>" selected="selected"><%= actions_type.description %></option>
+    <% else %>
+      <option value="<%= actions_type.id %>"><%= actions_type.description %></option>
+    <% end %>
+  <% end %>
+  </select>
+  <input type="submit" /> 
+</form>
+
+<% cur_actions_type = ActionsType.find( actions_type_id ) %>
+
 <%= form_for @action, as: :foo, url: actions_path do |f| %>
+  <p>
+    <%= f.label :actions_type_id %><br>
+    <%= f.text_field :actions_type_id, :value => actions_type_id, :readonly => true %>
+  </p>
+
   <p>
     <%= f.label :date %><br>
     <%= f.date_select :date %>
   </p>
- 
-  <p>
-    <%= f.label :actions_type_id %><br>
-    <%= f.collection_select :actions_type_id, @actions_types_all, :id, :description %>
-  </p>
 
-  <p>
-    <%= f.label :value1 %><br>
-    <%= f.text_field :value1 %>
-  </p>
- 
   <p>
     <%= f.label :symbol %><br>
     <%= f.text_field :symbol %>
+  </p>
+
+  <p>
+    <%= f.label :value1, cur_actions_type.value1 %><br>
+    <%= f.text_field :value1 %>
+  </p>
+
+  <p>
+    <%= f.label :value2, cur_actions_type.value2 %><br>
+    <%= f.text_field :value2 %>
+  </p>
+
+  <p>
+    <%= f.label :value3, cur_actions_type.value3 %><br>
+    <%= f.text_field :value3 %>
+  </p>
+
+  <p>
+    <%= f.label :value4, cur_actions_type.value4 %><br>
+    <%= f.text_field :value4 %>
+  </p>
+
+  <p>
+    <%= f.label :value5, cur_actions_type.value5 %><br>
+    <%= f.text_field :value5 %>
   </p>
  
   <p>

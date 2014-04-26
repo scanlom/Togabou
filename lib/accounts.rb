@@ -1,15 +1,4 @@
 
-class Entry
-  attr_accessor :date
-  attr_accessor :type
-  attr_accessor :value
-  def initialize( date, type, value )
-    @date = date
-    @type = type
-    @value = value
-  end
-end
-
 class Txn
   attr_accessor :date
   attr_accessor :amount
@@ -59,7 +48,6 @@ class Accounts
   attr_accessor :date
   attr_accessor :balances
   attr_accessor :txns
-  attr_accessor :entries
   
   def initialize(date = nil)
     conn = ActiveRecord::Base.connection
@@ -74,7 +62,6 @@ class Accounts
     
     @balances = Array.new
     @txns = Array.new
-    @entries = Array.new
     conn = ActiveRecord::Base.connection
     res = conn.execute( sprintf( "select h.type, b.description, h.value, b.recon_cash, b.recon_budget_pos, b.recon_budget_neg 
     from balances b, balances_history h 
@@ -96,14 +83,6 @@ order by s.date desc" )
     if @date.month == 1 && @date.day == 1
       date = "01/01/" + (@date.year - 1).to_s
     end
-    res = conn.execute( sprintf( "select h.date, h.type, h.value1 from history h where 
-  h.date > '%s' and
-  h.type = %d
-  order by h.date asc", date, Togabou::HISTORY_SAVINGS ) )
-    res.values().each do |row|
-      @entries << Entry.new( row[0], row[1], row[2] )
-    end
-
   end
   
   def get_balance_value( type )

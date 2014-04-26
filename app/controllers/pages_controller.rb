@@ -2,6 +2,8 @@ require 'accounts.rb'
 require 'assets.rb'
 
 class PagesController < ApplicationController
+  include ActionView::Helpers::NumberHelper
+  
   attr_accessor :chart_infos
   
   def initialize
@@ -30,6 +32,14 @@ class PagesController < ApplicationController
     end
             
     super
+  end
+  
+  def get_actions( type, start_date, end_date )
+    where = sprintf( "actions_type_id = %d and date >= '%s'", type, start_date )
+    if( end_date != nil )
+      where = sprintf( "%s and date < '%s'", where, end_date )
+    end
+    Action.where( where )
   end
   
   def get_assets( str_date )
@@ -71,21 +81,64 @@ class PagesController < ApplicationController
       f.title({:text => sprintf( "%s - %s", chart.table, chart.name )})
       f.options[:xAxis][:type] = "datetime"
       f.options[:xAxis][:ordinal] = false
-      f.options[:chart][:zoomType] = "xy"
-      f.options[:plotOptions][:area] = {
-        :fillColor => {
-                        :linearGradient => { :x1 => 0, :y1=> 0, :x2=> 0, :y2=> 1},
-                        :stops => [
-                            [0, "#4169E1"],
-                            [1, "#FFFFFF"]
-                        ]
-                    },
+      f.options[:chart][:zoomType] = "x"
+      f.options[:plotOptions][:line] = {
         :lineWidth => 1, 
         :marker => {:enabled => false},
         :shadow => false
       } 
-      f.series(:type => 'area', :name=> 'ROE',:data=> data)
+      f.series(:type => 'line', :name=> chart.name, :data=> data)
     end
   end
 
+  def get_chart_expenses
+    conn = ActiveRecord::Base.connection
+    h = Hash.new
+    res = conn.execute( "select t.description, extract(month from s.date) as month, sum(s.amount) as amount from spending s, spending_types t where s.type = t.type and s.date > '12/31/2013' group by t.description, month order by t.description, month asc" )
+    res.values().each do |row|
+      a = Array.new
+      if h.has_key?( row[0] )
+        a = h[ row[0] ]
+      else
+        h[ row[0] ] = a
+      end
+      a << row[2].to_f
+    end
+    
+    # Create the title
+    a = get_accounts( nil ) 
+    paid = a.get_balance_value( Togabou::BALANCES_PAID )
+    tax = a.get_balance_value( Togabou::BALANCES_TAX )
+    savings = a.get_balance_value( Togabou::BALANCES_SAVINGS )
+    spent = paid - tax - savings 
+    res = conn.execute( "select sum(amount) as value from spending where date > '12/31/2013'" )
+    expenses = res.first['value'].to_f
+    
+    day = a.date.yday.to_f
+    if day == 1
+      day = 365
+    end
+    spent_projected = 365 / day * spent
+    expenses_projected = 365 / day * expenses
+    budget_projected = 97651.56
+    budget = day / 365 * budget_projected
+      
+    title = sprintf( "Expenses - %s / %s Spent - %s / %s Budget - %s / %s",
+      number_with_precision( expenses, :precision => 2, :delimiter => ","),
+      number_with_precision( expenses_projected, :precision => 2, :delimiter => ","),
+      number_with_precision( spent, :precision => 2, :delimiter => ","), 
+      number_with_precision( spent_projected, :precision => 2, :delimiter => ","), 
+      number_with_precision( budget, :precision => 2, :delimiter => ","), 
+      number_with_precision( budget_projected, :precision => 2, :delimiter => ",") ) 
+              
+    LazyHighCharts::HighChart.new('column') do |f|
+      f.title({:text => title})
+      f.options[:xAxis][:categories] = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ]
+      f.options[:plotOptions][:column] = { :stacking => 'normal' }
+      h.keys().each do |key|
+        f.series(:type => 'column', :name=> key.to_s, :data=> h[ key ])
+      end
+    end
+  end
+  
 end
