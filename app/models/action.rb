@@ -13,6 +13,10 @@ class Action < ActiveRecord::Base
       execute_di
     when Togabou::ACTIONS_TYPE_PORT_DIV
       execute_port_div
+    when Togabou::ACTIONS_TYPE_TOT_DIV
+      execute_tot_div
+    when Togabou::ACTIONS_TYPE_FX_DIFF
+      execute_fx_diff
     when Togabou::ACTIONS_TYPE_MAN_SELL
       execute_man_sell
     when Togabou::ACTIONS_TYPE_MAN_BUY
@@ -37,14 +41,19 @@ class Action < ActiveRecord::Base
       execute_set_balance( Togabou::BALANCES_HSBC_VISA )  
     when Togabou::ACTIONS_TYPE_E_SET_VIRTUALBANK
       execute_set_balance( Togabou::BALANCES_VIRTUALBANK )  
+    when Togabou::ACTIONS_TYPE_E_SET_GS
+      execute_set_balance( Togabou::BALANCES_GS )    
+    when Togabou::ACTIONS_TYPE_E_SET_GS_IRA
+      execute_set_balance( Togabou::BALANCES_GS_IRA )    
     when Togabou::ACTIONS_TYPE_C_PAID
       execute_c_paid
     else
       raise ArgumentError, sprintf( "Unknown actions_type_id %s", self.actions_type_id ) , caller
     end
-    if self.actions_type_id <= Togabou::ACTIONS_TYPE_LAST_SIMPLE
+    if self.actions_type_id <= Togabou::ACTIONS_TYPE_LAST_SAVED
       save 
     end
+    history_balances
   end
 
   def undo
@@ -54,6 +63,8 @@ class Action < ActiveRecord::Base
       undo_di
     when Togabou::ACTIONS_TYPE_PORT_DIV
       undo_port_div
+    when Togabou::ACTIONS_TYPE_TOT_DIV
+        undo_tot_div
     when Togabou::ACTIONS_TYPE_MAN_SELL
       undo_man_sell
     when Togabou::ACTIONS_TYPE_MAN_BUY
@@ -72,6 +83,7 @@ class Action < ActiveRecord::Base
       raise ArgumentError, sprintf( "Unknown actions_type_id %s", self.actions_type_id ) , caller
     end
     destroy
+    history_balances
   end
   
   def round
@@ -109,6 +121,16 @@ class Action < ActiveRecord::Base
     set_cash_portfolio( cash_final )
   end
 
+  def execute_tot_div
+    cash_final = get_cash_total + self.value1
+    set_cash_total( cash_final )
+  end
+  
+  def execute_fx_diff
+    amount = self.value2 - ( self.value1 / Togabou::HKD_FX ) # USD I actually got minus what HKD was carried at
+    set_cash_total( get_cash_total + amount )
+  end
+  
   def execute_man_buy
     execute_man_txn( 1 )
   end
@@ -227,6 +249,16 @@ class Action < ActiveRecord::Base
   def undo_port_div
     cash_final = get_cash_portfolio - self.value1
     set_cash_portfolio( cash_final )
+  end
+  
+  def undo_tot_div
+    cash_final = get_cash_total - self.value1
+    set_cash_total( cash_final )
+  end
+  
+  def undo_fx_diff
+    amount = self.value2 - ( self.value1 / Togabou::HKD_FX ) # USD I actually got minus what HKD was carried at
+    set_cash_total( get_cash_total - amount )
   end
   
   def undo_man_buy
@@ -416,8 +448,13 @@ class Action < ActiveRecord::Base
   end
   
   def set_balance( value, balance_type )
-    logger.info( sprintf( "update balances set value=%.02f where type=%s", value.to_f, balance_type.to_s ) )
     @conn.execute( sprintf( "update balances set value=%.02f where type=%s", value.to_f, balance_type.to_s ) )
   end
-             
+
+  def history_balances
+    # Update balances_history with today's values
+    @conn.execute( "delete from balances_history where date=current_date" )
+    @conn.execute( "insert into balances_history (select current_date, type, value from balances)" )
+  end
+               
 end

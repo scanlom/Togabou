@@ -22,47 +22,56 @@
 </form>
 
 <% cur_actions_type = ActionsType.find( actions_type_id ) %>
-
+<h2><%= cur_actions_type.description %></h2>
 <%= form_for @action, as: :foo, url: actions_path do |f| %>
-  <p>
-    <%= f.label :actions_type_id %><br>
-    <%= f.text_field :actions_type_id, :value => actions_type_id, :readonly => true %>
-  </p>
+  <%= f.hidden_field :actions_type_id, :value => actions_type_id %>
 
   <p>
     <%= f.label :date %><br>
     <%= f.date_select :date %>
   </p>
 
+  <% unless cur_actions_type.symbol.nil? %>
   <p>
     <%= f.label :symbol %><br>
     <%= f.text_field :symbol %>
   </p>
+  <% end %>
 
+  <% unless cur_actions_type.value1.nil? %>
   <p>
     <%= f.label :value1, cur_actions_type.value1 %><br>
     <%= f.text_field :value1 %>
   </p>
+  <% end %>
 
+  <% unless cur_actions_type.value2.nil? %>
   <p>
     <%= f.label :value2, cur_actions_type.value2 %><br>
     <%= f.text_field :value2 %>
   </p>
+  <% end %>
 
+  <% unless cur_actions_type.value3.nil? %>
   <p>
     <%= f.label :value3, cur_actions_type.value3 %><br>
     <%= f.text_field :value3 %>
   </p>
+  <% end %>
 
+  <% unless cur_actions_type.value4.nil? %>
   <p>
     <%= f.label :value4, cur_actions_type.value4 %><br>
     <%= f.text_field :value4 %>
   </p>
+  <% end %>
 
+  <% unless cur_actions_type.value5.nil? %>
   <p>
     <%= f.label :value5, cur_actions_type.value5 %><br>
     <%= f.text_field :value5 %>
   </p>
+  <% end %>
  
   <p>
     <%= f.submit %>

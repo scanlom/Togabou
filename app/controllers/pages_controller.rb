@@ -62,10 +62,11 @@ class PagesController < ApplicationController
     ret
   end
   
+  def get_default_chart_number
+    "1" # The ROE chart
+  end
+  
   def get_chart( chart_number )
-    if chart_number == nil or chart_number == ""
-      chart_number = "1" # The ROE chart
-    end
     chart_number = chart_number.to_i
     conn = ActiveRecord::Base.connection
     chart = @chart_infos[ chart_number ]
@@ -96,13 +97,13 @@ class PagesController < ApplicationController
     h = Hash.new
     res = conn.execute( "select t.description, extract(month from s.date) as month, sum(s.amount) as amount from spending s, spending_types t where s.type = t.type and s.date > '12/31/2013' group by t.description, month order by t.description, month asc" )
     res.values().each do |row|
-      a = Array.new
+      a = Array.new( 12 )
       if h.has_key?( row[0] )
         a = h[ row[0] ]
       else
         h[ row[0] ] = a
       end
-      a << row[2].to_f
+      a[ row[1].to_i - 1 ] = row[2].to_f
     end
     
     # Create the title

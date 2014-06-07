@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140405031646) do
+ActiveRecord::Schema.define(version: 20140524072458) do
 
   create_table "accounts", id: false, force: true do |t|
     t.text    "name"
@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(version: 20140405031646) do
     t.text     "value5"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "symbol"
   end
 
   create_table "allocations", id: false, force: true do |t|

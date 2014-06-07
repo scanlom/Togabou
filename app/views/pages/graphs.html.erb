@@ -1,16 +1,27 @@
 <h1>Graphs</h1>
 
+<%
+  chart_number = params[:chart]
+  if chart_number == nil or chart_number == ""
+    chart_number = controller.get_default_chart_number
+  end
+%>
+
 <form method="GET">
   <label for="chart">Chart:</label>
   <select name="chart">
     <% x = 0 %> 
     <% controller.chart_infos.each do |chart| %>
-      <option value="<%= x %>"><%= sprintf( "%s - %s", chart.table, chart.name ) %></option>
-      <% x +=1 %>  
+      <% if x == chart_number.to_i %>
+        <option value="<%= x %>" selected><%= sprintf( "%s - %s", chart.table, chart.name ) %></option>
+      <% else %>
+        <option value="<%= x %>"><%= sprintf( "%s - %s", chart.table, chart.name ) %></option>
+      <% end %>
+      <% x += 1 %>  
     <% end %>
   </select>
   <input type="submit" /> 
 </form>
 
-<%= high_stock("chart_div", controller.get_chart( params[:chart] ) ) %>
+<%= high_stock("chart_div", controller.get_chart( chart_number ) ) %>
 <%= high_chart("chart_expenses_div", controller.get_chart_expenses ) %>

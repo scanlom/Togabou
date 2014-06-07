@@ -15,6 +15,8 @@ module Togabou
   BALANCES_HSBC       = 3
   BALANCES_HSBC_VISA  = 4
   BALANCES_VIRTUALBANK = 5
+  BALANCES_GS         = 9
+  BALANCES_GS_IRA     = 11
   BALANCES_TOTAL_ROE  = 12
   BALANCES_PAID       = 15
   BALANCES_TAX        = 16
@@ -39,12 +41,14 @@ module Togabou
   ACTIONS_TYPE_PORT_SELL          = 16
   ACTIONS_TYPE_TOT_CI             = 17
   ACTIONS_TYPE_A_OWE_PORT         = 18
+  ACTIONS_TYPE_LAST_SAVED         = 49
   ACTIONS_TYPE_E_SET_AMEX_CX      = 50
   ACTIONS_TYPE_E_SET_CAPITAL_ONE  = 51
   ACTIONS_TYPE_E_SET_HSBC         = 52
   ACTIONS_TYPE_E_SET_HSBC_VISA    = 53
   ACTIONS_TYPE_E_SET_VIRTUALBANK  = 54
-  ACTIONS_TYPE_LAST_SIMPLE        = 69 # Make sure this is the last non compound action, as only simple actions save
+  ACTIONS_TYPE_E_SET_GS           = 55
+  ACTIONS_TYPE_E_SET_GS_IRA       = 56
   ACTIONS_TYPE_C_PAID             = 70
           
   class Application < Rails::Application
