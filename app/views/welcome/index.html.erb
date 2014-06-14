@@ -1,11 +1,11 @@
 <h1>Home</h1>
 <form method="GET">
   <label for="date">Date:</label>
-  <input type="text" name="date" /> 
-  <input type="submit" /> 
+  <input type="text" name="date" />
+  <input type="submit" />
 </form>
-<% 
-  a = controller.get_assets( params[:date] ) 
+<%
+  a = controller.get_assets( params[:date] )
 %>
 <h2><%= a.date.to_s %></h2>
 <style type="text/css">
@@ -128,12 +128,21 @@ td.symbol {
 <td class="number"><%= number_with_precision(a.managed.divisor, :precision => 8, :delimiter => "") %></td>
 <td class="number"><%= number_with_precision(a.managed.index, :precision => 2, :delimiter => ",") %></td>
 </tr>
+<tr><td>&nbsp</td></tr>
+<% a.other.positions.each do |position| %>
+<tr>
+<td class="symbol"><%= position.symbol %></td>
+<td class="number"><%= number_with_delimiter(position.quantity) %></td>
+<td class="number"><%= number_with_precision(position.price, :precision => 2, :delimiter => ",") %></td>
+<td class="number"><%= number_with_precision(position.value, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<% end %>
 </table>
 </td>
 <td style="vertical-align:top">
 <table>
-<% 
-  allocations = a.get_asset_allocations 
+<%
+  allocations = a.get_asset_allocations
   allocations.each do |allocation|
 %>
 <tr>
@@ -146,8 +155,8 @@ td.symbol {
 </tr>
 <% end %>
 <tr><td>&nbsp</td></tr>
-<% 
-  allocations = a.get_asset_allocations_managed 
+<%
+  allocations = a.get_asset_allocations_managed
   allocations.each do |allocation|
 %>
 <tr>

@@ -40,7 +40,6 @@ GEM
       multi_json (~> 1.0)
     hash-deep-merge (0.1.1)
     hike (1.2.3)
-    htpasswd (0.1)
     i18n (0.6.5)
     jbuilder (1.5.0)
       activesupport (>= 3.0.0)
@@ -120,7 +119,6 @@ PLATFORMS
 
 DEPENDENCIES
   coffee-rails (~> 4.0.0)
-  htpasswd
   jbuilder (~> 1.2)
   jquery-rails
   lazy_high_charts
