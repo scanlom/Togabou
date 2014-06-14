@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140524072458) do
+ActiveRecord::Schema.define(version: 20140614130815) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "accounts", id: false, force: true do |t|
     t.text    "name"
@@ -116,30 +119,6 @@ ActiveRecord::Schema.define(version: 20140524072458) do
     t.integer  "stock_id"
   end
 
-  create_table "history", id: false, force: true do |t|
-    t.date    "date"
-    t.integer "type"
-    t.text    "description"
-    t.float   "value1"
-    t.float   "value2"
-    t.float   "value3"
-    t.float   "value4"
-    t.float   "value5"
-    t.text    "symbol"
-  end
-
-  add_index "history", ["type"], name: "fki_frgn_key_history_type", using: :btree
-
-  create_table "history_types", id: false, force: true do |t|
-    t.integer "type",        null: false
-    t.text    "description"
-    t.text    "value1"
-    t.text    "value2"
-    t.text    "value3"
-    t.text    "value4"
-    t.text    "value5"
-  end
-
   create_table "index_history", id: false, force: true do |t|
     t.date    "date",  null: false
     t.integer "type",  null: false
@@ -232,6 +211,13 @@ ActiveRecord::Schema.define(version: 20140524072458) do
     t.decimal  "year_change"
     t.decimal  "five_year_change"
     t.decimal  "ten_year_change"
+    t.date     "day_change_date"
+    t.date     "week_change_date"
+    t.date     "month_change_date"
+    t.date     "three_month_change_date"
+    t.date     "year_change_date"
+    t.date     "five_year_change_date"
+    t.date     "ten_year_change_date"
   end
 
 end

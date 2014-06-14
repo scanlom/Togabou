@@ -26,15 +26,15 @@ $(document).ready(function(){
 
   $('#div_change').hide();
 
-  $('#link_change').click(function(){ 
+  $('#link_change').click(function(){
       $('#div_main').hide();
       $('#div_change').show();
   });
 
-  $('#link_main').click(function(){ 
+  $('#link_main').click(function(){
       $('#div_change').hide();
       $('#div_main').show();
-  }); 
+  });
 });
 </script>
 <div id="div_main">
@@ -62,7 +62,7 @@ $(document).ready(function(){
     <th>5 CROE</th>
     <th>10 CROE</th>
   </tr>
- 
+
   <% controller.portfolio.each do |stock| %>
     <tr>
       <td class="<%= if stock.reminder == 0 then "symbol" elsif stock.reminder == 1 then "symbol_yellow" else "symbol_red" end %>"><%= link_to stock.symbol, stock_path(stock) %></td>
@@ -130,87 +130,70 @@ $(document).ready(function(){
     <th>Five Years</th>
     <th>Ten Years</th>
   </tr>
-  <% controller.portfolio.each do |stock| %>
+  <%
+    symbol_lists = [ [ controller.portfolio, true, 3 ], [ controller.watch_list, true, 1 ], [ controller.monitor_list, false, 1 ] ]
+    symbol_lists.each do |list|
+      list[0].each do |stock|
+  %>
     <tr>
-      <td class="<%= if stock.reminder == 0 then "symbol" elsif stock.reminder == 1 then "symbol_yellow" else "symbol_red" end %>"><%= link_to stock.symbol, stock_path(stock) %></td>
-      <td class="number"><%= number_with_precision( stock.day_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.week_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.month_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.three_month_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.five_year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.ten_year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	</tr>
+      <% if list[1] == true %>
+        <td class="<%= if stock.reminder == 0 then "symbol" elsif stock.reminder == 1 then "symbol_yellow" else "symbol_red" end %>"><%= link_to stock.symbol, stock_path(stock) %></td>
+      <% else %>
+        <td class="symbol"><%= stock.symbol %></td>
+      <% end %>
+      <td class="number" title="<%=stock.day_change_date.to_s %>"><%= number_with_precision( stock.day_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	    <td class="number" title="<%=stock.week_change_date.to_s %>"><%= number_with_precision( stock.week_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+  	  <td class="number" title="<%=stock.month_change_date.to_s %>"><%= number_with_precision( stock.month_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	    <td class="number" title="<%=stock.three_month_change_date.to_s %>"><%= number_with_precision( stock.three_month_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	    <td class="number" title="<%=stock.year_change_date.to_s %>"><%= number_with_precision( stock.year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+  	  <td class="number" title="<%=stock.five_year_change_date.to_s %>"><%= number_with_precision( stock.five_year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	    <td class="number" title="<%=stock.ten_year_change_date.to_s %>"><%= number_with_precision( stock.ten_year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  </tr>
   <% end %>
-  <tr><td>&nbsp</td></tr>
-  <tr><td>&nbsp</td></tr>
-  <tr><td>&nbsp</td></tr>
-  <% controller.watch_list.each do |stock| %>
-    <tr>
-      <td class="<%= if stock.reminder == 0 then "symbol" elsif stock.reminder == 1 then "symbol_yellow" else "symbol_red" end %>"><%= link_to stock.symbol, stock_path(stock) %></td>
-      <td class="number"><%= number_with_precision( stock.day_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.week_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.month_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.three_month_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.five_year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.ten_year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	</tr>
+  <% ( 1..list[2] ).each do |i| %>
+    <tr><td>&nbsp</td></tr>
   <% end %>
-  <tr><td>&nbsp</td></tr>
-  <% controller.monitor_list.each do |stock| %>
-    <tr>
-      <td class="symbol"><%= stock.symbol %></td>
-      <td class="number"><%= number_with_precision( stock.day_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.week_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.month_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.three_month_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.five_year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( stock.ten_year_change * 100, :precision => 2, :delimiter => ",") %>%</td>
-	</tr>
   <% end %>
   <% as = controller.assets %>
-  <tr><td>&nbsp</td></tr>
     <tr>
       <td class="symbol">ROE</td>
-      <td class="number"><%= number_with_precision( as.ret_day_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_week_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_month_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_three_month_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_year_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_five_year_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_ten_year_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number" title="<%= ( as.date - 1.day ).to_s %>"><%= number_with_precision( as.ret_day_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 1.week ).to_s %>"><%= number_with_precision( as.ret_week_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 1.month ).to_s %>"><%= number_with_precision( as.ret_month_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 3.months ).to_s %>"><%= number_with_precision( as.ret_three_month_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 1.year ).to_s %>"><%= number_with_precision( as.ret_year_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 5.years ).to_s %>"><%= number_with_precision( as.ret_five_year_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 10.years ).to_s %>"><%= number_with_precision( as.ret_ten_year_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
 	</tr>
     <tr>
       <td class="symbol">ROTC</td>
-      <td class="number"><%= number_with_precision( as.ret_day_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_week_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_month_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_three_month_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_year_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_five_year_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_ten_year_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number" title="<%= ( as.date - 1.day ).to_s %>"><%= number_with_precision( as.ret_day_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 1.week ).to_s %>"><%= number_with_precision( as.ret_week_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 1.month ).to_s %>"><%= number_with_precision( as.ret_month_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 3.months ).to_s %>"><%= number_with_precision( as.ret_three_month_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 1.year ).to_s %>"><%= number_with_precision( as.ret_year_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 5.years ).to_s %>"><%= number_with_precision( as.ret_five_year_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 10.years ).to_s %>"><%= number_with_precision( as.ret_ten_year_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
 	</tr>
     <tr>
       <td class="symbol">Portfolio</td>
-      <td class="number"><%= number_with_precision( as.ret_day_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_week_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_month_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_three_month_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_year_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_five_year_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_ten_year_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number" title="<%= ( as.date - 1.day ).to_s %>"><%= number_with_precision( as.ret_day_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 1.week ).to_s %>"><%= number_with_precision( as.ret_week_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 1.month ).to_s %>"><%= number_with_precision( as.ret_month_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 3.months ).to_s %>"><%= number_with_precision( as.ret_three_month_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 1.year ).to_s %>"><%= number_with_precision( as.ret_year_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 5.years ).to_s %>"><%= number_with_precision( as.ret_five_year_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 10.years ).to_s %>"><%= number_with_precision( as.ret_ten_year_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
 	</tr>
     <tr>
       <td class="symbol">Managed</td>
-      <td class="number"><%= number_with_precision( as.ret_day_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_week_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_month_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_three_month_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_year_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_five_year_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
-	  <td class="number"><%= number_with_precision( as.ret_ten_year_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number" title="<%= ( as.date - 1.day ).to_s %>"><%= number_with_precision( as.ret_day_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 1.week ).to_s %>"><%= number_with_precision( as.ret_week_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 1.month ).to_s %>"><%= number_with_precision( as.ret_month_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 3.months ).to_s %>"><%= number_with_precision( as.ret_three_month_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 1.year ).to_s %>"><%= number_with_precision( as.ret_year_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 5.years ).to_s %>"><%= number_with_precision( as.ret_five_year_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 10.years ).to_s %>"><%= number_with_precision( as.ret_ten_year_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
 	</tr>
 </table>
 </div>
