@@ -9,19 +9,20 @@ Bundler.require(:default, Rails.env)
 module Togabou
   HKD_FX = 7.76
   TAX_RATE = 0.3
-  
+
   BALANCES_AMEX_CX    = 1
   BALANCES_CAPITAL_ONE = 2
   BALANCES_HSBC       = 3
   BALANCES_HSBC_VISA  = 4
   BALANCES_VIRTUALBANK = 5
   BALANCES_GS         = 9
+  BALANCES_GS_HKD     = 10
   BALANCES_GS_IRA     = 11
   BALANCES_TOTAL_ROE  = 12
   BALANCES_PAID       = 15
   BALANCES_TAX        = 16
   BALANCES_SAVINGS    = 17
-  
+
   ACTIONS_TYPE_UNKNOWN  = 0
   ACTIONS_TYPE_PORT_DIV = 1
   ACTIONS_TYPE_TOT_INT  = 2
@@ -49,8 +50,9 @@ module Togabou
   ACTIONS_TYPE_E_SET_VIRTUALBANK  = 54
   ACTIONS_TYPE_E_SET_GS           = 55
   ACTIONS_TYPE_E_SET_GS_IRA       = 56
+  ACTIONS_TYPE_E_SET_GS_HKD       = 57
   ACTIONS_TYPE_C_PAID             = 70
-          
+
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

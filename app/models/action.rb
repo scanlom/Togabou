@@ -1,5 +1,6 @@
 class Action < ActiveRecord::Base
   belongs_to :actions_type
+  default_scope order( 'date DESC' )
 
   after_initialize :initialize_members
   def initialize_members
@@ -51,6 +52,8 @@ class Action < ActiveRecord::Base
       execute_set_balance( Togabou::BALANCES_VIRTUALBANK )
     when Togabou::ACTIONS_TYPE_E_SET_GS
       execute_set_balance( Togabou::BALANCES_GS )
+    when Togabou::ACTIONS_TYPE_E_SET_GS_HKD
+      execute_set_balance( Togabou::BALANCES_GS_HKD )
     when Togabou::ACTIONS_TYPE_E_SET_GS_IRA
       execute_set_balance( Togabou::BALANCES_GS_IRA )
     when Togabou::ACTIONS_TYPE_C_PAID
@@ -216,7 +219,7 @@ class Action < ActiveRecord::Base
 
   def execute_set_balance( balance_type )
     fx_rate = 1
-    if balance_type == Togabou::BALANCES_AMEX_CX || balance_type == Togabou::BALANCES_HSBC || balance_type == Togabou::BALANCES_HSBC_VISA
+    if balance_type == Togabou::BALANCES_AMEX_CX || balance_type == Togabou::BALANCES_HSBC || balance_type == Togabou::BALANCES_HSBC_VISA || balance_type == Togabou::BALANCES_GS_HKD
       fx_rate = Togabou::HKD_FX
     end
     set_balance( self.value1 / fx_rate, balance_type )
