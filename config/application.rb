@@ -51,6 +51,7 @@ module Togabou
   ACTIONS_TYPE_E_SET_GS           = 55
   ACTIONS_TYPE_E_SET_GS_IRA       = 56
   ACTIONS_TYPE_E_SET_GS_HKD       = 57
+  ACTIONS_TYPE_E_SET_SYMBOL_VALUE_HKD = 58
   ACTIONS_TYPE_C_PAID             = 70
 
   class Application < Rails::Application

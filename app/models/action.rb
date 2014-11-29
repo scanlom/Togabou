@@ -40,6 +40,8 @@ class Action < ActiveRecord::Base
       execute_tax
     when Togabou::ACTIONS_TYPE_A_OWE_PORT
       execute_owe_port
+    when Togabou::ACTIONS_TYPE_E_SET_SYMBOL_VALUE_HKD
+        execute_set_symbol_value_hkd
     when Togabou::ACTIONS_TYPE_E_SET_AMEX_CX
       execute_set_balance( Togabou::BALANCES_AMEX_CX )
     when Togabou::ACTIONS_TYPE_E_SET_CAPITAL_ONE
@@ -201,6 +203,10 @@ class Action < ActiveRecord::Base
     set_cash_total( cash_final )
   end
 
+  def execute_set_symbol_value_hkd
+    set_symbol_value( self.symbol, self.value1 / Togabou::HKD_FX )
+  end
+  
   def execute_paid
     set_paid( get_paid + self.value1 )
   end
@@ -497,7 +503,7 @@ class Action < ActiveRecord::Base
   def set_balance( value, balance_type )
     @conn.execute( sprintf( "update balances set value=%.02f where type=%s", value.to_f, balance_type.to_s ) )
   end
-
+  
   def history_balances
     # Update balances_history with today's values
     @conn.execute( "delete from balances_history where date=current_date" )
