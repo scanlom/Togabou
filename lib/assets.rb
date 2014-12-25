@@ -82,6 +82,7 @@ class Assets
   attr_accessor :portfolio
   attr_accessor :managed
   attr_accessor :other
+  attr_accessor :play
   attr_accessor :cash
   attr_accessor :debt
   attr_accessor :roe_total
@@ -95,14 +96,17 @@ class Assets
   attr_accessor :ret_ytd_rotc
   attr_accessor :ret_ytd_portfolio
   attr_accessor :ret_ytd_managed
+  attr_accessor :ret_ytd_play
   attr_accessor :ret_qtd_roe
   attr_accessor :ret_qtd_rotc
   attr_accessor :ret_qtd_portfolio
   attr_accessor :ret_qtd_managed
+  attr_accessor :ret_qtd_play
   attr_accessor :ret_day_roe
   attr_accessor :ret_day_rotc
   attr_accessor :ret_day_portfolio
   attr_accessor :ret_day_managed
+  attr_accessor :ret_day_play
   attr_accessor :profit
   attr_accessor :ret_week_roe
   attr_accessor :ret_week_rotc
@@ -144,6 +148,7 @@ class Assets
     @portfolio = Portfolio2.new( conn, @date, 1, 13, 1 )
     @managed = Portfolio2.new( conn, @date, 2, 14, 4 )
     @other = Portfolio2.new( conn, @date, 4, -1, -1 )
+    @play = Portfolio2.new( conn, @date, 5, 19, 5 )
 
     # Load the scalars
     @cash = get_scalar( conn, sprintf( "select value from portfolio_history where date='%s' and type=3 and symbol='CASH'", @date.to_s(:db) ) )
@@ -160,14 +165,17 @@ class Assets
     @ret_ytd_rotc = calculate_return( self.rotc_index, get_ytd_base( conn, 3 ) )
     @ret_ytd_portfolio = calculate_return( self.portfolio.index, get_ytd_base( conn, 1 ) )
     @ret_ytd_managed = calculate_return( self.managed.index, get_ytd_base( conn, 4 ) )
+    @ret_ytd_play = calculate_return( self.play.index, get_ytd_base( conn, 5 ) )
     @ret_qtd_roe = calculate_return( self.roe_index, get_qtd_base( conn, 2 ) )
     @ret_qtd_rotc = calculate_return( self.rotc_index, get_qtd_base( conn, 3 ) )
     @ret_qtd_portfolio = calculate_return( self.portfolio.index, get_qtd_base( conn, 1 ) )
     @ret_qtd_managed = calculate_return( self.managed.index, get_qtd_base( conn, 4 ) )
+    @ret_qtd_play = calculate_return( self.play.index, get_qtd_base( conn, 5 ) )
     @ret_day_roe = calculate_return( self.roe_index, get_day_base( conn, 2 ) )
     @ret_day_rotc = calculate_return( self.rotc_index, get_day_base( conn, 3 ) )
     @ret_day_portfolio = calculate_return( self.portfolio.index, get_day_base( conn, 1 ) )
     @ret_day_managed = calculate_return( self.managed.index, get_day_base( conn, 4 ) )
+    @ret_day_play = calculate_return( self.play.index, get_day_base( conn, 5 ) )
     savings = get_scalar( conn, sprintf( "select value from balances_history where date='%s' and type=17", @date.to_s(:db) ) )
     @roe_base = get_ytd_balance_base( conn, Togabou::BALANCES_TOTAL_ROE ).to_f
     if @roe_base <= 0

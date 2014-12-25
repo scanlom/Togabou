@@ -25,6 +25,7 @@ td.symbol {
 <td class="symbol">Total (ROE)</td>
 <td class="symbol">Total (ROTC)</td>
 <td class="symbol">Self</td>
+<td class="symbol">Play</td>
 <td class="symbol">Managed</td>
 <td class="symbol">Profit</td>
 </tr>
@@ -33,6 +34,7 @@ td.symbol {
 <td class="number"><%= number_with_precision(a.ret_ytd_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
 <td class="number"><%= number_with_precision(a.ret_ytd_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
 <td class="number"><%= number_with_precision(a.ret_ytd_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
+<td class="number"><%= number_with_precision(a.ret_ytd_play * 100, :precision => 2, :delimiter => ",") %>%</td>
 <td class="number"><%= number_with_precision(a.ret_ytd_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
 <td class="number"><%= number_with_precision(a.profit, :precision => 2, :delimiter => ",") %></td>
 </tr>
@@ -41,6 +43,7 @@ td.symbol {
 <td class="number"><%= number_with_precision(a.ret_qtd_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
 <td class="number"><%= number_with_precision(a.ret_qtd_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
 <td class="number"><%= number_with_precision(a.ret_qtd_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
+<td class="number"><%= number_with_precision(a.ret_qtd_play * 100, :precision => 2, :delimiter => ",") %>%</td>
 <td class="number"><%= number_with_precision(a.ret_qtd_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
 <td/>
 </tr>
@@ -49,6 +52,7 @@ td.symbol {
 <td class="number"><%= number_with_precision(a.ret_day_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
 <td class="number"><%= number_with_precision(a.ret_day_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
 <td class="number"><%= number_with_precision(a.ret_day_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
+<td class="number"><%= number_with_precision(a.ret_day_play * 100, :precision => 2, :delimiter => ",") %>%</td>
 <td class="number"><%= number_with_precision(a.ret_day_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
 <td/>
 </tr>
