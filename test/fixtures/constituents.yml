@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  symbol: MyText
+  value: 9.99
+  quantity: 9.99
+  price: 9.99
+  pricing_type: 1
+  portfolio_id: 
+
+two:
+  symbol: MyText
+  value: 9.99
+  quantity: 9.99
+  price: 9.99
+  pricing_type: 1
+  portfolio_id: 
