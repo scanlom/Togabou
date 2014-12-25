@@ -34,7 +34,7 @@ class Stock < ActiveRecord::Base
 
     # Populate value and percentage from db
     conn = ActiveRecord::Base.connection
-    @value = get_scalar( conn, sprintf( "select value from portfolio where symbol='%s'", self.symbol ) )
+    @value = get_scalar( conn, sprintf( "select value from constituents where symbol='%s'", self.symbol ) )
     @portfolio = @value.to_f / get_scalar( conn, "select value from balances where type=13" ).to_f
 
     # Populate calculated values

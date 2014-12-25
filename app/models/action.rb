@@ -206,7 +206,7 @@ class Action < ActiveRecord::Base
   def execute_set_symbol_value_hkd
     set_symbol_value( self.symbol, self.value1 / Togabou::HKD_FX )
   end
-  
+
   def execute_paid
     set_paid( get_paid + self.value1 )
   end
@@ -281,11 +281,9 @@ class Action < ActiveRecord::Base
     xTC_final = get_latest_index_rotc / total_capital_final
     debt_final = get_debt - self.value1
     cash_final = get_cash_total - self.value1
-    owe_port_final = get_owe_port - self.value1
     set_cash_total( cash_final )
     set_debt( debt_final )
     set_divisor_rotc( xTC_final )
-    set_owe_port( owe_port_final )
     set_total_capital_balance( total_capital_final )
   end
 
@@ -374,11 +372,11 @@ class Action < ActiveRecord::Base
   end
 
   def get_debt
-    get_scalar( "select * from portfolio where symbol='DEBT' and type=3" )
+    get_scalar( "select * from constituents where symbol='DEBT' and portfolio_id=3" )
   end
 
   def get_cash_total
-    get_scalar( "select * from portfolio where symbol='CASH' and type=3" )
+    get_scalar( "select * from constituents where symbol='CASH' and portfolio_id=3" )
   end
 
   def get_owe_port
@@ -386,15 +384,15 @@ class Action < ActiveRecord::Base
   end
 
   def get_cash_portfolio
-    get_scalar( "select * from portfolio where symbol='CASH' and type=1" )
+    get_scalar( "select * from constituents where symbol='CASH' and portfolio_id=1" )
   end
 
   def get_symbol_value( symbol )
-    get_scalar( sprintf( "select * from portfolio where symbol = '%s'", symbol ) )
+    get_scalar( sprintf( "select * from constituents where symbol = '%s'", symbol ) )
   end
 
   def get_symbol_quantity( symbol )
-    get_scalar_field( sprintf( "select * from portfolio where symbol = '%s'", symbol ), "quantity" )
+    get_scalar_field( sprintf( "select * from constituents where symbol = '%s'", symbol ), "quantity" )
   end
 
   def get_paid
@@ -429,11 +427,11 @@ class Action < ActiveRecord::Base
   # DB Write Methods
 
   def set_cash_total( value )
-    @conn.execute( sprintf( "update portfolio set value=%.02f where symbol='CASH' and type=3", value.to_f ) )
+    @conn.execute( sprintf( "update constituents set value=%.02f where symbol='CASH' and portfolio_id=3", value.to_f ) )
   end
 
   def set_debt( value )
-    @conn.execute( sprintf( "update portfolio set value=%.02f where symbol='DEBT' and type=3", value.to_f ) )
+    @conn.execute( sprintf( "update constituents set value=%.02f where symbol='DEBT' and portfolio_id=3", value.to_f ) )
   end
 
   def set_divisor_roe( value )
@@ -473,15 +471,15 @@ class Action < ActiveRecord::Base
   end
 
   def set_cash_portfolio( value )
-    @conn.execute( sprintf( "update portfolio set value=%.02f where symbol='CASH' and type=1", value.to_f ) )
+    @conn.execute( sprintf( "update constituents set value=%.02f where symbol='CASH' and portfolio_id=1", value.to_f ) )
   end
 
   def set_symbol_value( symbol, value )
-    @conn.execute( sprintf( "update portfolio set value=%.02f where symbol='%s'", value.to_f, symbol ) )
+    @conn.execute( sprintf( "update constituents set value=%.02f where symbol='%s'", value.to_f, symbol ) )
   end
 
   def set_symbol_quantity( symbol, quantity )
-    @conn.execute( sprintf( "update portfolio set quantity=%d where symbol='%s'", quantity.to_i, symbol ) )
+    @conn.execute( sprintf( "update constituents set quantity=%d where symbol='%s'", quantity.to_i, symbol ) )
   end
 
   def set_paid( value )
@@ -503,7 +501,7 @@ class Action < ActiveRecord::Base
   def set_balance( value, balance_type )
     @conn.execute( sprintf( "update balances set value=%.02f where type=%s", value.to_f, balance_type.to_s ) )
   end
-  
+
   def history_balances
     # Update balances_history with today's values
     @conn.execute( "delete from balances_history where date=current_date" )

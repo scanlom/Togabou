@@ -50,7 +50,8 @@ class Allocation
   end
 end
 
-class Portfolio
+# Named Portfolio2 as I screwed up and there is a model of the same name
+class Portfolio2
   attr_accessor :positions
   attr_accessor :cash
   attr_accessor :total
@@ -140,9 +141,9 @@ class Assets
     @date = Date.parse( res.first['date'] )
 
     # Load the portfolios
-    @portfolio = Portfolio.new( conn, @date, 1, 13, 1 )
-    @managed = Portfolio.new( conn, @date, 2, 14, 4 )
-    @other = Portfolio.new( conn, @date, 4, -1, -1 )
+    @portfolio = Portfolio2.new( conn, @date, 1, 13, 1 )
+    @managed = Portfolio2.new( conn, @date, 2, 14, 4 )
+    @other = Portfolio2.new( conn, @date, 4, -1, -1 )
 
     # Load the scalars
     @cash = get_scalar( conn, sprintf( "select value from portfolio_history where date='%s' and type=3 and symbol='CASH'", @date.to_s(:db) ) )

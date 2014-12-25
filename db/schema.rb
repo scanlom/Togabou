@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140614130815) do
+ActiveRecord::Schema.define(version: 20141223131830) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,6 +84,20 @@ ActiveRecord::Schema.define(version: 20140614130815) do
 
   add_index "balances_history", ["type"], name: "fki_frgn_key_balances_history_type", using: :btree
 
+  create_table "constituents", force: true do |t|
+    t.text     "symbol"
+    t.decimal  "value"
+    t.decimal  "quantity"
+    t.decimal  "price"
+    t.integer  "pricing_type"
+    t.integer  "portfolio_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.decimal  "model"
+  end
+
+  add_index "constituents", ["portfolio_id"], name: "index_constituents_on_portfolio_id", using: :btree
+
   create_table "divisors", id: false, force: true do |t|
     t.integer "type",  null: false
     t.float   "value"
@@ -147,6 +161,13 @@ ActiveRecord::Schema.define(version: 20140614130815) do
   end
 
   add_index "portfolio_history", ["type", "symbol"], name: "fki_frgn_key_portfolio_history_type_symbol", using: :btree
+
+  create_table "portfolios", force: true do |t|
+    t.text     "name"
+    t.integer  "type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "researches", force: true do |t|
     t.text     "symbol"
