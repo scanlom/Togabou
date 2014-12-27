@@ -12,17 +12,13 @@ end
 class Stock < ActiveRecord::Base
   has_many :researches, :order => "date DESC"
   has_many :fundamentals, :order => "date DESC"
+  has_many :constituents
 
   DIV_GROWTH = 0.0686
 
-  attr_accessor :value
-  attr_accessor :portfolio
-  attr_accessor :off
   attr_accessor :pe
   attr_accessor :eps_yield
   attr_accessor :div_yield
-  attr_accessor :eps_yield_wtd
-  attr_accessor :div_yield_wtd
   attr_accessor :div_plus_growth
   attr_accessor :five_year_cagr
   attr_accessor :ten_year_cagr
@@ -31,19 +27,10 @@ class Stock < ActiveRecord::Base
 
   after_initialize :initialize_members
   def initialize_members
-
-    # Populate value and percentage from db
-    conn = ActiveRecord::Base.connection
-    @value = get_scalar( conn, sprintf( "select value from constituents where symbol='%s'", self.symbol ) )
-    @portfolio = @value.to_f / get_scalar( conn, "select value from balances where type=13" ).to_f
-
     # Populate calculated values
-    @off = self.portfolio.to_f - self.model.to_f
     @pe = self.price / self.eps
     @eps_yield = self.eps.to_f / self.price.to_f
     @div_yield = self.div.to_f / self.price.to_f
-    @eps_yield_wtd = self.portfolio.to_f * self.eps_yield.to_f
-    @div_yield_wtd = self.portfolio.to_f * self.div_yield.to_f
     @div_plus_growth = self.div_yield + self.growth
     @five_year_cagr = cagr( 5 )
     @ten_year_cagr = cagr( 10 )

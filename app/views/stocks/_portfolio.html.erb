@@ -1,0 +1,80 @@
+<table>
+  <tr><td class="symbol">Total</td><td class="number"><%= number_with_precision( controller.portfolio_total( portfolio_id ), :precision => 2, :delimiter => "," ) %></td><td class="number"><%= number_with_precision( controller.portfolio_total_percent( portfolio_id ) * 100, :precision => 2, :delimiter => ",") %>%</td></tr>
+  <tr>
+    <th>Symbol</th>
+    <th>EPS</th>
+    <th>Div</th>
+    <th>Growth</th>
+    <th>PE Ter</th>
+    <th>Payout</th>
+    <th>Book</th>
+    <th>ROE</th>
+    <th>%Model</th>
+    <th>Price</th>
+    <th>Value</th>
+    <th>%Portfolio</th>
+    <th>%Off</th>
+    <th>Div+Growth</th>
+    <th>EYield</th>
+    <th>DYield</th>
+    <th>5 CAGR</th>
+    <th>10 CAGR</th>
+    <th>5 CROE</th>
+    <th>10 CROE</th>
+  </tr>
+
+  <% controller.portfolio_constituents( portfolio_id ).each do |constituent|
+       stock = constituent.stock
+    %>
+    <tr>
+      <td class="<%= if stock.reminder == 0 then "symbol" elsif stock.reminder == 1 then "symbol_yellow" else "symbol_red" end %>"><%= link_to stock.symbol, stock_path(stock) %></td>
+      <td class="number"><%= number_with_precision( stock.eps, :precision => 2, :delimiter => ",") %></td>
+      <td class="number"><%= number_with_precision( stock.div, :precision => 2, :delimiter => ",") %></td>
+      <td class="number"><%= stock.growth*100 %>%</td>
+      <td class="number"><%= stock.pe_terminal %></td>
+      <td class="number"><%= stock.payout * 100 %>%</td>
+      <td class="number"><%= number_with_precision( stock.book, :precision => 2, :delimiter => ",") %></td>
+      <td class="number"><%= stock.roe * 100 %>%</td>
+      <td class="number"><%= constituent.model * 100 %>%</td>
+      <td class="number"><%= number_with_precision( stock.price, :precision => 2, :delimiter => ",") %></td>
+      <td class="number"><%= number_with_precision( constituent.value, :precision => 2, :delimiter => ",") %></td>
+      <td class="number"><%= number_with_precision( constituent.actual * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number"><%= number_with_precision( constituent.off * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number"><%= number_with_precision( stock.div_plus_growth * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number"><%= number_with_precision( stock.eps_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number"><%= number_with_precision( stock.div_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number"><%= number_with_precision( stock.five_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number"><%= number_with_precision( stock.ten_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number"><%= number_with_precision( stock.five_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number"><%= number_with_precision( stock.ten_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
+    </tr>
+  <% end %>
+  <tr><td/><td/><td/><td/><td/><td/><td/><td/><td class="number"><%= number_with_precision( controller.portfolio_model_check( portfolio_id ) * 100, :precision => 1, :delimiter => ",") %>%</td><td class="symbol">CASH</td><td class="number"><%= number_with_precision( controller.portfolio_cash( portfolio_id ), :precision => 2, :delimiter => ",") %></td></td><td class="number"><%= number_with_precision( controller.portfolio_cash_percent( portfolio_id ) * 100, :precision => 2, :delimiter => ",") %>%</td><td/><td/><td class="number"><%= number_with_precision( controller.portfolio_eps_wtd_total( portfolio_id ) * 100, :precision => 2, :delimiter => ",") %>%</td><td class="number"><%= number_with_precision( controller.portfolio_div_wtd_total( portfolio_id ) * 100, :precision => 2, :delimiter => ",") %>%</td>
+  <tr><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td class="symbol">CHECK</td></td><td class="number"><%= number_with_precision( controller.portfolio_check( portfolio_id ) * 100, :precision => 2, :delimiter => ",") %>%</td>
+  <tr><td>&nbsp</td></tr>
+  <% controller.watch_stocks( portfolio_id ).each do |stock| %>
+    <tr>
+      <td class="<%= if stock.reminder == 0 then "symbol" elsif stock.reminder == 1 then "symbol_yellow" else "symbol_red" end %>"><%= link_to stock.symbol, stock_path(stock) %></td>
+      <td class="number"><%= number_with_precision( stock.eps, :precision => 2, :delimiter => ",") %></td>
+      <td class="number"><%= number_with_precision( stock.div, :precision => 2, :delimiter => ",") %></td>
+      <td class="number"><%= stock.growth*100 %>%</td>
+      <td class="number"><%= stock.pe_terminal %></td>
+      <td class="number"><%= stock.payout * 100 %>%</td>
+      <td class="number"><%= number_with_precision( stock.book, :precision => 2, :delimiter => ",") %></td>
+      <td class="number"><%= stock.roe * 100 %>%</td>
+      <td class="number"></td>
+      <td class="number"><%= number_with_precision( stock.price, :precision => 2, :delimiter => ",") %></td>
+      <td class="number"></td>
+      <td class="number"></td>
+      <td class="number"></td>
+      <td class="number"><%= number_with_precision( stock.div_plus_growth * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number"><%= number_with_precision( stock.eps_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number"><%= number_with_precision( stock.div_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number"><%= number_with_precision( stock.five_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number"><%= number_with_precision( stock.ten_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number"><%= number_with_precision( stock.five_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="number"><%= number_with_precision( stock.ten_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
+    </tr>
+  <% end %>
+  <tr><td class="symbol"><%= link_to 'New', new_stock_path %></td></tr>
+</table>

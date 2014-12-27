@@ -10,6 +10,10 @@ module Togabou
   HKD_FX = 7.76
   TAX_RATE = 0.3
 
+  PORTFOLIOS_SELF    = 1
+  PORTFOLIOS_MANAGED = 2
+  PORTFOLIOS_PLAY    = 5
+
   BALANCES_AMEX_CX    = 1
   BALANCES_CAPITAL_ONE = 2
   BALANCES_HSBC       = 3
@@ -52,6 +56,10 @@ module Togabou
   ACTIONS_TYPE_E_SET_GS_IRA       = 56
   ACTIONS_TYPE_E_SET_GS_HKD       = 57
   ACTIONS_TYPE_E_SET_SYMBOL_VALUE_HKD = 58
+  ACTIONS_TYPE_L_PLAY_DIV         = 59
+  ACTIONS_TYPE_L_PLAY_CI          = 60
+  ACTIONS_TYPE_L_PLAY_BUY         = 61
+  ACTIONS_TYPE_L_PLAY_SELL        = 62
   ACTIONS_TYPE_C_PAID             = 70
 
   class Application < Rails::Application

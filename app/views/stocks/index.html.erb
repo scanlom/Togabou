@@ -21,105 +21,39 @@ td.symbol_red {
 </style>
 <a href="#" id="link_main">Main</a>
 <a href="#" id="link_change">Returns</a>
+<a href="#" id="link_play">Play</a>
 <script type="text/javascript">
 $(document).ready(function(){
 
   $('#div_change').hide();
+  $('#div_play').hide();
 
   $('#link_change').click(function(){
       $('#div_main').hide();
       $('#div_change').show();
+      $('#div_play').hide();
   });
 
   $('#link_main').click(function(){
       $('#div_change').hide();
       $('#div_main').show();
+      $('#div_play').hide();
   });
+
+  $('#link_play').click(function(){
+      $('#div_change').hide();
+      $('#div_main').hide();
+      $('#div_play').show();
+  });
+
 });
 </script>
 <div id="div_main">
-<table>
-  <tr><td class="symbol">Total</td><td class="number"><%= number_with_precision( controller.portfolio_total, :precision => 2, :delimiter => "," ) %></td><td class="number"><%= number_with_precision( controller.portfolio_total_percent * 100, :precision => 2, :delimiter => ",") %>%</td></tr>
-  <tr>
-    <th>Symbol</th>
-    <th>EPS</th>
-    <th>Div</th>
-    <th>Growth</th>
-    <th>PE Ter</th>
-    <th>Payout</th>
-    <th>Book</th>
-    <th>ROE</th>
-    <th>%Model</th>
-    <th>Price</th>
-    <th>Value</th>
-    <th>%Portfolio</th>
-    <th>%Off</th>
-    <th>Div+Growth</th>
-    <th>EYield</th>
-    <th>DYield</th>
-    <th>5 CAGR</th>
-    <th>10 CAGR</th>
-    <th>5 CROE</th>
-    <th>10 CROE</th>
-  </tr>
-
-  <% controller.portfolio.each do |stock| %>
-    <tr>
-      <td class="<%= if stock.reminder == 0 then "symbol" elsif stock.reminder == 1 then "symbol_yellow" else "symbol_red" end %>"><%= link_to stock.symbol, stock_path(stock) %></td>
-      <td class="number"><%= number_with_precision( stock.eps, :precision => 2, :delimiter => ",") %></td>
-      <td class="number"><%= number_with_precision( stock.div, :precision => 2, :delimiter => ",") %></td>
-      <td class="number"><%= stock.growth*100 %>%</td>
-      <td class="number"><%= stock.pe_terminal %></td>
-      <td class="number"><%= stock.payout * 100 %>%</td>
-      <td class="number"><%= number_with_precision( stock.book, :precision => 2, :delimiter => ",") %></td>
-      <td class="number"><%= stock.roe * 100 %>%</td>
-      <td class="number"><%= stock.model * 100 %>%</td>
-      <td class="number"><%= number_with_precision( stock.price, :precision => 2, :delimiter => ",") %></td>
-      <td class="number"><%= number_with_precision( stock.value, :precision => 2, :delimiter => ",") %></td>
-      <td class="number"><%= number_with_precision( stock.portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.off * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.div_plus_growth * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.eps_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.div_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.five_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.ten_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.five_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.ten_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
-    </tr>
-  <% end %>
-  <tr><td/><td/><td/><td/><td/><td/><td/><td/><td class="number"><%= number_with_precision( controller.portfolio_model_check * 100, :precision => 1, :delimiter => ",") %>%</td><td class="symbol">CASH</td><td class="number"><%= number_with_precision( controller.portfolio_cash, :precision => 2, :delimiter => ",") %></td></td><td class="number"><%= number_with_precision( controller.portfolio_cash_percent * 100, :precision => 2, :delimiter => ",") %>%</td><td/><td/><td class="number"><%= number_with_precision( controller.portfolio_eps_wtd_total * 100, :precision => 2, :delimiter => ",") %>%</td><td class="number"><%= number_with_precision( controller.portfolio_div_wtd_total * 100, :precision => 2, :delimiter => ",") %>%</td>
-  <tr><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td class="symbol">CHECK</td></td><td class="number"><%= number_with_precision( controller.portfolio_check * 100, :precision => 2, :delimiter => ",") %>%</td>
-  <tr><td>&nbsp</td></tr>
-  <% controller.watch_list.each do |stock| %>
-    <tr>
-      <td class="<%= if stock.reminder == 0 then "symbol" elsif stock.reminder == 1 then "symbol_yellow" else "symbol_red" end %>"><%= link_to stock.symbol, stock_path(stock) %></td>
-      <td class="number"><%= number_with_precision( stock.eps, :precision => 2, :delimiter => ",") %></td>
-      <td class="number"><%= number_with_precision( stock.div, :precision => 2, :delimiter => ",") %></td>
-      <td class="number"><%= stock.growth*100 %>%</td>
-      <td class="number"><%= stock.pe_terminal %></td>
-      <td class="number"><%= stock.payout * 100 %>%</td>
-      <td class="number"><%= number_with_precision( stock.book, :precision => 2, :delimiter => ",") %></td>
-      <td class="number"><%= stock.roe * 100 %>%</td>
-      <td class="number"></td>
-      <td class="number"><%= number_with_precision( stock.price, :precision => 2, :delimiter => ",") %></td>
-      <td class="number"></td>
-      <td class="number"></td>
-      <td class="number"></td>
-      <td class="number"><%= number_with_precision( stock.div_plus_growth * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.eps_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.div_yield * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.five_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.ten_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.five_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
-      <td class="number"><%= number_with_precision( stock.ten_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
-    </tr>
-  <% end %>
-  <tr><td class="symbol"><%= link_to 'New', new_stock_path %></td></tr>
-</table>
+  <%= render :partial => "portfolio", :locals => {:portfolio_id => Togabou::PORTFOLIOS_SELF} %>
 </div>
 <div id="div_change">
 <table>
-  <tr><td class="symbol">Total</td><td class="number"><%= number_with_precision( controller.portfolio_total, :precision => 2, :delimiter => "," ) %></td><td class="number"><%= number_with_precision( controller.portfolio_total_percent * 100, :precision => 2, :delimiter => ",") %>%</td></tr>
+  <tr><td class="symbol">Total</td><td class="number"><%= number_with_precision( controller.portfolio_total( Togabou::PORTFOLIOS_SELF ), :precision => 2, :delimiter => "," ) %></td><td class="number"><%= number_with_precision( controller.portfolio_total_percent( Togabou::PORTFOLIOS_SELF ) * 100, :precision => 2, :delimiter => ",") %>%</td></tr>
   <tr>
     <th>Symbol</th>
     <th>Day</th>
@@ -131,7 +65,7 @@ $(document).ready(function(){
     <th>Ten Years</th>
   </tr>
   <%
-    symbol_lists = [ [ controller.portfolio, true, 3 ], [ controller.watch_list, true, 1 ], [ controller.monitor_list, false, 1 ] ]
+    symbol_lists = [ [ controller.portfolio_stocks( Togabou::PORTFOLIOS_SELF ), true, 3 ], [ controller.watch_stocks( Togabou::PORTFOLIOS_SELF ), true, 1 ], [ controller.monitor_stocks, false, 1 ] ]
     symbol_lists.each do |list|
       list[0].each do |stock|
   %>
@@ -196,5 +130,8 @@ $(document).ready(function(){
 	  <td class="number" title="<%= ( as.date - 10.years ).to_s %>"><%= number_with_precision( as.ret_ten_year_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
 	</tr>
 </table>
+</div>
+<div id="div_play">
+  <%= render :partial => "portfolio", :locals => {:portfolio_id => Togabou::PORTFOLIOS_PLAY} %>
 </div>
 <p/>

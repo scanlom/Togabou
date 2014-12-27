@@ -14,6 +14,8 @@ class Action < ActiveRecord::Base
       execute_di
     when Togabou::ACTIONS_TYPE_PORT_DIV
       execute_port_div
+    when Togabou::ACTIONS_TYPE_L_PLAY_DIV
+      execute_play_div
     when Togabou::ACTIONS_TYPE_TOT_DIV
       execute_tot_cash( 1 )
     when Togabou::ACTIONS_TYPE_TOT_INT
@@ -28,8 +30,14 @@ class Action < ActiveRecord::Base
       execute_port_txn( -1 )
     when Togabou::ACTIONS_TYPE_PORT_BUY
       execute_port_txn( 1 )
+    when Togabou::ACTIONS_TYPE_L_PLAY_SELL
+      execute_play_txn( -1 )
+    when Togabou::ACTIONS_TYPE_L_PLAY_BUY
+      execute_play_txn( 1 )
     when Togabou::ACTIONS_TYPE_PORT_CI
       execute_port_ci
+    when Togabou::ACTIONS_TYPE_L_PLAY_CI
+      execute_play_ci
     when Togabou::ACTIONS_TYPE_TOT_CI
       execute_tot_ci
     when Togabou::ACTIONS_TYPE_PAID
@@ -76,6 +84,8 @@ class Action < ActiveRecord::Base
       undo_di
     when Togabou::ACTIONS_TYPE_PORT_DIV
       undo_port_div
+    when Togabou::ACTIONS_TYPE_L_PLAY_DIV
+      undo_play_div
     when Togabou::ACTIONS_TYPE_TOT_DIV
       execute_tot_cash( -1 )
     when Togabou::ACTIONS_TYPE_TOT_INT
@@ -88,8 +98,14 @@ class Action < ActiveRecord::Base
       execute_port_txn( 1 )
     when Togabou::ACTIONS_TYPE_PORT_BUY
       execute_port_txn( -1 )
+    when Togabou::ACTIONS_TYPE_L_PLAY_SELL
+      execute_play_txn( 1 )
+    when Togabou::ACTIONS_TYPE_L_PLAY_BUY
+      execute_play_txn( -1 )
     when Togabou::ACTIONS_TYPE_PORT_CI
       undo_port_ci
+    when Togabou::ACTIONS_TYPE_L_PLAY_CI
+      undo_play_ci
     when Togabou::ACTIONS_TYPE_TOT_CI
       undo_tot_ci
     when Togabou::ACTIONS_TYPE_PAID
@@ -125,7 +141,6 @@ class Action < ActiveRecord::Base
     end
   end
 
-  # Debt Infusion
   def execute_di
     total_capital_final = get_total_capital_balance + self.value1
     xTC_final = get_latest_index_rotc / total_capital_final
@@ -164,19 +179,26 @@ class Action < ActiveRecord::Base
     amount = self.value1 * side
     managed_final = get_managed_balance + amount
     xM_final = get_latest_index_401k / managed_final
-    value_final = get_symbol_value( self.symbol ) + amount
+    value_final = get_symbol_value( self.symbol, Togabou::PORTFOLIOS_MANAGED ) + amount
     set_divisor_401k( xM_final )
-    set_symbol_value( self.symbol, value_final )
+    set_symbol_value( self.symbol, value_final, Togabou::PORTFOLIOS_MANAGED )
     cash_final = get_cash_total - amount
     set_managed_balance( managed_final )
     set_cash_total( cash_final )
   end
 
   def execute_port_txn( side )
-    quantity_final = get_symbol_quantity( self.symbol ) + self.value2 * side
+    quantity_final = get_symbol_quantity( self.symbol, Togabou::PORTFOLIOS_SELF ) + self.value2 * side
     cash_final = get_cash_portfolio - self.value1 * side;
-    set_symbol_quantity( symbol, quantity_final )
+    set_symbol_quantity( symbol, quantity_final, Togabou::PORTFOLIOS_SELF )
     set_cash_portfolio( cash_final )
+  end
+
+  def execute_play_txn( side )
+    quantity_final = get_symbol_quantity( self.symbol, Togabou::PORTFOLIOS_PLAY ) + self.value2 * side
+    cash_final = get_cash_play - self.value1 * side;
+    set_symbol_quantity( symbol, quantity_final, Togabou::PORTFOLIOS_PLAY )
+    set_cash_play( cash_final )
   end
 
   def execute_port_ci
@@ -188,6 +210,15 @@ class Action < ActiveRecord::Base
     set_cash_portfolio( portfolio_cash_final )
     set_cash_total( total_cash_final )
     set_portfolio_balance( portfolio_final )
+  end
+
+  def execute_play_ci
+    play_cash_final = get_cash_play + self.value1
+    play_final = get_play_balance + self.value1
+    x_final = get_latest_index_play / play_final
+    set_divisor_slay( x_final )
+    set_cash_play( play_cash_final )
+    set_play_balance( play_final )
   end
 
   def execute_tot_ci
@@ -204,7 +235,7 @@ class Action < ActiveRecord::Base
   end
 
   def execute_set_symbol_value_hkd
-    set_symbol_value( self.symbol, self.value1 / Togabou::HKD_FX )
+    set_symbol_value( self.symbol, self.value1 / Togabou::HKD_FX, Togbou::PORTFOLIOS_MANAGED )
   end
 
   def execute_paid
@@ -292,6 +323,11 @@ class Action < ActiveRecord::Base
     set_cash_portfolio( cash_final )
   end
 
+  def undo_play_div
+    cash_final = get_cash_play - self.value1
+    set_cash_play( cash_final )
+  end
+
   def undo_fx_diff
     amount = self.value2 - ( self.value1 / Togabou::HKD_FX ) # USD I actually got minus what HKD was carried at
     set_cash_total( get_cash_total - amount )
@@ -306,6 +342,15 @@ class Action < ActiveRecord::Base
     set_cash_portfolio( portfolio_cash_final )
     set_cash_total( total_cash_final )
     set_portfolio_balance( portfolio_final )
+  end
+
+  def undo_play_ci
+    play_cash_final = get_cash_play - self.value1
+    play_final = get_play_balance - self.value1
+    x_final = get_latest_index_play / play_final
+    set_divisor_play( x_final )
+    set_cash_play( play_cash_final )
+    set_play_balance( play_final )
   end
 
   def undo_tot_ci
@@ -351,6 +396,10 @@ class Action < ActiveRecord::Base
     get_scalar( "select * from balances where type=13" )
   end
 
+  def get_play_balance
+    get_scalar( "select * from balances where type=19" )
+  end
+
   def get_managed_balance
     get_scalar( "select * from balances where type=14" )
   end
@@ -371,6 +420,10 @@ class Action < ActiveRecord::Base
     get_scalar( "select * from index_history where type=1 and date = (select max(date) from index_history where type=1)" )
   end
 
+  def get_latest_index_play
+    get_scalar( "select * from index_history where type=5 and date = (select max(date) from index_history where type=5)" )
+  end
+
   def get_debt
     get_scalar( "select * from constituents where symbol='DEBT' and portfolio_id=3" )
   end
@@ -387,12 +440,16 @@ class Action < ActiveRecord::Base
     get_scalar( "select * from constituents where symbol='CASH' and portfolio_id=1" )
   end
 
-  def get_symbol_value( symbol )
-    get_scalar( sprintf( "select * from constituents where symbol = '%s'", symbol ) )
+  def get_cash_play
+    get_scalar( "select * from constituents where symbol='CASH' and portfolio_id=5" )
   end
 
-  def get_symbol_quantity( symbol )
-    get_scalar_field( sprintf( "select * from constituents where symbol = '%s'", symbol ), "quantity" )
+  def get_symbol_value( symbol, portfolio_id )
+    get_scalar( sprintf( "select * from constituents where symbol = '%s' and portfolio_id=%d", symbol, portfolio_id ) )
+  end
+
+  def get_symbol_quantity( symbol, portfolio_id )
+    get_scalar_field( sprintf( "select * from constituents where symbol = '%s' and portfolio_id=%d", symbol, portfolio_id ), "quantity" )
   end
 
   def get_paid
@@ -450,6 +507,10 @@ class Action < ActiveRecord::Base
     @conn.execute( sprintf( "update divisors set value=%s where type=1", value.to_s ) )
   end
 
+  def set_divisor_play( value )
+    @conn.execute( sprintf( "update divisors set value=%s where type=5", value.to_s ) )
+  end
+
   def set_owe_port( value )
     set_balance( value, 7 )
   end
@@ -470,16 +531,24 @@ class Action < ActiveRecord::Base
     set_balance( value, 13 )
   end
 
+  def set_play_balance( value )
+    set_balance( value, 19 )
+  end
+
   def set_cash_portfolio( value )
     @conn.execute( sprintf( "update constituents set value=%.02f where symbol='CASH' and portfolio_id=1", value.to_f ) )
   end
 
-  def set_symbol_value( symbol, value )
-    @conn.execute( sprintf( "update constituents set value=%.02f where symbol='%s'", value.to_f, symbol ) )
+  def set_cash_play( value )
+    @conn.execute( sprintf( "update constituents set value=%.02f where symbol='CASH' and portfolio_id=5", value.to_f ) )
   end
 
-  def set_symbol_quantity( symbol, quantity )
-    @conn.execute( sprintf( "update constituents set quantity=%d where symbol='%s'", quantity.to_i, symbol ) )
+  def set_symbol_value( symbol, value, portfolio_id )
+    @conn.execute( sprintf( "update constituents set value=%.02f where symbol='%s' and portfolio_id=%d", value.to_f, symbol, portfolio_id ) )
+  end
+
+  def set_symbol_quantity( symbol, quantity, portfolio_id )
+    @conn.execute( sprintf( "update constituents set quantity=%d where symbol='%s' and portfolio_id=%d", quantity.to_i, symbol, portfolio_id ) )
   end
 
   def set_paid( value )

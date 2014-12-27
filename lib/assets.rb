@@ -331,5 +331,13 @@ class Assets
     end
     get_scalar( conn, sprintf( "select * from balances_history where type=%d and date='%s'", type, date ) )
   end
+
+  def portfolio_internal( portfolio_id )
+    ret = self.portfolio
+    if portfolio_id == Togabou::PORTFOLIOS_PLAY
+      ret = self.play
+    end
+    ret
+  end
 end
 
