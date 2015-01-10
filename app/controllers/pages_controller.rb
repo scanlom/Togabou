@@ -142,7 +142,7 @@ class PagesController < ApplicationController
   def get_chart_expenses
     conn = ActiveRecord::Base.connection
     h = Hash.new
-    res = conn.execute( "select t.description, extract(month from s.date) as month, sum(s.amount) as amount from spending s, spending_types t where s.type = t.type and s.date > '12/31/2013' group by t.description, month order by t.description, month asc" )
+    res = conn.execute( "select t.description, extract(month from s.date) as month, sum(s.amount) as amount from spending s, spending_types t where s.type = t.type and s.date > '12/31/2014' group by t.description, month order by t.description, month asc" )
     res.values().each do |row|
       a = Array.new( 12 )
       if h.has_key?( row[0] )
@@ -159,7 +159,7 @@ class PagesController < ApplicationController
     tax = a.get_balance_value( Togabou::BALANCES_TAX )
     savings = a.get_balance_value( Togabou::BALANCES_SAVINGS )
     spent = paid - tax - savings
-    res = conn.execute( "select sum(amount) as value from spending where date > '12/31/2013'" )
+    res = conn.execute( "select sum(amount) as value from spending where date > '12/31/2014'" )
     expenses = res.first['value'].to_f
 
     day = a.date.yday.to_f

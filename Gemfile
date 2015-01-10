@@ -7,6 +7,9 @@ gem 'therubyracer'
 gem 'lazy_high_charts'
 # gem 'htpasswd'
 
+# MS 01/03/2015 - Had a build error in the JSON gem, hopefully this can be removed on next linux instaill
+gem 'json', :github => 'kgrz/json'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
 
