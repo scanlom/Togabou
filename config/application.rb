@@ -46,6 +46,10 @@ module Togabou
   ACTIONS_TYPE_PORT_SELL          = 16
   ACTIONS_TYPE_TOT_CI             = 17
   ACTIONS_TYPE_A_OWE_PORT         = 18
+  ACTIONS_TYPE_L_PLAY_DIV         = 19
+  ACTIONS_TYPE_L_PLAY_CI          = 20
+  ACTIONS_TYPE_L_PLAY_BUY         = 21
+  ACTIONS_TYPE_L_PLAY_SELL        = 22
   ACTIONS_TYPE_LAST_SAVED         = 49
   ACTIONS_TYPE_E_SET_AMEX_CX      = 50
   ACTIONS_TYPE_E_SET_CAPITAL_ONE  = 51
@@ -56,10 +60,6 @@ module Togabou
   ACTIONS_TYPE_E_SET_GS_IRA       = 56
   ACTIONS_TYPE_E_SET_GS_HKD       = 57
   ACTIONS_TYPE_E_SET_SYMBOL_VALUE_HKD = 58
-  ACTIONS_TYPE_L_PLAY_DIV         = 59
-  ACTIONS_TYPE_L_PLAY_CI          = 60
-  ACTIONS_TYPE_L_PLAY_BUY         = 61
-  ACTIONS_TYPE_L_PLAY_SELL        = 62
   ACTIONS_TYPE_C_PAID             = 70
 
   class Application < Rails::Application

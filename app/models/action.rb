@@ -157,6 +157,11 @@ class Action < ActiveRecord::Base
     set_cash_portfolio( cash_final )
   end
 
+  def execute_play_div
+    cash_final = get_cash_play + self.value1
+    set_cash_play( cash_final )
+  end
+
   def execute_tot_cash( side )
     cash_final = get_cash_total + self.value1 * side
     set_cash_total( cash_final )
@@ -216,7 +221,7 @@ class Action < ActiveRecord::Base
     play_cash_final = get_cash_play + self.value1
     play_final = get_play_balance + self.value1
     x_final = get_latest_index_play / play_final
-    set_divisor_slay( x_final )
+    set_divisor_play( x_final )
     set_cash_play( play_cash_final )
     set_play_balance( play_final )
   end
@@ -235,7 +240,7 @@ class Action < ActiveRecord::Base
   end
 
   def execute_set_symbol_value_hkd
-    set_symbol_value( self.symbol, self.value1 / Togabou::HKD_FX, Togbou::PORTFOLIOS_MANAGED )
+    set_symbol_value( self.symbol, self.value1 / Togabou::HKD_FX, Togabou::PORTFOLIOS_MANAGED )
   end
 
   def execute_paid
@@ -548,7 +553,7 @@ class Action < ActiveRecord::Base
   end
 
   def set_symbol_quantity( symbol, quantity, portfolio_id )
-    @conn.execute( sprintf( "update constituents set quantity=%d where symbol='%s' and portfolio_id=%d", quantity.to_i, symbol, portfolio_id ) )
+    @conn.execute( sprintf( "update constituents set quantity=%.05f where symbol='%s' and portfolio_id=%d", quantity.to_f, symbol, portfolio_id ) )
   end
 
   def set_paid( value )
