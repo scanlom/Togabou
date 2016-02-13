@@ -137,9 +137,9 @@ class Assets
     conn = ActiveRecord::Base.connection
 
     # If no date is passed in, use max date
-    date_sql = "select max(p.date) date from portfolio_history p, balances_history b, index_history i, divisors_history d where p.date = b.date and i.date = d.date and p.date = i.date"
+    date_sql = "select max(p.date) date from portfolio_history p"
     if date != nil and date != ""
-      date_sql += " and p.date <= '" + date.to_s(:db) + "'"
+      date_sql += " where p.date <= '" + date.to_s(:db) + "'"
     end
     res = conn.execute( date_sql )
     @date = Date.parse( res.first['date'] )

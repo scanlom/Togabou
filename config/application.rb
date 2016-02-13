@@ -8,6 +8,7 @@ Bundler.require(:default, Rails.env)
 
 module Togabou
   HKD_FX = 7.76
+  JPY_FX = 120.25
   TAX_RATE = 0.3
 
   PORTFOLIOS_SELF    = 1
@@ -19,6 +20,7 @@ module Togabou
   BALANCES_HSBC       = 3
   BALANCES_HSBC_VISA  = 4
   BALANCES_VIRTUALBANK = 5
+  BALANCES_JPY        = 6
   BALANCES_GS         = 9
   BALANCES_GS_HKD     = 10
   BALANCES_GS_IRA     = 11
@@ -60,6 +62,7 @@ module Togabou
   ACTIONS_TYPE_E_SET_GS_IRA       = 56
   ACTIONS_TYPE_E_SET_GS_HKD       = 57
   ACTIONS_TYPE_E_SET_SYMBOL_VALUE_HKD = 58
+  ACTIONS_TYPE_E_SET_JPY          = 59
   ACTIONS_TYPE_C_PAID             = 70
 
   class Application < Rails::Application

@@ -66,6 +66,8 @@ class Action < ActiveRecord::Base
       execute_set_balance( Togabou::BALANCES_GS_HKD )
     when Togabou::ACTIONS_TYPE_E_SET_GS_IRA
       execute_set_balance( Togabou::BALANCES_GS_IRA )
+    when Togabou::ACTIONS_TYPE_E_SET_JPY
+      execute_set_balance( Togabou::BALANCES_JPY )
     when Togabou::ACTIONS_TYPE_C_PAID
       execute_c_paid
     else
@@ -263,6 +265,8 @@ class Action < ActiveRecord::Base
     fx_rate = 1
     if balance_type == Togabou::BALANCES_AMEX_CX || balance_type == Togabou::BALANCES_HSBC || balance_type == Togabou::BALANCES_HSBC_VISA || balance_type == Togabou::BALANCES_GS_HKD
       fx_rate = Togabou::HKD_FX
+    elsif balance_type == Togabou::BALANCES_JPY
+      fx_rate = Togabou::JPY_FX
     end
     set_balance( self.value1 / fx_rate, balance_type )
   end
@@ -270,7 +274,6 @@ class Action < ActiveRecord::Base
   def execute_c_paid
     salary_usd = self.value1 / Togabou::HKD_FX
     orso1_usd = self.value2 / Togabou::HKD_FX
-    orso2_usd = self.value3 / Togabou::HKD_FX
     tax_usd = salary_usd * Togabou::TAX_RATE
 
     # Book Salary - Paid
@@ -279,10 +282,6 @@ class Action < ActiveRecord::Base
 
     # Book Orso 1 - Paid
     action = Action.new( date: self.date, actions_type_id: Togabou::ACTIONS_TYPE_PAID, value1: orso1_usd )
-    action.execute
-
-    # Book Orso 2 - Paid
-    action = Action.new( date: self.date, actions_type_id: Togabou::ACTIONS_TYPE_PAID, value1: orso2_usd )
     action.execute
 
     # Book Tax
@@ -298,17 +297,15 @@ class Action < ActiveRecord::Base
     action.execute
 
     # Book Orso - Savings
-    action = Action.new( date: self.date, actions_type_id: Togabou::ACTIONS_TYPE_SAVINGS, value1: orso1_usd + orso2_usd )
+    action = Action.new( date: self.date, actions_type_id: Togabou::ACTIONS_TYPE_SAVINGS, value1: orso1_usd )
     action.execute
 
     # CI Orso
-    action = Action.new( date: self.date, actions_type_id: Togabou::ACTIONS_TYPE_TOT_CI, value1: orso1_usd + orso2_usd )
+    action = Action.new( date: self.date, actions_type_id: Togabou::ACTIONS_TYPE_TOT_CI, value1: orso1_usd )
     action.execute
 
-    # Buy Managed for both ORSO's
-    action = Action.new( date: self.date, actions_type_id: Togabou::ACTIONS_TYPE_MAN_BUY, value1: orso1_usd, symbol: "Dragons" )
-    action.execute
-    action = Action.new( date: self.date, actions_type_id: Togabou::ACTIONS_TYPE_MAN_BUY, value1: orso2_usd, symbol: "GlBonds" )
+    # Buy Managed for ORSO
+    action = Action.new( date: self.date, actions_type_id: Togabou::ACTIONS_TYPE_MAN_BUY, value1: orso1_usd, symbol: "AsianOpps" )
     action.execute
   end
 
