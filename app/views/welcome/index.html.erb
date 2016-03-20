@@ -84,63 +84,10 @@ td.symbol {
 <td/><td/>
 <td class="number"><%= number_with_precision(a.debt, :precision => 2, :delimiter => ",") %></td>
 </tr>
-<tr><td>&nbsp</td></tr>
-<% a.portfolio.positions.each do |position| %>
-<tr>
-<td class="symbol"><%= position.symbol %></td>
-<td class="number"><%= number_with_delimiter(position.quantity) %></td>
-<td class="number"><%= number_with_precision(position.price, :precision => 2, :delimiter => ",") %></td>
-<td class="number"><%= number_with_precision(position.value, :precision => 2, :delimiter => ",") %></td>
-</tr>
-<% end %>
-<tr>
-<td class="symbol">CASH</td>
-<td/><td/>
-<td class="number"><%= number_with_precision(a.portfolio.cash, :precision => 2, :delimiter => ",") %></td>
-</tr>
-<tr>
-<td class="symbol">TOTAL</td>
-<td/><td/>
-<td class="number"><%= number_with_precision(a.portfolio.total, :precision => 2, :delimiter => ",") %></td>
-</tr>
-<tr>
-<td/><td/>
-<td class="number"><%= number_with_precision(a.portfolio.divisor, :precision => 8, :delimiter => "") %></td>
-<td class="number"><%= number_with_precision(a.portfolio.index, :precision => 2, :delimiter => ",") %></td>
-</tr>
-<tr><td>&nbsp</td></tr>
-<% a.managed.positions.each do |position| %>
-<tr>
-<td class="symbol"><%= position.symbol %></td>
-<td class="number"><%= number_with_delimiter(position.quantity) %></td>
-<td class="number"><%= number_with_precision(position.price, :precision => 2, :delimiter => ",") %></td>
-<td class="number"><%= number_with_precision(position.value, :precision => 2, :delimiter => ",") %></td>
-</tr>
-<% end %>
-<tr>
-<td class="symbol">CASH</td>
-<td/><td/>
-<td class="number"><%= number_with_precision(a.managed.cash, :precision => 2, :delimiter => ",") %></td>
-</tr>
-<tr>
-<td class="symbol">TOTAL</td>
-<td/><td/>
-<td class="number"><%= number_with_precision(a.managed.total, :precision => 2, :delimiter => ",") %></td>
-</tr>
-<tr>
-<td/><td/>
-<td class="number"><%= number_with_precision(a.managed.divisor, :precision => 8, :delimiter => "") %></td>
-<td class="number"><%= number_with_precision(a.managed.index, :precision => 2, :delimiter => ",") %></td>
-</tr>
-<tr><td>&nbsp</td></tr>
-<% a.other.positions.each do |position| %>
-<tr>
-<td class="symbol"><%= position.symbol %></td>
-<td class="number"><%= number_with_delimiter(position.quantity) %></td>
-<td class="number"><%= number_with_precision(position.price, :precision => 2, :delimiter => ",") %></td>
-<td class="number"><%= number_with_precision(position.value, :precision => 2, :delimiter => ",") %></td>
-</tr>
-<% end %>
+<%= render :partial => "portfolio", :locals => {:portfolio => a.portfolio} %>
+<%= render :partial => "portfolio", :locals => {:portfolio => a.managed} %>
+<%= render :partial => "portfolio", :locals => {:portfolio => a.other} %>
+<%= render :partial => "portfolio", :locals => {:portfolio => a.play} %>
 </table>
 </td>
 <td style="vertical-align:top">
