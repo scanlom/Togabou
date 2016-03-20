@@ -1,0 +1,32 @@
+<%#
+  Mike Scanlon 2016/03/20
+
+  Usage:
+  render :partial => "portfolio", :locals => {:portfolio => x}
+%>
+<% if !portfolio.nil? && !portfolio.positions.blank? %>
+<tr><td>&nbsp</td></tr>
+<% portfolio.positions.each do |position| %>
+<tr>
+<td class="symbol"><%= position.symbol %></td>
+<td class="number"><%= number_with_delimiter(position.quantity) %></td>
+<td class="number"><%= number_with_precision(position.price, :precision => 2, :delimiter => ",") %></td>
+<td class="number"><%= number_with_precision(position.value, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<% end %>
+<tr>
+<td class="symbol">CASH</td>
+<td/><td/>
+<td class="number"><%= number_with_precision(portfolio.cash, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr>
+<td class="symbol">TOTAL</td>
+<td/><td/>
+<td class="number"><%= number_with_precision(portfolio.total, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<tr>
+<td/><td/>
+<td class="number"><%= number_with_precision(portfolio.divisor, :precision => 8, :delimiter => "") %></td>
+<td class="number"><%= number_with_precision(portfolio.index, :precision => 2, :delimiter => ",") %></td>
+</tr>
+<% end %>
