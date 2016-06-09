@@ -12,7 +12,8 @@ end
 class Stock < ActiveRecord::Base
   has_many :researches, :order => "date DESC"
   has_many :fundamentals, :order => "date DESC"
-  has_many :constituents
+  has_many :constituents, :order => "portfolio_id ASC"
+  accepts_nested_attributes_for :constituents, update_only: true
 
   DIV_GROWTH = 0.0686
 

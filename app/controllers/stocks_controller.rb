@@ -28,11 +28,14 @@ class StocksController < ApplicationController
   end
 
   def new
+    @stock = Stock.new
+    @stock.constituents.build
   end
 
   def create
-    @stock = Stock.new(params[:stock].permit(:symbol, :eps, :div, :growth, :pe_terminal, :payout, :book, :roe, :model))
-
+    #@stock = Stock.new(params[:stock].permit(:symbol, :eps, :div, :growth, :pe_terminal, :payout, :book, :roe, constituents_attributes: [:model, :id, :stock_id]))
+    @stock = Stock.new(params[:stock].permit!)
+    constituent = @stock.constituents.build
     @stock.save
     redirect_to @stock
   end
@@ -51,8 +54,8 @@ class StocksController < ApplicationController
 
   def update
     @stock = Stock.find(params[:id])
-
-    if @stock.update(params[:stock].permit(:eps, :div, :growth, :pe_terminal, :payout, :book, :roe, :price, :model ) )
+    #if @stock.update(params[:stock].permit(:eps, :div, :growth, :pe_terminal, :payout, :book, :roe, :price, constituents_attributes: [:model, :id, :stock_id] ) )
+    if @stock.update( stock_params )
       redirect_to @stock
     else
       render 'edit'
@@ -93,6 +96,7 @@ class StocksController < ApplicationController
 
   private
     def stock_params
-      params.require(:stock).permit(:symbol, :eps, :div, :growth, :pe_terminal, :payout, :book, :roe, :model)
+      params.require(:stock).permit(:symbol, :eps, :div, :growth, :pe_terminal, :payout, :book, :roe, constituents_attributes: [:model, :id, :stock_id] )
+      #params.require(:stock).permit!
     end
 end
