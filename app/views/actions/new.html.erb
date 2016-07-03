@@ -3,7 +3,7 @@
 <%
 	actions_type_id = 3
 	if params[:actions_type_id] != nil
-	  actions_type_id = params[:actions_type_id].to_i	  
+	  actions_type_id = params[:actions_type_id].to_i
 	end
 %>
 
@@ -18,7 +18,7 @@
     <% end %>
   <% end %>
   </select>
-  <input type="submit" /> 
+  <input type="submit" />
 </form>
 
 <% cur_actions_type = ActionsType.find( actions_type_id ) %>
@@ -27,8 +27,8 @@
   <%= f.hidden_field :actions_type_id, :value => actions_type_id %>
 
   <p>
-    <%= f.label :date %><br>
-    <%= f.date_select :date %>
+    <%= f.label Date.today %><br>
+    <%= f.date_select :date, :default => Date.today %>
   </p>
 
   <% unless cur_actions_type.symbol.nil? %>
@@ -72,7 +72,7 @@
     <%= f.text_field :value5 %>
   </p>
   <% end %>
- 
+
   <p>
     <%= f.submit %>
   </p>

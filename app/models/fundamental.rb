@@ -1,3 +1,3 @@
-class Fundamental < ActiveRecord::Base
+class Fundamental < ApplicationRecord
   belongs_to :stock
 end

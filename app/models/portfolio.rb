@@ -1,2 +1,2 @@
-class Portfolio < ActiveRecord::Base
+class Portfolio < ApplicationRecord
 end

@@ -1,8 +1,9 @@
-class Action < ActiveRecord::Base
+class Action < ApplicationRecord
   belongs_to :actions_type
-  default_scope order( 'date DESC' )
+  default_scope { order( 'date DESC' ) }
 
   after_initialize :initialize_members
+
   def initialize_members
     @conn = ActiveRecord::Base.connection
   end

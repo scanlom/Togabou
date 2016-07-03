@@ -1,3 +1,3 @@
-class Research < ActiveRecord::Base
+class Research < ApplicationRecord
   belongs_to :stock
 end

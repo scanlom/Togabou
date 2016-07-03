@@ -1,4 +1,8 @@
-Togabou::Application.routes.draw do
+#Rails.application.routes.draw do
+  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+#end
+
+Rails.application.routes.draw do
   resources :stocks do 
     resources :researches
     resources :fundamentals
@@ -70,3 +74,4 @@ Togabou::Application.routes.draw do
   #     resources :products
   #   end
 end
+
