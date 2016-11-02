@@ -131,7 +131,7 @@ class Action < ApplicationRecord
       self.value1 = self.value1.round(2)
     end
     if self.value2 != nil
-      self.value2 = self.value2.round(2)
+      self.value2 = self.value2.round(3) # There may be three decimals in a mutual fund share quantity
     end
     if self.value3 != nil
       self.value3 = self.value3.round(2)

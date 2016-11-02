@@ -10,7 +10,7 @@ class StocksController < ApplicationController
 
   def portfolio_constituents( portfolio_id )
     ret = Constituent.where( sprintf( "portfolio_id = %d and model > 0", portfolio_id ) )
-    ret.sort! { |a,b| [ b.value.to_f ] <=> [ a.value.to_f ] }
+    ret.sort { |a,b| [ b.value.to_f ] <=> [ a.value.to_f ] }
   end
 
   def portfolio_stocks( portfolio_id )
@@ -19,12 +19,12 @@ class StocksController < ApplicationController
 
   def watch_stocks( portfolio_id )
     ret = Stock.where("model >= 0") - portfolio_stocks( portfolio_id )
-    ret.sort! { |a,b| [ b.five_year_cagr.to_f ] <=> [ a.five_year_cagr.to_f ] }
+    ret.sort { |a,b| [ b.five_year_cagr.to_f ] <=> [ a.five_year_cagr.to_f ] }
   end
 
   def monitor_stocks
     ret = Stock.where( "model < 0" )
-    ret.sort! { |a,b| [ a.id.to_f ] <=> [ b.id.to_f ] }
+    ret.sort { |a,b| [ a.id.to_f ] <=> [ b.id.to_f ] }
   end
 
   def new
@@ -35,7 +35,7 @@ class StocksController < ApplicationController
   def create
     #@stock = Stock.new(params[:stock].permit(:symbol, :eps, :div, :growth, :pe_terminal, :payout, :book, :roe, constituents_attributes: [:model, :id, :stock_id]))
     @stock = Stock.new(params[:stock].permit!)
-    constituent = @stock.constituents.build
+    #constituent = @stock.constituents.build
     @stock.save
     redirect_to @stock
   end

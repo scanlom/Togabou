@@ -9,10 +9,10 @@ def get_scalar( conn, sql )
   end
 end
 
-class Stock < ActiveRecord::Base
-  has_many :researches, :order => "date DESC"
-  has_many :fundamentals, :order => "date DESC"
-  has_many :constituents, :order => "portfolio_id ASC"
+class Stock < ApplicationRecord
+  has_many :researches, -> { order "date DESC" }
+  has_many :fundamentals, -> { order "date DESC" }
+  has_many :constituents, -> { order "portfolio_id ASC" }
   accepts_nested_attributes_for :constituents, update_only: true
 
   DIV_GROWTH = 0.0686
@@ -29,14 +29,16 @@ class Stock < ActiveRecord::Base
   after_initialize :initialize_members
   def initialize_members
     # Populate calculated values
-    @pe = self.price / self.eps
-    @eps_yield = self.eps.to_f / self.price.to_f
-    @div_yield = self.div.to_f / self.price.to_f
-    @div_plus_growth = self.div_yield + self.growth
-    @five_year_cagr = cagr( 5 )
-    @ten_year_cagr = cagr( 10 )
-    @five_year_croe = croe( 5 )
-    @ten_year_croe = croe( 10 )
+    if self[:price] != nil
+      @pe = self.price / self.eps
+      @eps_yield = self.eps.to_f / self.price.to_f
+      @div_yield = self.div.to_f / self.price.to_f
+      @div_plus_growth = self.div_yield + self.growth
+      @five_year_cagr = cagr( 5 )
+      @ten_year_cagr = cagr( 10 )
+      @five_year_croe = croe( 5 )
+      @ten_year_croe = croe( 10 )
+    end
   end
 
   def price
