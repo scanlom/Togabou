@@ -7,11 +7,11 @@ gem 'therubyracer'
 gem 'lazy_high_charts'
 # gem 'htpasswd'
 
-# MS 01/03/2015 - Had a build error in the JSON gem, hopefully this can be removed on next linux instaill
-gem 'json', :github => 'kgrz/json'
+# MS 01/07/2017 - Issues with json gem (as always), this time with ruby 2.4, so need to force version 2 of the gem
+gem 'json', '~> 2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.0.0'
+gem 'rails', '5.0.1'
 
 # Use postgresql as the database for Active Record
 gem 'pg'
