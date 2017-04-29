@@ -18,7 +18,7 @@ class StocksController < ApplicationController
   end
 
   def watch_stocks( portfolio_id )
-    ret = Stock.where("model >= 0") - portfolio_stocks( portfolio_id )
+    ret = Stock.where("model >= 0 and hidden = false") - portfolio_stocks( portfolio_id )
     ret.sort { |a,b| [ b.five_year_cagr.to_f ] <=> [ a.five_year_cagr.to_f ] }
   end
 
