@@ -43,7 +43,7 @@ class PagesController < ApplicationController
   def get_actions( type, start_date, end_date )
     where = sprintf( "actions_type_id = %d and date >= '%s'", type, start_date )
     if( end_date != nil )
-      where = sprintf( "%s and date < '%s'", where, end_date )
+      where = sprintf( "%s and date <= '%s'", where, end_date )
     end
     Action.where( where )
   end
@@ -168,7 +168,7 @@ class PagesController < ApplicationController
     end
     spent_projected = 365 / day * spent
     expenses_projected = 365 / day * expenses
-    budget_projected = 124165.29
+    budget_projected = 119165.29
     budget = day / 365 * budget_projected
 
     title = sprintf( "Expenses - %s / %s Spent - %s / %s Budget - %s / %s",

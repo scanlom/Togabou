@@ -13,7 +13,7 @@
 	  year = Time.now.year
 	end
 	a = controller.get_accounts( date )
-	start_date = "01/01/" + year.to_s 
+	start_date = "01/02/" + year.to_s 
 	paid = a.get_balance_value( Togabou::BALANCES_PAID )
 	tax = a.get_balance_value( Togabou::BALANCES_TAX )
 	savings = a.get_balance_value( Togabou::BALANCES_SAVINGS )
