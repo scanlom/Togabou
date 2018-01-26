@@ -168,7 +168,7 @@ class PagesController < ApplicationController
     end
     spent_projected = 365 / day * spent
     expenses_projected = 365 / day * expenses
-    budget_projected = 119165.29
+    budget_projected = 151000
     budget = day / 365 * budget_projected
 
     title = sprintf( "Expenses - %s / %s Spent - %s / %s Budget - %s / %s",

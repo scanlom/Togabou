@@ -7,9 +7,9 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 
 module Togabou
-    HKD_FX = 7.76
-    JPY_FX = 120.25
-    TAX_RATE = 0.3
+    HKD_FX = 7.82
+    JPY_FX = 108.72
+    TAX_RATE = 0.25
   
     PORTFOLIOS_SELF    = 1
     PORTFOLIOS_MANAGED = 2
