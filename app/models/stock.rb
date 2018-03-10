@@ -112,7 +112,7 @@ class Stock < ApplicationRecord
 
   def x_year_eps( year )
     ret = 0
-    if self.fundamentals.length <= year
+    if self.fundamentals.length <= year || self.fundamentals[ year ].eps <= 0
       ret = 0
     else
       ret = ( self.fundamentals[0].eps / self.fundamentals[ year ].eps ) ** ( 1 / year.to_f ) - 1
