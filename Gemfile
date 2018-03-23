@@ -7,11 +7,12 @@ gem 'therubyracer'
 gem 'lazy_high_charts'
 # gem 'htpasswd'
 
-# MS 01/07/2017 - Issues with json gem (as always), this time with ruby 2.4, so need to force version 2 of the gem
-gem 'json', '~> 2'
+# MS 2017/01/07 - Issues with json gem (as always), this time with ruby 2.4, so need to pin version 2 of the gem
+# MS 2018/03/23 - Appears to be fixed, removed pin with rails 5.1.5
+gem 'json'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.1.4'
+gem 'rails'
 
 # Use postgresql as the database for Active Record
 gem 'pg'

@@ -15,8 +15,6 @@ class Stock < ApplicationRecord
   has_many :constituents, -> { order "portfolio_id ASC" }
   accepts_nested_attributes_for :constituents, update_only: true
 
-  DIV_GROWTH = 0.0686
-
   attr_accessor :pe
   attr_accessor :eps_yield
   attr_accessor :div_yield
@@ -54,7 +52,7 @@ class Stock < ApplicationRecord
     div_bucket = 0
     eps = self.eps.to_f
     (1..years).each do |i|
-      div_bucket = div_bucket.to_f * (1.to_f + DIV_GROWTH.to_f)
+      div_bucket = div_bucket.to_f * (1.to_f + Togabou::DIV_GROWTH.to_f)
       div_bucket = div_bucket.to_f + (eps.to_f * self.payout.to_f)
       eps = eps.to_f * (1 + self.growth.to_f)
     end
@@ -67,7 +65,7 @@ class Stock < ApplicationRecord
     book = self.book.to_f
     div = 0
     (1..years).each do |i|
-      div_bucket = div_bucket.to_f * (1.to_f + DIV_GROWTH.to_f)
+      div_bucket = div_bucket.to_f * (1.to_f + Togabou::DIV_GROWTH.to_f)
       eps = book * self.roe.to_f
       div = eps * self.payout.to_f
       div_bucket = div_bucket.to_f + div.to_f

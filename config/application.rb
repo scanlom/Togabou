@@ -10,6 +10,7 @@ module Togabou
     HKD_FX = 7.82
     JPY_FX = 108.72
     TAX_RATE = 0.25
+    DIV_GROWTH = 0.0798
   
     PORTFOLIOS_SELF    = 1
     PORTFOLIOS_MANAGED = 2
@@ -66,6 +67,9 @@ module Togabou
     ACTIONS_TYPE_C_PAID             = 70
   
   class Application < Rails::Application
+    # Initialize configuration defaults for originally generated Rails version.
+    config.load_defaults 5.1
+    
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
