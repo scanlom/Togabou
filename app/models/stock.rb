@@ -26,11 +26,20 @@ class Stock < ApplicationRecord
 
   after_initialize :initialize_members
   def initialize_members
+    if ( ( self.price == nil || self.price <= 0 ) && self.symbol != nil )
+      # Populate price from AlphaVantage
+      logger.info sprintf( "Retrieving last from AlphaVantage for %s...", self.symbol )
+      url = sprintf("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=%s&apikey=2YG6SAN57NRYNPJ8", self.symbol)
+      data = JSON.load(open(url))
+      self.price = data['Time Series (Daily)'].values[0]['5. adjusted close'].to_f
+      logger.info sprintf( "Retrieved %f from AlphaVantage for %s", self.price, self.symbol )
+    end
+
     # Populate calculated values
-    if self[:price] != nil
+    if self.price != nil && self.price > 0
       @pe = self.price / self.eps
-      @eps_yield = self.eps.to_f / self.price.to_f
-      @div_yield = self.div.to_f / self.price.to_f
+      @eps_yield = self.eps / self.price
+      @div_yield = self.div / self.price
       @div_plus_growth = self.div_yield + self.growth
       @five_year_cagr = cagr( 5 )
       @ten_year_cagr = cagr( 10 )
@@ -39,39 +48,30 @@ class Stock < ApplicationRecord
     end
   end
 
-  def price
-    if self[:price] == nil or self[:price] <= 0
-      # Populate price from yahoo
-      url = sprintf("http://finance.yahoo.com/d/quotes.csv?s=%s&f=%s", self.symbol, "l1")
-      self[:price] = open(url).readline
-    end
-    self[:price]
-  end
-
   def cagr( years )
-    div_bucket = 0
-    eps = self.eps.to_f
+    div_bucket = 0.0
+    eps = self.eps
     (1..years).each do |i|
-      div_bucket = div_bucket.to_f * (1.to_f + Togabou::DIV_GROWTH.to_f)
-      div_bucket = div_bucket.to_f + (eps.to_f * self.payout.to_f)
-      eps = eps.to_f * (1 + self.growth.to_f)
+      div_bucket = div_bucket * (1 + Togabou::DIV_GROWTH)
+      div_bucket = div_bucket + (eps * self.payout)
+      eps = eps * (1 + self.growth)
     end
-    ((((eps.to_f * self.pe_terminal.to_f) + div_bucket.to_f) / self.price.to_f) ** (1.to_f/years.to_f)) - 1.to_f
+    ((((eps * self.pe_terminal) + div_bucket) / self.price) ** (1/years.to_f)) - 1
   end
 
   def croe( years )
-    div_bucket = 0
+    div_bucket = 0.0
     eps = 0
-    book = self.book.to_f
+    book = self.book
     div = 0
     (1..years).each do |i|
-      div_bucket = div_bucket.to_f * (1.to_f + Togabou::DIV_GROWTH.to_f)
-      eps = book * self.roe.to_f
-      div = eps * self.payout.to_f
-      div_bucket = div_bucket.to_f + div.to_f
-      book = book.to_f + eps.to_f - div.to_f
+      div_bucket = div_bucket * (1 + Togabou::DIV_GROWTH)
+      eps = book * self.roe
+      div = eps * self.payout
+      div_bucket = div_bucket + div
+      book = book + eps - div
     end
-    ((((eps.to_f * self.pe_terminal.to_f) + div_bucket.to_f) / self.price.to_f) ** (1.to_f/years.to_f)) - 1.to_f
+    ((((eps * self.pe_terminal) + div_bucket) / self.price) ** (1/years.to_f)) - 1
   end
 
   def reminder
@@ -113,7 +113,7 @@ class Stock < ApplicationRecord
     if self.fundamentals.length <= year || self.fundamentals[ year ].eps <= 0
       ret = 0
     else
-      ret = ( self.fundamentals[0].eps / self.fundamentals[ year ].eps ) ** ( 1 / year.to_f ) - 1
+      ret = ( self.fundamentals[0].eps / self.fundamentals[ year ].eps ) ** ( 1 / year ) - 1
     end
     ret
   end
@@ -123,7 +123,7 @@ class Stock < ApplicationRecord
     if self.fundamentals.length < year
       ret = 0
     else
-      ret = self.fundamentals[0, year].inject(0.0){ |sum,e| sum += e.roe } / year.to_f
+      ret = self.fundamentals[0, year].inject(0.0){ |sum,e| sum += e.roe } / year
     end
     ret
   end
@@ -134,7 +134,7 @@ class Stock < ApplicationRecord
       ret = 0
     else
       sorted = self.fundamentals[0, year].sort {|a,b| a.pe_high <=> b.pe_high }
-      ret = year % 2 == 1 ? sorted[year/2].pe_high : (sorted[year/2 - 1].pe_high + sorted[year/2]).pe_high.to_f / 2
+      ret = year % 2 == 1 ? sorted[year/2.0].pe_high : (sorted[year/2.0 - 1].pe_high + sorted[year/2.0]).pe_high / 2.0
     end
     ret
   end
@@ -145,7 +145,7 @@ class Stock < ApplicationRecord
       ret = 0
     else
       sorted = self.fundamentals[0, year].sort {|a,b| a.pe_low <=> b.pe_low }
-      ret = year % 2 == 1 ? sorted[year/2].pe_low : (sorted[year/2 - 1].pe_low + sorted[year/2]).pe_low.to_f / 2
+      ret = year % 2 == 1 ? sorted[year/2.0].pe_low : (sorted[year/2.0 - 1].pe_low + sorted[year/2.0]).pe_low / 2.0
     end
     ret
   end

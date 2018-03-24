@@ -54,3 +54,8 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+# MS 2018/03/23 - Required for db migrations 
+group :development do
+  gem 'listen'
+end
