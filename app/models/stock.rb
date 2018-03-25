@@ -56,7 +56,7 @@ class Stock < ApplicationRecord
       div_bucket = div_bucket + (eps * self.payout)
       eps = eps * (1 + self.growth)
     end
-    ((((eps * self.pe_terminal) + div_bucket) / self.price) ** (1/years.to_f)) - 1
+    ((((eps * self.pe_terminal) + div_bucket) / self.price) ** (1.0 / years)) - 1
   end
 
   def croe( years )
@@ -71,7 +71,7 @@ class Stock < ApplicationRecord
       div_bucket = div_bucket + div
       book = book + eps - div
     end
-    ((((eps * self.pe_terminal) + div_bucket) / self.price) ** (1/years.to_f)) - 1
+    ((((eps * self.pe_terminal) + div_bucket) / self.price) ** (1.0 / years)) - 1
   end
 
   def reminder
@@ -113,7 +113,7 @@ class Stock < ApplicationRecord
     if self.fundamentals.length <= year || self.fundamentals[ year ].eps <= 0
       ret = 0
     else
-      ret = ( self.fundamentals[0].eps / self.fundamentals[ year ].eps ) ** ( 1 / year ) - 1
+      ret = ( self.fundamentals[0].eps / self.fundamentals[ year ].eps ) ** ( 1.0 / year ) - 1
     end
     ret
   end
