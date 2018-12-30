@@ -101,10 +101,24 @@ class PagesController < ApplicationController
              return ((a.y < b.y) ? 1 : ((a.y > b.y) ? -1 : 0));
              });
            var total = this.points.reduce(function(a, b){ return a + b.y; }, 0);
+           
+           // The maximum rows we can show in the tooltip is about 11, over that we will overflow the visible space in the chart, after which the tooltip 
+           // doesn't show up at all.  That seems like a bug in either high charts or the lazy gem, but in any event it doesn't make sense to show a ginormous
+           // tooltip.  So here we will decide how many components to show values for, and put the rest on the final line with only %'s 
+           var showAsSingle = 11
+           if (sortedPoints.length > showAsSingle) {
+            showAsSingle -= 1
+           }
            $.each(sortedPoints, function(i, point) {
-             s += '<br/><p style=\"font-weight:bold; color:' + point.series.color + '\">' + point.series.name + ': <span style=\"color:#000000\">' +
-               point.y.toLocaleString( \"en-US\", { minimumFractionDigits:2 } ) + '</span> ' + ( 100 * point.y / total ).toLocaleString( \"en-US\", { minimumFractionDigits:2, maximumFractionDigits:2 } ) + '%</p>';
-             });
+             if (i < showAsSingle) {
+              s += '<br/><p style=\"font-weight:bold; color:' + point.series.color + '\">' + point.series.name + ': <span style=\"color:#000000\">' +
+                point.y.toLocaleString( \"en-US\", { minimumFractionDigits:2 } ) + '</span> ' + ( 100 * point.y / total ).toLocaleString( \"en-US\", { minimumFractionDigits:2, maximumFractionDigits:2 } ) + '%</p>';
+            } else {
+              if (i == showAsSingle) { s += '<br/>' }
+              else { s += ', ' }  
+              s += point.series.name + ' ' + ( 100 * point.y / total ).toLocaleString( \"en-US\", { minimumFractionDigits:2, maximumFractionDigits:2 } ) + '%'
+            }  
+           });
            return s; }".js_code
         f.options[:legend] = { :layout => 'horizontal' }
         f.options[:plotOptions][:line] = {
@@ -128,6 +142,12 @@ class PagesController < ApplicationController
         f.options[:xAxis][:type] = "datetime"
         f.options[:xAxis][:ordinal] = false
         f.options[:chart][:zoomType] = "x"
+        f.options[:tooltip][:formatter] = "function() {
+            var d = new Date( this.x ); var s = '<strong>' + d.toDateString() + '</strong>';
+            var point = this.points[0]
+            s += '<br/><p style=\"font-weight:bold; color:' + point.series.color + '\">' + point.series.name + ': <span style=\"color:#000000\">' +
+                 point.y.toLocaleString( \"en-US\", { minimumFractionDigits:2 } ) + '</span></p>';
+            return s; }".js_code
         f.options[:legend] = { :layout => 'horizontal' }
         f.options[:plotOptions][:line] = {
           :lineWidth => 1,
