@@ -21,6 +21,7 @@
     <th>10 CAGR</th>
     <th>5 CROE</th>
     <th>10 CROE</th>
+    <th>Confidence</th>
   </tr>
 
   <% controller.portfolio_constituents( portfolio_id ).each do |constituent|
@@ -47,6 +48,10 @@
       <td class="number"><%= number_with_precision( stock.ten_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="number"><%= number_with_precision( stock.five_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="number"><%= number_with_precision( stock.ten_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="<%= if stock.confidence == Togabou::CONFIDENCE_HIGH then "confidence_green" 
+        elsif stock.confidence == Togabou::CONFIDENCE_MEDIUM then "confidence_yellow"
+        elsif stock.confidence == Togabou::CONFIDENCE_LOW then "confidence_red"
+        end %>"><%= stock.confidence %></td>
     </tr>
   <% end %>
   <tr><td/><td/><td/><td/><td/><td/><td/><td/><td class="number"><%= number_with_precision( controller.portfolio_model_check( portfolio_id ) * 100, :precision => 1, :delimiter => ",") %>%</td><td class="symbol">CASH</td><td class="number"><%= number_with_precision( controller.portfolio_cash( portfolio_id ), :precision => 2, :delimiter => ",") %></td></td><td class="number"><%= number_with_precision( controller.portfolio_cash_percent( portfolio_id ) * 100, :precision => 2, :delimiter => ",") %>%</td><td/><td/><td class="number"><%= number_with_precision( controller.portfolio_eps_wtd_total( portfolio_id ) * 100, :precision => 2, :delimiter => ",") %>%</td><td class="number"><%= number_with_precision( controller.portfolio_div_wtd_total( portfolio_id ) * 100, :precision => 2, :delimiter => ",") %>%</td>
@@ -74,6 +79,10 @@
       <td class="number"><%= number_with_precision( stock.ten_year_cagr * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="number"><%= number_with_precision( stock.five_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="number"><%= number_with_precision( stock.ten_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
+      <td class="<%= if stock.confidence == Togabou::CONFIDENCE_HIGH then "confidence_green" 
+        elsif stock.confidence == Togabou::CONFIDENCE_MEDIUM then "confidence_yellow"
+        elsif stock.confidence == Togabou::CONFIDENCE_LOW then "confidence_red"
+        end %>"><%= stock.confidence %></td>
     </tr>
   <% end %>
   <tr><td class="symbol"><%= link_to 'New', new_stock_path %></td></tr>

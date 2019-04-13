@@ -23,6 +23,7 @@ class Stock < ApplicationRecord
   attr_accessor :ten_year_cagr
   attr_accessor :five_year_croe
   attr_accessor :ten_year_croe
+  attr_accessor :confidence
 
   after_initialize :initialize_members
   def initialize_members
@@ -45,6 +46,11 @@ class Stock < ApplicationRecord
       @ten_year_cagr = cagr( 10 )
       @five_year_croe = croe( 5 )
       @ten_year_croe = croe( 10 )
+    end
+    
+    @confidence = Togabou::CONFIDENCE_NONE
+    if self.researches.length > 0
+      @confidence = self.researches[0].confidence
     end
   end
 
