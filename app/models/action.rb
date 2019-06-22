@@ -306,7 +306,7 @@ class Action < ApplicationRecord
     action.execute
 
     # Buy Managed for ORSO
-    action = Action.new( date: self.date, actions_type_id: Togabou::ACTIONS_TYPE_MAN_BUY, value1: orso1_usd, symbol: "AsianOpps" )
+    action = Action.new( date: self.date, actions_type_id: Togabou::ACTIONS_TYPE_MAN_BUY, value1: orso1_usd, symbol: "JPEM" )
     action.execute
   end
 
