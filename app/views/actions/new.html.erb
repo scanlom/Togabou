@@ -41,35 +41,35 @@
   <% unless cur_actions_type.value1.nil? %>
   <p>
     <%= f.label :value1, cur_actions_type.value1 %><br>
-    <%= f.text_field :value1 %>
+    <%= f.number_field :value1, step: :any %>
   </p>
   <% end %>
 
   <% unless cur_actions_type.value2.nil? %>
   <p>
     <%= f.label :value2, cur_actions_type.value2 %><br>
-    <%= f.text_field :value2 %>
+    <%= f.number_field :value2, step: :any %>
   </p>
   <% end %>
 
   <% unless cur_actions_type.value3.nil? %>
   <p>
     <%= f.label :value3, cur_actions_type.value3 %><br>
-    <%= f.text_field :value3 %>
+    <%= f.number_field :value3, step: :any %>
   </p>
   <% end %>
 
   <% unless cur_actions_type.value4.nil? %>
   <p>
     <%= f.label :value4, cur_actions_type.value4 %><br>
-    <%= f.text_field :value4 %>
+    <%= f.number_field :value4, step: :any %>
   </p>
   <% end %>
 
   <% unless cur_actions_type.value5.nil? %>
   <p>
     <%= f.label :value5, cur_actions_type.value5 %><br>
-    <%= f.text_field :value5 %>
+    <%= f.number_field :value5, step: :any %>
   </p>
   <% end %>
 
