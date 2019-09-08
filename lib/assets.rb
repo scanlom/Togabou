@@ -264,6 +264,13 @@ class Assets
     @managed.positions.each do |position|
       allocations << Allocation.new( conn, position.symbol, position.value, @roe_total )
     end
+    allocation = Allocation.new( nil, "CASH",  @managed.cash.to_f, roe_total )
+    allocation.symbol= "CASH"
+    allocation.primary = "Cash"
+    allocation.primary_ordinal = 9
+    allocation.secondary = "Cash"
+    allocation.secondary_ordinal = 1
+    allocations << allocation
     @other.positions.each do |position|
       allocations << Allocation.new( conn, position.symbol, position.value, @roe_total )
     end
@@ -285,6 +292,13 @@ class Assets
     @managed.positions.each do |position|
       allocations << Allocation.new( conn, position.symbol, position.value, @managed.total )
     end
+    allocation = Allocation.new( nil, "CASH",  @managed.cash.to_f, @managed.total )
+    allocation.symbol= "CASH"
+    allocation.primary = "Cash"
+    allocation.primary_ordinal = 9
+    allocation.secondary = "Cash"
+    allocation.secondary_ordinal = 1
+    allocations << allocation
 
     allocations = normalize_allocations( allocations )
 
