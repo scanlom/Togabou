@@ -129,6 +129,16 @@ $(document).ready(function(){
 	  <td class="number" title="<%= ( as.date - 10.years ).to_s %>"><%= number_with_precision( as.ret_ten_year_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
 	</tr>
     <tr>
+      <td class="symbol">Play</td>
+      <td class="number" title="<%= ( as.date - 1.day ).to_s %>"><%= number_with_precision( as.ret_day_play * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 1.week ).to_s %>"><%= number_with_precision( as.ret_week_play * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 1.month ).to_s %>"><%= number_with_precision( as.ret_month_play * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 3.months ).to_s %>"><%= number_with_precision( as.ret_three_month_play * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 1.year ).to_s %>"><%= number_with_precision( as.ret_year_play * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 5.years ).to_s %>"><%= number_with_precision( as.ret_five_year_play * 100, :precision => 2, :delimiter => ",") %>%</td>
+	  <td class="number" title="<%= ( as.date - 10.years ).to_s %>"><%= number_with_precision( as.ret_ten_year_play * 100, :precision => 2, :delimiter => ",") %>%</td>
+	</tr>
+    <tr>
       <td class="symbol">Managed</td>
       <td class="number" title="<%= ( as.date - 1.day ).to_s %>"><%= number_with_precision( as.ret_day_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
 	  <td class="number" title="<%= ( as.date - 1.week ).to_s %>"><%= number_with_precision( as.ret_week_managed * 100, :precision => 2, :delimiter => ",") %>%</td>

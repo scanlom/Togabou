@@ -112,26 +112,32 @@ class Assets
   attr_accessor :ret_week_rotc
   attr_accessor :ret_week_portfolio
   attr_accessor :ret_week_managed
+  attr_accessor :ret_week_play
   attr_accessor :ret_month_roe
   attr_accessor :ret_month_rotc
   attr_accessor :ret_month_portfolio
   attr_accessor :ret_month_managed
+  attr_accessor :ret_month_play
   attr_accessor :ret_three_month_roe
   attr_accessor :ret_three_month_rotc
   attr_accessor :ret_three_month_portfolio
   attr_accessor :ret_three_month_managed
+  attr_accessor :ret_three_month_play
   attr_accessor :ret_year_roe
   attr_accessor :ret_year_rotc
   attr_accessor :ret_year_portfolio
   attr_accessor :ret_year_managed
+  attr_accessor :ret_year_play
   attr_accessor :ret_five_year_roe
   attr_accessor :ret_five_year_rotc
   attr_accessor :ret_five_year_portfolio
   attr_accessor :ret_five_year_managed
+  attr_accessor :ret_five_year_play
   attr_accessor :ret_ten_year_roe
   attr_accessor :ret_ten_year_rotc
   attr_accessor :ret_ten_year_portfolio
   attr_accessor :ret_ten_year_managed
+  attr_accessor :ret_ten_year_play
 
   def initialize(date = nil)
     conn = ActiveRecord::Base.connection
@@ -189,26 +195,32 @@ class Assets
     @ret_week_rotc = calculate_return( self.rotc_index, get_base( conn, 3, @date - 1.week ) )
     @ret_week_portfolio = calculate_return( self.portfolio.index, get_base( conn, 1, @date - 1.week ) )
     @ret_week_managed = calculate_return( self.managed.index, get_base( conn, 4, @date - 1.week ) )
+    @ret_week_play = calculate_return( self.play.index, get_base( conn, 5, @date - 1.week ) )
     @ret_month_roe = calculate_return( self.roe_index, get_base( conn, 2, @date - 1.month ) )
     @ret_month_rotc = calculate_return( self.rotc_index, get_base( conn, 3, @date - 1.month ) )
     @ret_month_portfolio = calculate_return( self.portfolio.index, get_base( conn, 1, @date - 1.month ) )
     @ret_month_managed = calculate_return( self.managed.index, get_base( conn, 4, @date - 1.month ) )
+    @ret_month_play = calculate_return( self.play.index, get_base( conn, 5, @date - 1.month ) )
     @ret_three_month_roe = calculate_return( self.roe_index, get_base( conn, 2, @date - 3.months ) )
     @ret_three_month_rotc = calculate_return( self.rotc_index, get_base( conn, 3, @date - 3.months ) )
     @ret_three_month_portfolio = calculate_return( self.portfolio.index, get_base( conn, 1, @date - 3.months ) )
     @ret_three_month_managed = calculate_return( self.managed.index, get_base( conn, 4, @date - 3.months ) )
+    @ret_three_month_play = calculate_return( self.play.index, get_base( conn, 5, @date - 3.months ) )
     @ret_year_roe = calculate_return( self.roe_index, get_base( conn, 2, @date - 1.year ) )
     @ret_year_rotc = calculate_return( self.rotc_index, get_base( conn, 3, @date - 1.year ) )
     @ret_year_portfolio = calculate_return( self.portfolio.index, get_base( conn, 1, @date - 1.year ) )
     @ret_year_managed = calculate_return( self.managed.index, get_base( conn, 4, @date - 1.year ) )
+    @ret_year_play = calculate_return( self.play.index, get_base( conn, 5, @date - 1.year ) )
     @ret_five_year_roe = calculate_return( self.roe_index, get_base( conn, 2, @date - 5.years ), 5 )
     @ret_five_year_rotc = calculate_return( self.rotc_index, get_base( conn, 3, @date - 5.years ), 5 )
     @ret_five_year_portfolio = calculate_return( self.portfolio.index, get_base( conn, 1, @date - 5.years ), 5 )
     @ret_five_year_managed = calculate_return( self.managed.index, get_base( conn, 4, @date - 5.years ), 5 )
+    @ret_five_year_play = calculate_return( self.play.index, get_base( conn, 5, @date - 5.years ), 5 )
     @ret_ten_year_roe = calculate_return( self.roe_index, get_base( conn, 2, @date - 10.years ), 10 )
     @ret_ten_year_rotc = calculate_return( self.rotc_index, get_base( conn, 3, @date - 10.years ), 10 )
     @ret_ten_year_portfolio = calculate_return( self.portfolio.index, get_base( conn, 1, @date - 10.years ), 10 )
     @ret_ten_year_managed = calculate_return( self.managed.index, get_base( conn, 4, @date - 10.years ), 10 )
+    @ret_ten_year_play = calculate_return( self.play.index, get_base( conn, 5, @date - 10.years ), 10 )
   end
 
   def normalize_allocations( allocations )
