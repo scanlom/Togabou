@@ -57,6 +57,7 @@
   <tr><td/><td/><td/><td/><td/><td/><td/><td/><td class="number"><%= number_with_precision( controller.portfolio_model_check( portfolio_id ) * 100, :precision => 1, :delimiter => ",") %>%</td><td class="symbol">CASH</td><td class="number"><%= number_with_precision( controller.portfolio_cash( portfolio_id ), :precision => 2, :delimiter => ",") %></td></td><td class="number"><%= number_with_precision( controller.portfolio_cash_percent( portfolio_id ) * 100, :precision => 2, :delimiter => ",") %>%</td><td/><td/><td class="number"><%= number_with_precision( controller.portfolio_eps_wtd_total( portfolio_id ) * 100, :precision => 2, :delimiter => ",") %>%</td><td class="number"><%= number_with_precision( controller.portfolio_div_wtd_total( portfolio_id ) * 100, :precision => 2, :delimiter => ",") %>%</td>
   <tr><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td class="symbol">CHECK</td></td><td class="number"><%= number_with_precision( controller.portfolio_check( portfolio_id ) * 100, :precision => 2, :delimiter => ",") %>%</td>
   <tr><td>&nbsp</td></tr>
+  <tr><td class="symbol"><%= link_to 'New', new_stock_path %></td></tr>
   <% controller.watch_stocks( portfolio_id ).each do |stock| %>
     <tr>
       <td class="<%= if stock.reminder == 0 then "symbol" elsif stock.reminder == 1 then "symbol_yellow" else "symbol_red" end %>"><%= link_to stock.symbol, stock_path(stock) %></td>
@@ -85,5 +86,4 @@
         end %>"><%= stock.confidence %></td>
     </tr>
   <% end %>
-  <tr><td class="symbol"><%= link_to 'New', new_stock_path %></td></tr>
 </table>
