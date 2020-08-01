@@ -24,6 +24,7 @@ class Stock < ApplicationRecord
   attr_accessor :five_year_croe
   attr_accessor :ten_year_croe
   attr_accessor :confidence
+  attr_accessor :confidence_num
 
   after_initialize :initialize_members
   def initialize_members
@@ -51,6 +52,16 @@ class Stock < ApplicationRecord
     @confidence = Togabou::CONFIDENCE_NONE
     if self.researches.length > 0
       @confidence = self.researches[0].confidence
+    end
+
+    if self.confidence == Togabou::CONFIDENCE_HIGH
+        @confidence_num = 0
+    elsif self.confidence == Togabou::CONFIDENCE_MEDIUM
+        @confidence_num = 1
+    elsif self.confidence == Togabou::CONFIDENCE_NONE
+        @confidence_num = 2
+    elsif self.confidence == Togabou::CONFIDENCE_LOW
+        @confidence_num = 3
     end
   end
 
