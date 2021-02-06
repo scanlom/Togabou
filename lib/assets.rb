@@ -261,12 +261,12 @@ class Assets
     conn = ActiveRecord::Base.connection
     allocations = Array.new
     @portfolio.positions.each do |position|
-      allocation = Allocation.new( conn, position.symbol, position.value, @roe_total )
+      allocation = Allocation.new( conn, position.symbol, position.value, @rotc_total )
       allocation.secondary = "Self" # Override for self positions, as we may hold the same asset in managed (JPM)
       allocation.secondary_ordinal = 1
       allocations << allocation
     end
-    allocation = Allocation.new( nil, "CASH",  @portfolio.cash.to_f, roe_total )
+    allocation = Allocation.new( nil, "CASH",  @portfolio.cash.to_f, rotc_total )
     allocation.symbol= "CASH"
     allocation.primary = "DomEq"
     allocation.primary_ordinal = 1
@@ -274,9 +274,9 @@ class Assets
     allocation.secondary_ordinal = 1
     allocations << allocation
     @managed.positions.each do |position|
-      allocations << Allocation.new( conn, position.symbol, position.value, @roe_total )
+      allocations << Allocation.new( conn, position.symbol, position.value, @rotc_total )
     end
-    allocation = Allocation.new( nil, "CASH",  @managed.cash.to_f, roe_total )
+    allocation = Allocation.new( nil, "CASH",  @managed.cash.to_f, rotc_total )
     allocation.symbol= "CASH"
     allocation.primary = "Cash"
     allocation.primary_ordinal = 9
@@ -284,16 +284,16 @@ class Assets
     allocation.secondary_ordinal = 1
     allocations << allocation
     @other.positions.each do |position|
-      allocations << Allocation.new( conn, position.symbol, position.value, @roe_total )
+      allocations << Allocation.new( conn, position.symbol, position.value, @rotc_total )
     end
 
     allocations = normalize_allocations( allocations )
 
     # Add Cash, Check, Debt (bit of a hack, but hopefully you can follow)
-    debt_percentage = 100 * ( @debt.to_f / @roe_total.to_f )
-    allocations << Allocation.new( nil, "CASH",  @cash.to_f, roe_total )
-    allocations << Allocation.new( nil, "CHECK", allocations.inject(0){ |sum,x| sum += x.percentage } - debt_percentage, 100 )
-    allocations << Allocation.new( nil, "DEBT", @debt, @roe_total )
+    debt_percentage = 100 * ( @debt.to_f / @rotc_total.to_f )
+    allocations << Allocation.new( nil, "CASH",  @cash.to_f, rotc_total )
+    allocations << Allocation.new( nil, "CHECK", allocations.inject(0){ |sum,x| sum += x.percentage }, 100 )
+    allocations << Allocation.new( nil, "DEBT", @debt, @rotc_total )
 
     allocations
   end

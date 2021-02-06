@@ -31,9 +31,9 @@ class Stock < ApplicationRecord
     if ( ( self.price == nil || self.price <= 0 ) && self.symbol != nil )
       # Populate price from AlphaVantage
       logger.info sprintf( "Retrieving last from AlphaVantage for %s...", self.symbol )
-      url = sprintf("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=%s&apikey=2YG6SAN57NRYNPJ8", self.symbol)
+      url = sprintf("https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=%s&apikey=2YG6SAN57NRYNPJ8", self.symbol)
       data = JSON.load(open(url))
-      self.price = data['Time Series (Daily)'].values[0]['5. adjusted close'].to_f
+      self.price = data['Global Quote']['05. price'].to_f
       logger.info sprintf( "Retrieved %f from AlphaVantage for %s", self.price, self.symbol )
     end
 

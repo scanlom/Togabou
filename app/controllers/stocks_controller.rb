@@ -67,7 +67,7 @@ class StocksController < ApplicationController
   end
 
   def portfolio_total_percent( portfolio_id )
-    self.assets.portfolio_internal( portfolio_id ).total.to_f / self.assets.roe_total.to_f
+    self.assets.portfolio_internal( portfolio_id ).total.to_f / self.assets.rotc_total.to_f
   end
 
   def portfolio_cash( portfolio_id )

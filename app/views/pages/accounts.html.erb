@@ -70,7 +70,7 @@ td.symbol {
 </table></td>
 <td style="vertical-align:top"><table><tr>
   <td class = "symbol">Total</td>
-  <td class="number"><%= number_with_precision( as.cash.to_f + as.portfolio.cash.to_f, :precision => 2, :delimiter => ",") %></td>
+  <td class="number"><%= number_with_precision( as.cash.to_f + as.portfolio.cash.to_f + as.managed.cash.to_f, :precision => 2, :delimiter => ",") %></td>
 </tr></table></td>
 <td><table>
 <tr>
