@@ -5,6 +5,8 @@ class Constituent < ApplicationRecord
   attr_accessor :off
   attr_accessor :eps_yield_wtd
   attr_accessor :div_yield_wtd
+  attr_accessor :cagr5yr_wtd
+  attr_accessor :cagr10yr_wtd
 
   after_initialize :initialize_members
   def initialize_members
@@ -18,9 +20,13 @@ class Constituent < ApplicationRecord
     if self.stock != nil
       @eps_yield_wtd = self.actual.to_f * self.stock.eps_yield.to_f
       @div_yield_wtd = self.actual.to_f * self.stock.div_yield.to_f
+      @cagr5yr_wtd = self.actual.to_f * self.stock.cagr(5).to_f
+      @cagr10yr_wtd = self.actual.to_f * self.stock.cagr(10).to_f
     else
       @eps_yield_wtd = 0
       @div_yield_wtd = 0
+      @cagr5yr_wtd = 0
+      @cagr10yr_wtd = 0
     end
   end
 end

@@ -94,6 +94,14 @@ class StocksController < ApplicationController
     self.portfolio_constituents( portfolio_id ).inject(0.0){ |sum,x| sum + x.div_yield_wtd.to_f }
   end
 
+  def portfolio_cagr5yr_wtd_total( portfolio_id )
+    self.portfolio_constituents( portfolio_id ).inject(0.0){ |sum,x| sum + x.cagr5yr_wtd.to_f }
+  end
+
+  def portfolio_cagr10yr_wtd_total( portfolio_id )
+    self.portfolio_constituents( portfolio_id ).inject(0.0){ |sum,x| sum + x.cagr10yr_wtd.to_f }
+  end
+
   private
     def stock_params
       params.require(:stock).permit(:symbol, :eps, :div, :growth, :pe_terminal, :payout, :book, :roe, constituents_attributes: [:model, :id, :stock_id] )

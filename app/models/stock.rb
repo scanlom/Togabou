@@ -32,7 +32,7 @@ class Stock < ApplicationRecord
       # Populate price from AlphaVantage
       logger.info sprintf( "Retrieving last from AlphaVantage for %s...", self.symbol )
       url = sprintf("https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=%s&apikey=2YG6SAN57NRYNPJ8", self.symbol)
-      data = JSON.load(open(url))
+      data = JSON.load(URI.open(url))
       self.price = data['Global Quote']['05. price'].to_f
       logger.info sprintf( "Retrieved %f from AlphaVantage for %s", self.price, self.symbol )
     end
