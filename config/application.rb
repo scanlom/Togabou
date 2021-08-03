@@ -18,6 +18,7 @@ module Togabou
 
    CONFIDENCE_HIGH    = "HIGH"
    CONFIDENCE_MEDIUM  = "MEDIUM"
+   CONFIDENCE_BLAH    = "BLAH"
    CONFIDENCE_LOW     = "LOW"
    CONFIDENCE_NONE    = "NONE"
     

@@ -11,6 +11,8 @@ class Research < ApplicationRecord
         @confidence = Togabou::CONFIDENCE_HIGH
       elsif self.comment.include?(Togabou::CONFIDENCE_MEDIUM)
         @confidence = Togabou::CONFIDENCE_MEDIUM
+      elsif self.comment.include?(Togabou::CONFIDENCE_BLAH)
+        @confidence = Togabou::CONFIDENCE_BLAH
       elsif self.comment.include?(Togabou::CONFIDENCE_LOW)
         @confidence = Togabou::CONFIDENCE_LOW
       end  

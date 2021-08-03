@@ -50,6 +50,7 @@
       <td class="number"><%= number_with_precision( stock.ten_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="<%= if stock.confidence == Togabou::CONFIDENCE_HIGH then "confidence_green" 
         elsif stock.confidence == Togabou::CONFIDENCE_MEDIUM then "confidence_yellow"
+        elsif stock.confidence == Togabou::CONFIDENCE_BLAH then "confidence_gray"
         elsif stock.confidence == Togabou::CONFIDENCE_LOW then "confidence_red"
         end %>"><%= stock.confidence %></td>
     </tr>
@@ -89,6 +90,7 @@
       <td class="number"><%= number_with_precision( stock.ten_year_croe * 100, :precision => 2, :delimiter => ",") %>%</td>
       <td class="<%= if stock.confidence == Togabou::CONFIDENCE_HIGH then "confidence_green" 
         elsif stock.confidence == Togabou::CONFIDENCE_MEDIUM then "confidence_yellow"
+        elsif stock.confidence == Togabou::CONFIDENCE_BLAH then "confidence_gray"
         elsif stock.confidence == Togabou::CONFIDENCE_LOW then "confidence_red"
         end %>"><%= stock.confidence %></td>
     </tr>

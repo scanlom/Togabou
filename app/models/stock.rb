@@ -60,8 +60,10 @@ class Stock < ApplicationRecord
         @confidence_num = 1
     elsif self.confidence == Togabou::CONFIDENCE_NONE
         @confidence_num = 2
-    elsif self.confidence == Togabou::CONFIDENCE_LOW
+    elsif self.confidence == Togabou::CONFIDENCE_BLAH
         @confidence_num = 3
+    elsif self.confidence == Togabou::CONFIDENCE_LOW
+        @confidence_num = 4
     end
   end
 
