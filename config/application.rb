@@ -59,6 +59,10 @@ module Togabou
    ACTIONS_TYPE_L_PLAY_CI          = 20
    ACTIONS_TYPE_L_PLAY_BUY         = 21
    ACTIONS_TYPE_L_PLAY_SELL        = 22
+   ACTIONS_TYPE_P_CI               = 23
+   ACTIONS_TYPE_P_BUY              = 24
+   ACTIONS_TYPE_P_SELL             = 25
+   ACTIONS_TYPE_P_DIV              = 26
    ACTIONS_TYPE_LAST_SAVED         = 49
    ACTIONS_TYPE_E_SET_AMEX_CX      = 50
    ACTIONS_TYPE_E_SET_CAPITAL_ONE  = 51

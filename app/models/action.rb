@@ -15,6 +15,8 @@ class Action < ApplicationRecord
       execute_di
     when Togabou::ACTIONS_TYPE_PORT_DIV
       execute_port_div
+    when Togabou::ACTIONS_TYPE_P_DIV
+      execute_div
     when Togabou::ACTIONS_TYPE_L_PLAY_DIV
       execute_play_div
     when Togabou::ACTIONS_TYPE_TOT_DIV
@@ -31,12 +33,18 @@ class Action < ApplicationRecord
       execute_port_txn( -1 )
     when Togabou::ACTIONS_TYPE_PORT_BUY
       execute_port_txn( 1 )
+    when Togabou::ACTIONS_TYPE_P_SELL
+      execute_txn( -1 )
+    when Togabou::ACTIONS_TYPE_P_BUY
+      execute_txn( 1 )
     when Togabou::ACTIONS_TYPE_L_PLAY_SELL
       execute_play_txn( -1 )
     when Togabou::ACTIONS_TYPE_L_PLAY_BUY
       execute_play_txn( 1 )
     when Togabou::ACTIONS_TYPE_PORT_CI
       execute_port_ci
+    when Togabou::ACTIONS_TYPE_P_CI
+      execute_ci
     when Togabou::ACTIONS_TYPE_L_PLAY_CI
       execute_play_ci
     when Togabou::ACTIONS_TYPE_TOT_CI
@@ -72,7 +80,7 @@ class Action < ApplicationRecord
     when Togabou::ACTIONS_TYPE_C_PAID
       execute_c_paid
     else
-      raise ArgumentError, sprintf( "Unknown actions_type_id %s", self.actions_type_id ) , caller
+      raise ArgumentError, sprintf( "Unknown actions_type_id %s", self.actions_type_id ), caller
     end
     if self.actions_type_id <= Togabou::ACTIONS_TYPE_LAST_SAVED
       save
@@ -87,6 +95,8 @@ class Action < ApplicationRecord
       undo_di
     when Togabou::ACTIONS_TYPE_PORT_DIV
       undo_port_div
+    when Togabou::ACTIONS_TYPE_P_DIV
+      undo_div
     when Togabou::ACTIONS_TYPE_L_PLAY_DIV
       undo_play_div
     when Togabou::ACTIONS_TYPE_TOT_DIV
@@ -101,12 +111,18 @@ class Action < ApplicationRecord
       execute_port_txn( 1 )
     when Togabou::ACTIONS_TYPE_PORT_BUY
       execute_port_txn( -1 )
+    when Togabou::ACTIONS_TYPE_P_SELL
+      execute_txn( 1 )
+    when Togabou::ACTIONS_TYPE_P_BUY
+      execute_txn( -1 )
     when Togabou::ACTIONS_TYPE_L_PLAY_SELL
       execute_play_txn( 1 )
     when Togabou::ACTIONS_TYPE_L_PLAY_BUY
       execute_play_txn( -1 )
     when Togabou::ACTIONS_TYPE_PORT_CI
       undo_port_ci
+    when Togabou::ACTIONS_TYPE_P_CI
+      undo_ci
     when Togabou::ACTIONS_TYPE_L_PLAY_CI
       undo_play_ci
     when Togabou::ACTIONS_TYPE_TOT_CI
@@ -120,7 +136,7 @@ class Action < ApplicationRecord
     when Togabou::ACTIONS_TYPE_A_OWE_PORT
       undo_owe_port
     else
-      raise ArgumentError, sprintf( "Unknown actions_type_id %s", self.actions_type_id ) , caller
+      raise ArgumentError, sprintf( "Unknown actions_type_id %s", self.actions_type_id ), caller
     end
     destroy
     history_balances
@@ -158,6 +174,11 @@ class Action < ApplicationRecord
   def execute_port_div
     cash_final = get_cash_portfolio + self.value1
     set_cash_portfolio( cash_final )
+  end
+
+  def execute_div
+    cash_final = get_cash( self.value2 ) + self.value1
+    set_cash( cash_final, self.value2 )
   end
 
   def execute_play_div
@@ -202,6 +223,13 @@ class Action < ApplicationRecord
     set_cash_portfolio( cash_final )
   end
 
+  def execute_txn( side )
+    quantity_final = get_symbol_quantity( self.symbol, self.value3 ) + self.value2 * side
+    cash_final = get_cash(self.value3) - self.value1 * side;
+    set_symbol_quantity( symbol, quantity_final, self.value3 )
+    set_cash( cash_final, self.value3 )
+  end
+
   def execute_play_txn( side )
     quantity_final = get_symbol_quantity( self.symbol, Togabou::PORTFOLIOS_PLAY ) + self.value2 * side
     cash_final = get_cash_play - self.value1 * side;
@@ -218,6 +246,17 @@ class Action < ApplicationRecord
     set_cash_portfolio( portfolio_cash_final )
     set_cash_total( total_cash_final )
     set_portfolio_balance( portfolio_final )
+  end
+
+  def execute_ci
+    portfolio_cash_final = get_cash( self.value2 ) + self.value1
+    total_cash_final = get_cash_total - self.value1
+    portfolio_final = get_balance( self.value2 ) + self.value1
+    x_final = get_latest_index( self.value2 ) / portfolio_final
+    set_divisor( x_final, self.value2 )
+    set_cash( portfolio_cash_final, self.value2 )
+    set_cash_total( total_cash_final )
+    set_balance( portfolio_final, self.value2 )
   end
 
   def execute_play_ci
@@ -326,6 +365,11 @@ class Action < ApplicationRecord
     set_cash_portfolio( cash_final )
   end
 
+  def undo_div
+    cash_final = get_cash( self.value2 ) - self.value1
+    set_cash( cash_final, self.value2 )
+  end
+
   def undo_play_div
     cash_final = get_cash_play - self.value1
     set_cash_play( cash_final )
@@ -345,6 +389,17 @@ class Action < ApplicationRecord
     set_cash_portfolio( portfolio_cash_final )
     set_cash_total( total_cash_final )
     set_portfolio_balance( portfolio_final )
+  end
+
+  def undo_ci
+    portfolio_cash_final = get_cash( self.value2 ) - self.value1
+    total_cash_final = get_cash_total + self.value1
+    portfolio_final = get_balance( self.value2 ) - self.value1
+    x_final = get_latest_index( self.value2 ) / portfolio_final
+    set_divisor( x_final, self.value2 )
+    set_cash( portfolio_cash_final, self.value2 )
+    set_cash_total( total_cash_final )
+    set_balance( portfolio_final, self.value2 )
   end
 
   def undo_play_ci
@@ -407,6 +462,10 @@ class Action < ApplicationRecord
     get_scalar( "select * from balances where type=14" )
   end
 
+  def get_balance( portfolio_id )
+    get_scalar( sprintf( "select * from balances where type=%d", portfolio_id ) )
+  end
+
   def get_latest_index_rotc
     get_scalar( "select * from index_history where type=3 and date = (select max(date) from index_history where type=3)" )
   end
@@ -427,6 +486,10 @@ class Action < ApplicationRecord
     get_scalar( "select * from index_history where type=5 and date = (select max(date) from index_history where type=5)" )
   end
 
+  def get_latest_index( portfolio_id )
+    get_scalar( sprintf( "select * from index_history where type=%d and date = (select max(date) from index_history where type=%d)", portfolio_id, portfolio_id ) )
+  end
+
   def get_debt
     get_scalar( "select * from constituents where symbol='DEBT' and portfolio_id=3" )
   end
@@ -445,6 +508,10 @@ class Action < ApplicationRecord
 
   def get_cash_play
     get_scalar( "select * from constituents where symbol='CASH' and portfolio_id=5" )
+  end
+
+  def get_cash( portfolio_id )
+    get_scalar( sprintf( "select * from constituents where symbol='CASH' and portfolio_id=%d", portfolio_id ) )
   end
 
   def get_symbol_value( symbol, portfolio_id )
@@ -514,6 +581,10 @@ class Action < ApplicationRecord
     @conn.execute( sprintf( "update divisors set value=%s where type=5", value.to_s ) )
   end
 
+  def set_divisor( value, portfolio_id )
+    @conn.execute( sprintf( "update divisors set value=%s where type=%d", value.to_s, portfolio_id ) )
+  end
+
   def set_owe_port( value )
     set_balance( value, 7 )
   end
@@ -544,6 +615,10 @@ class Action < ApplicationRecord
 
   def set_cash_play( value )
     @conn.execute( sprintf( "update constituents set value=%.02f where symbol='CASH' and portfolio_id=5", value.to_f ) )
+  end
+
+  def set_cash( value, portfolio_id )
+    @conn.execute( sprintf( "update constituents set value=%.02f where symbol='CASH' and portfolio_id=%d", value.to_f, portfolio_id ) )
   end
 
   def set_symbol_value( symbol, value, portfolio_id )

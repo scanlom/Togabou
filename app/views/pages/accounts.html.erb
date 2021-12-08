@@ -34,7 +34,7 @@ td.symbol {
     </tr>
     <tr>
       <td>Cash Portfolio</td>
-      <td class="number"><%= number_with_precision( as.portfolio.cash, :precision => 2, :delimiter => ",") %></td>
+      <td class="number"><%= number_with_precision( as.play.cash, :precision => 2, :delimiter => ",") %></td>
     </tr>
     <tr>
       <td>Cash Managed</td>
@@ -65,7 +65,7 @@ td.symbol {
 </tr>
 <tr>
   <td class = "symbol">Recon</td>
-  <td class="number"><%= number_with_precision( a.total_cash.to_f - as.cash.to_f - as.portfolio.cash.to_f - as.managed.cash.to_f, :precision => 2, :delimiter => ",") %></td>
+  <td class="number"><%= number_with_precision( a.total_cash.to_f - as.cash.to_f - as.play.cash.to_f - as.managed.cash.to_f, :precision => 2, :delimiter => ",") %></td>
 </tr>
 </table></td>
 <td style="vertical-align:top"><table><tr>

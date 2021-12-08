@@ -52,13 +52,15 @@ end
 
 # Named Portfolio2 as I screwed up and there is a model of the same name
 class Portfolio2
+  attr_accessor :name
   attr_accessor :positions
   attr_accessor :cash
   attr_accessor :total
   attr_accessor :divisor
   attr_accessor :index
 
-  def initialize( conn, date, type, balance_type, index_type )
+  def initialize( conn, date, name, type, balance_type, index_type )
+    @name = name
 
     # Download positions
     @positions = Array.new
@@ -83,6 +85,10 @@ class Assets
   attr_accessor :managed
   attr_accessor :other
   attr_accessor :play
+  attr_accessor :oak
+  attr_accessor :risk_arb
+  attr_accessor :trade_fin
+  attr_accessor :quick
   attr_accessor :cash
   attr_accessor :debt
   attr_accessor :roe_total
@@ -151,10 +157,14 @@ class Assets
     @date = Date.parse( res.first['date'] )
 
     # Load the portfolios
-    @portfolio = Portfolio2.new( conn, @date, 1, 13, 1 )
-    @managed = Portfolio2.new( conn, @date, 2, 14, 4 )
-    @other = Portfolio2.new( conn, @date, 4, -1, -1 )
-    @play = Portfolio2.new( conn, @date, 5, 19, 5 )
+    @portfolio = Portfolio2.new( conn, @date, "Portfolio", 1, 13, 1 )
+    @managed = Portfolio2.new( conn, @date, "Managed", 2, 14, 4 )
+    @other = Portfolio2.new( conn, @date, "Other", 4, -1, -1 )
+    @play = Portfolio2.new( conn, @date, "Play", 5, 19, 5 )
+    @oak = Portfolio2.new( conn, @date, "Oak", 23, 23, 23 )
+    @risk_arb = Portfolio2.new( conn, @date, "Risk Arb", 24, 24, 24 )
+    @trade_fin = Portfolio2.new( conn, @date, "Trade Fin", 25, 25, 25 )
+    @quick = Portfolio2.new( conn, @date, "Quick", 26, 26, 26 )
 
     # Load the scalars
     @cash = get_scalar( conn, sprintf( "select value from portfolio_history where date='%s' and type=3 and symbol='CASH'", @date.to_s(:db) ) )
@@ -221,6 +231,23 @@ class Assets
     @ret_ten_year_portfolio = calculate_return( self.portfolio.index, get_base( conn, 1, @date - 10.years ), 10 )
     @ret_ten_year_managed = calculate_return( self.managed.index, get_base( conn, 4, @date - 10.years ), 10 )
     @ret_ten_year_play = calculate_return( self.play.index, get_base( conn, 5, @date - 10.years ), 10 )
+  end
+
+  def get_portfolio_allocations
+    allocations = Array.new
+    portfolios = [self.portfolio,self.play,self.oak,self.managed,self.other,self.risk_arb,self.trade_fin,self.quick]
+    portfolios.each do |portfolio|
+      if !portfolio.nil? && !portfolio.positions.blank?
+        allocations << Allocation.new( nil, portfolio.name, portfolio.total, @roe_total )
+      end
+    end
+
+    # Add Cash, Check, Debt (bit of a hack, but hopefully you can follow)
+    allocations << Allocation.new( nil, "CASH",  @cash.to_f, @roe_total )
+    allocations << Allocation.new( nil, "CHECK", allocations.inject(0){ |sum,x| sum += x.percentage }, 100 )
+    allocations << Allocation.new( nil, "DEBT", @debt, @roe_total )
+   
+    allocations
   end
 
   def normalize_allocations( allocations )
@@ -290,7 +317,6 @@ class Assets
     allocations = normalize_allocations( allocations )
 
     # Add Cash, Check, Debt (bit of a hack, but hopefully you can follow)
-    debt_percentage = 100 * ( @debt.to_f / @rotc_total.to_f )
     allocations << Allocation.new( nil, "CASH",  @cash.to_f, rotc_total )
     allocations << Allocation.new( nil, "CHECK", allocations.inject(0){ |sum,x| sum += x.percentage }, 100 )
     allocations << Allocation.new( nil, "DEBT", @debt, @rotc_total )

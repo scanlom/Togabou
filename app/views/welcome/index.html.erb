@@ -84,14 +84,29 @@ td.symbol {
 <td/><td/>
 <td class="number"><%= number_with_precision(a.debt, :precision => 2, :delimiter => ",") %></td>
 </tr>
+<%= render :partial => "portfolio", :locals => {:portfolio => a.play} %>
 <%= render :partial => "portfolio", :locals => {:portfolio => a.portfolio} %>
+<%= render :partial => "portfolio", :locals => {:portfolio => a.oak} %>
 <%= render :partial => "portfolio", :locals => {:portfolio => a.managed} %>
 <%= render :partial => "portfolio", :locals => {:portfolio => a.other} %>
-<%= render :partial => "portfolio", :locals => {:portfolio => a.play} %>
+<%= render :partial => "portfolio", :locals => {:portfolio => a.risk_arb} %>
+<%= render :partial => "portfolio", :locals => {:portfolio => a.trade_fin} %>
+<%= render :partial => "portfolio", :locals => {:portfolio => a.quick} %>
 </table>
 </td>
 <td style="vertical-align:top">
 <table>
+<%
+  allocations = a.get_portfolio_allocations
+  allocations.each do |allocation|
+%>
+<tr>
+<td><%= allocation.primary %></td>
+<td/><td/><td/><td/>
+<td class="number"><%= number_with_precision(allocation.percentage, :precision => 2) %></td>
+</tr>
+<% end %>
+<tr><td>&nbsp</td></tr>
 <%
   allocations = a.get_asset_allocations
   allocations.each do |allocation|
