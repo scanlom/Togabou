@@ -2,15 +2,15 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180323152610) do
+ActiveRecord::Schema.define(version: 2022_01_11_135314) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,44 +63,42 @@ ActiveRecord::Schema.define(version: 20180323152610) do
 
   create_table "balances", primary_key: "type", id: :integer, default: nil, force: :cascade do |t|
     t.text "description"
-    t.float "value"
+    t.decimal "value", precision: 12, scale: 2
     t.boolean "recon_cash"
     t.boolean "recon_budget_pos"
     t.boolean "recon_budget_neg"
-    t.boolean "recon_liquid_pos"
-    t.boolean "recon_liquid_neg"
   end
 
   create_table "balances_history", primary_key: ["date", "type"], force: :cascade do |t|
     t.date "date", null: false
     t.integer "type", null: false
-    t.float "value"
+    t.decimal "value", precision: 12, scale: 2
     t.index ["type"], name: "fki_frgn_key_balances_history_type"
   end
 
   create_table "constituents", id: :serial, force: :cascade do |t|
     t.text "symbol"
-    t.decimal "value"
-    t.decimal "quantity"
-    t.decimal "price"
+    t.decimal "value", precision: 12, scale: 2
+    t.decimal "quantity", precision: 13, scale: 3
+    t.decimal "price", precision: 12, scale: 2
     t.integer "pricing_type"
     t.integer "portfolio_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal "model"
+    t.decimal "model", precision: 3, scale: 2
     t.integer "stock_id"
     t.index ["portfolio_id"], name: "index_constituents_on_portfolio_id"
     t.index ["stock_id"], name: "index_constituents_on_stock_id"
   end
 
   create_table "divisors", primary_key: "type", id: :integer, default: nil, force: :cascade do |t|
-    t.float "value"
+    t.decimal "value", precision: 26, scale: 25
   end
 
   create_table "divisors_history", primary_key: ["date", "type"], force: :cascade do |t|
     t.date "date", null: false
     t.integer "type", null: false
-    t.float "value"
+    t.decimal "value", precision: 26, scale: 25
     t.index ["type"], name: "fki_frgn_key_divisors_history_type"
   end
 
@@ -111,15 +109,15 @@ ActiveRecord::Schema.define(version: 20180323152610) do
   create_table "fundamentals", id: :serial, force: :cascade do |t|
     t.date "date"
     t.text "symbol"
-    t.decimal "eps"
-    t.decimal "div"
-    t.decimal "pe"
-    t.decimal "pe_high"
-    t.decimal "pe_low"
-    t.decimal "roe"
-    t.decimal "roa"
-    t.decimal "mkt_cap"
-    t.decimal "shrs_out"
+    t.decimal "eps", precision: 12, scale: 2
+    t.decimal "div", precision: 13, scale: 3
+    t.decimal "pe", precision: 10
+    t.decimal "pe_high", precision: 10
+    t.decimal "pe_low", precision: 10
+    t.decimal "roe", precision: 5, scale: 2
+    t.decimal "roa", precision: 5, scale: 2
+    t.decimal "mkt_cap", precision: 15
+    t.decimal "shrs_out", precision: 15
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "stock_id"
@@ -128,18 +126,18 @@ ActiveRecord::Schema.define(version: 20180323152610) do
   create_table "index_history", primary_key: ["date", "type"], force: :cascade do |t|
     t.date "date", null: false
     t.integer "type", null: false
-    t.float "value"
+    t.decimal "value", precision: 12, scale: 2
     t.index ["type"], name: "fki_frgn_key_index_history_type"
   end
 
   create_table "portfolio_history", primary_key: ["date", "type", "symbol"], force: :cascade do |t|
     t.date "date", null: false
     t.text "symbol", null: false
-    t.float "value"
+    t.decimal "value", precision: 12, scale: 2
     t.integer "type", null: false
     t.integer "pricing_type"
-    t.float "quantity"
-    t.float "price"
+    t.decimal "quantity", precision: 13, scale: 3
+    t.decimal "price", precision: 12, scale: 2
     t.index ["type", "symbol"], name: "fki_frgn_key_portfolio_history_type_symbol"
   end
 
@@ -152,34 +150,34 @@ ActiveRecord::Schema.define(version: 20180323152610) do
   create_table "researches", id: :serial, force: :cascade do |t|
     t.text "symbol"
     t.date "date"
-    t.decimal "eps"
-    t.decimal "div"
-    t.decimal "growth"
-    t.decimal "pe_terminal"
-    t.decimal "payout"
-    t.decimal "book"
-    t.decimal "roe"
-    t.decimal "price"
-    t.decimal "div_plus_growth"
-    t.decimal "eps_yield"
-    t.decimal "div_yield"
-    t.decimal "five_year_cagr"
-    t.decimal "ten_year_cagr"
-    t.decimal "five_year_croe"
-    t.decimal "ten_year_croe"
+    t.decimal "eps", precision: 12, scale: 2
+    t.decimal "div", precision: 13, scale: 3
+    t.decimal "growth", precision: 5, scale: 2
+    t.decimal "pe_terminal", precision: 10
+    t.decimal "payout", precision: 5, scale: 2
+    t.decimal "book", precision: 12, scale: 2
+    t.decimal "roe", precision: 5, scale: 2
+    t.decimal "price", precision: 12, scale: 2
+    t.decimal "div_plus_growth", precision: 10, scale: 4
+    t.decimal "eps_yield", precision: 10, scale: 4
+    t.decimal "div_yield", precision: 10, scale: 4
+    t.decimal "five_year_cagr", precision: 10, scale: 4
+    t.decimal "ten_year_cagr", precision: 10, scale: 4
+    t.decimal "five_year_croe", precision: 10, scale: 4
+    t.decimal "ten_year_croe", precision: 10, scale: 4
     t.date "eps_yr1_date"
-    t.decimal "eps_yr1"
+    t.decimal "eps_yr1", precision: 12, scale: 2
     t.date "eps_yr2_date"
-    t.decimal "eps_yr2"
+    t.decimal "eps_yr2", precision: 12, scale: 2
     t.text "comment"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "stock_id"
   end
 
-  create_table "spending", id: false, force: :cascade do |t|
+  create_table "spending", id: :serial, force: :cascade do |t|
     t.date "date"
-    t.float "amount"
+    t.decimal "amount", precision: 12, scale: 2
     t.text "description"
     t.integer "type"
     t.integer "source"
@@ -192,24 +190,24 @@ ActiveRecord::Schema.define(version: 20180323152610) do
 
   create_table "stocks", id: :serial, force: :cascade do |t|
     t.text "symbol"
-    t.decimal "eps"
-    t.decimal "div"
-    t.decimal "growth"
-    t.decimal "pe_terminal"
-    t.decimal "payout"
-    t.decimal "book"
-    t.decimal "roe"
-    t.decimal "model"
+    t.decimal "eps", precision: 12, scale: 2
+    t.decimal "div", precision: 13, scale: 3
+    t.decimal "growth", precision: 5, scale: 2
+    t.decimal "pe_terminal", precision: 10
+    t.decimal "payout", precision: 5, scale: 2
+    t.decimal "book", precision: 12, scale: 2
+    t.decimal "roe", precision: 5, scale: 2
+    t.decimal "model", precision: 3, scale: 2
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.decimal "price"
-    t.decimal "day_change", default: -> { "(0)::numeric" }
-    t.decimal "week_change", default: -> { "(0)::numeric" }
-    t.decimal "month_change", default: -> { "(0)::numeric" }
-    t.decimal "three_month_change", default: -> { "(0)::numeric" }
-    t.decimal "year_change", default: -> { "(0)::numeric" }
-    t.decimal "five_year_change", default: -> { "(0)::numeric" }
-    t.decimal "ten_year_change", default: -> { "(0)::numeric" }
+    t.decimal "price", precision: 12, scale: 2
+    t.decimal "day_change", precision: 10, scale: 4, default: -> { "(0)::numeric" }
+    t.decimal "week_change", precision: 10, scale: 4, default: -> { "(0)::numeric" }
+    t.decimal "month_change", precision: 10, scale: 4, default: -> { "(0)::numeric" }
+    t.decimal "three_month_change", precision: 10, scale: 4, default: -> { "(0)::numeric" }
+    t.decimal "year_change", precision: 10, scale: 4, default: -> { "(0)::numeric" }
+    t.decimal "five_year_change", precision: 10, scale: 4, default: -> { "(0)::numeric" }
+    t.decimal "ten_year_change", precision: 10, scale: 4, default: -> { "(0)::numeric" }
     t.date "day_change_date"
     t.date "week_change_date"
     t.date "month_change_date"
@@ -221,10 +219,8 @@ ActiveRecord::Schema.define(version: 20180323152610) do
   end
 
   add_foreign_key "accounts", "accounts_types", column: "type", primary_key: "type", name: "frgn_key_accounts_type"
-  add_foreign_key "accounts", "divisors_types", column: "type", primary_key: "type", name: "frgn_key_divisors_type"
   add_foreign_key "balances_history", "balances", column: "type", primary_key: "type", name: "frgn_key_balances_history_type"
   add_foreign_key "divisors_history", "divisors_types", column: "type", primary_key: "type", name: "frgn_key_divisors_history_type"
   add_foreign_key "index_history", "divisors_types", column: "type", primary_key: "type", name: "frgn_key_index_history_type"
   add_foreign_key "spending", "balances", column: "source", primary_key: "type", name: "frgn_key_spending_source"
-  add_foreign_key "spending_types", "spending_types", column: "type", primary_key: "type", name: "frgn_key_spending_type"
 end

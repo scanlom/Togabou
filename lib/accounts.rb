@@ -21,8 +21,6 @@ class Balance
   attr_accessor :recon_cash
   attr_accessor :recon_budget_pos
   attr_accessor :recon_budget_neg
-  attr_accessor :recon_liquid_pos
-  attr_accessor :recon_liquid_neg
 
   def recon_cash
     ! [false, nil, 'f'].include?( @recon_cash )
@@ -36,23 +34,13 @@ class Balance
     ! [false, nil, 'f'].include?( @recon_budget_neg )
   end
 
-  def recon_liquid_pos
-    ! [false, nil, 'f'].include?( @recon_liquid_pos )
-  end
-  
-  def recon_liquid_neg
-    ! [false, nil, 'f'].include?( @recon_liquid_neg )
-  end
-  
-  def initialize( type, description, value, recon_cash, recon_budget_pos, recon_budget_neg, recon_liquid_pos, recon_liquid_neg )
+  def initialize( type, description, value, recon_cash, recon_budget_pos, recon_budget_neg )
     @type = type.to_i
     @description = description
     @value = value.to_f
     @recon_cash = recon_cash
     @recon_budget_pos = recon_budget_pos
     @recon_budget_neg = recon_budget_neg
-    @recon_liquid_pos = recon_liquid_pos
-    @recon_liquid_neg = recon_liquid_neg
   end
 end
 
@@ -75,13 +63,13 @@ class Accounts
     @balances = Array.new
     @txns = Array.new
     conn = ActiveRecord::Base.connection
-    res = conn.execute( sprintf( "select h.type, b.description, h.value, b.recon_cash, b.recon_budget_pos, b.recon_budget_neg, b.recon_liquid_pos, b.recon_liquid_neg 
+    res = conn.execute( sprintf( "select h.type, b.description, h.value, b.recon_cash, b.recon_budget_pos, b.recon_budget_neg 
     from balances b, balances_history h 
     where h.date='%s' and
       b.type = h.type
     order by value desc", @date.to_s(:db) ) )
     res.values().each do |row|
-      @balances << Balance.new( row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7] )
+      @balances << Balance.new( row[0], row[1], row[2], row[3], row[4], row[5] )
     end
     res = conn.execute( "select s.date, s.amount, s.description, t.description, b.description from spending s, spending_types t, balances b where 
 	s.date > DATE 'today' - 31 and
@@ -130,25 +118,4 @@ order by s.date desc" )
     balances_recon_budget_neg.inject(0){|sum,x| sum += x.value}
   end
 
-  def balances_liquid_pos
-    ret = self.balances.collect {|x| if x.recon_liquid_pos == true then x else nil end}
-    ret.compact!
-  end
-
-  def total_liquid_pos
-    balances_liquid_pos.inject(0){|sum,x| sum += x.value}
-  end
-
-  def balances_liquid_neg
-    ret = self.balances.collect {|x| if x.recon_liquid_neg == true then x else nil end}
-    ret.compact!
-  end
-  
-  def total_liquid_neg
-    balances_liquid_neg.inject(0){|sum,x| sum += x.value}
-  end
-      
-  def liquid_budget
-    total_liquid_pos - total_liquid_neg
-  end
 end
