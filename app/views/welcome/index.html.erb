@@ -24,36 +24,36 @@ td.symbol {
 <tr><td/>
 <td class="symbol">Total (ROE)</td>
 <td class="symbol">Total (ROTC)</td>
-<td class="symbol">Self</td>
-<td class="symbol">Play</td>
-<td class="symbol">Managed</td>
+<% a.portfolios.each do |portfolio| %>
+<td class="symbol"><%= portfolio.name %></td>
+<% end %>
 <td class="symbol">Profit</td>
 </tr>
 <tr>
 <td class="symbol">YTD</td>
 <td class="number"><%= number_with_precision(a.ret_ytd_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
 <td class="number"><%= number_with_precision(a.ret_ytd_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
-<td class="number"><%= number_with_precision(a.ret_ytd_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
-<td class="number"><%= number_with_precision(a.ret_ytd_play * 100, :precision => 2, :delimiter => ",") %>%</td>
-<td class="number"><%= number_with_precision(a.ret_ytd_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
+<% a.portfolios.each do |portfolio| %>
+<td class="number"><%= number_with_precision(portfolio.ret_ytd * 100, :precision => 2, :delimiter => ",") %>%</td>
+<% end %>
 <td class="number"><%= number_with_precision(a.profit, :precision => 2, :delimiter => ",") %></td>
 </tr>
 <tr>
 <td class="symbol">QTD</td>
 <td class="number"><%= number_with_precision(a.ret_qtd_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
 <td class="number"><%= number_with_precision(a.ret_qtd_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
-<td class="number"><%= number_with_precision(a.ret_qtd_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
-<td class="number"><%= number_with_precision(a.ret_qtd_play * 100, :precision => 2, :delimiter => ",") %>%</td>
-<td class="number"><%= number_with_precision(a.ret_qtd_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
+<% a.portfolios.each do |portfolio| %>
+<td class="number"><%= number_with_precision(portfolio.ret_qtd * 100, :precision => 2, :delimiter => ",") %>%</td>
+<% end %>
 <td/>
 </tr>
 <tr>
 <td class="symbol">Day</td>
 <td class="number"><%= number_with_precision(a.ret_day_roe * 100, :precision => 2, :delimiter => ",") %>%</td>
 <td class="number"><%= number_with_precision(a.ret_day_rotc * 100, :precision => 2, :delimiter => ",") %>%</td>
-<td class="number"><%= number_with_precision(a.ret_day_portfolio * 100, :precision => 2, :delimiter => ",") %>%</td>
-<td class="number"><%= number_with_precision(a.ret_day_play * 100, :precision => 2, :delimiter => ",") %>%</td>
-<td class="number"><%= number_with_precision(a.ret_day_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
+<% a.portfolios.each do |portfolio| %>
+<td class="number"><%= number_with_precision(portfolio.ret_day * 100, :precision => 2, :delimiter => ",") %>%</td>
+<% end %>
 <td/>
 </tr>
 </table></td></tr>

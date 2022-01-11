@@ -52,30 +52,80 @@ end
 
 # Named Portfolio2 as I screwed up and there is a model of the same name
 class Portfolio2
+  attr_accessor :date
   attr_accessor :name
   attr_accessor :positions
   attr_accessor :cash
   attr_accessor :total
   attr_accessor :divisor
   attr_accessor :index
+  attr_accessor :ret_ytd
+  attr_accessor :ret_qtd
+  attr_accessor :ret_day
 
-  def initialize( conn, date, name, type, balance_type, index_type )
+  def initialize( conn, date, name, portfolio_type, balance_type, index_type )
+    @date = date
     @name = name
 
     # Download positions
     @positions = Array.new
-    res = conn.execute( sprintf( "select symbol, value, quantity, price from portfolio_history where date='%s' and type=%s and symbol<>'CASH' order by value desc", date.to_s(:db), type.to_s ) )
+    res = conn.execute( sprintf( "select symbol, value, quantity, price from portfolio_history where date='%s' and type=%s and symbol<>'CASH' order by value desc", date.to_s(:db), portfolio_type.to_s ) )
     res.values().each do |row|
       @positions << Position.new( row[0], row[1], row[2], row[3] )
     end
 
     # Download scalars
     if balance_type > 0
-      @cash = get_scalar( conn, sprintf( "select value from portfolio_history where date='%s' and type=%s and symbol='CASH'", date.to_s(:db), type.to_s ) )
+      @cash = get_scalar( conn, sprintf( "select value from portfolio_history where date='%s' and type=%s and symbol='CASH'", date.to_s(:db), portfolio_type.to_s ) )
       @total = get_scalar( conn, sprintf( "select value from balances_history where date='%s' and type=%s", date.to_s(:db), balance_type.to_s ) )
       @divisor = get_scalar( conn, sprintf( "select value from divisors_history where date='%s' and type=%s", date.to_s(:db), index_type.to_s ) )
       @index = get_scalar( conn, sprintf( "select value from index_history where date='%s' and type=%s", date.to_s(:db), index_type.to_s ) )
     end
+
+    # Calculate returns
+    @ret_ytd = calculate_return( self.index, get_ytd_base( conn, index_type ) )
+    @ret_qtd = calculate_return( self.index, get_qtd_base( conn, index_type ) )
+    @ret_day = calculate_return( self.index, get_day_base( conn, index_type ) )
+  end
+
+  def calculate_return( current, base, years = 1 )
+    ret = 0
+    if base.to_f > 0
+      ret = ( current.to_f / base.to_f ) ** ( 1 / years.to_f ) - 1
+    end
+    ret
+  end
+
+  def get_base( conn, index, date )
+    get_scalar( conn, sprintf( "select * from index_history where type=%s and
+      date = ( select max(date) from index_history where date <= '%s' )", index, date.to_s(:db) ) )
+  end
+
+  def get_ytd_base( conn, index )
+    date = "01/01/" + self.date.year.to_s
+    if self.date.month == 1 && self.date.day == 1
+        date = "01/01/" + (self.date.year - 1).to_s
+    end
+    get_scalar( conn, sprintf( "select * from index_history where type=%s and date='%s'", index, date ) )
+  end
+
+  def get_qtd_base( conn, index )
+    date = "10/01/" + (self.date.year - 1).to_s
+    if self.date.month > 9 && !(self.date.month == 10 && self.date.day == 1)
+        date = "10/01/" + self.date.year.to_s
+    elsif self.date.month > 6 && !(self.date.month == 7 && self.date.day == 1)
+        date = "07/01/" + self.date.year.to_s
+    elsif self.date.month > 3 && !(self.date.month == 4 && self.date.day == 1)
+        date = "04/01/" + self.date.year.to_s
+    elsif !(self.date.month == 1 && self.date.day == 1)
+        date = "01/01/" + self.date.year.to_s
+    end
+    get_scalar( conn, sprintf( "select * from index_history where type=%s and date='%s'", index, date ) )
+  end
+
+  def get_day_base( conn, index )
+    date = self.date - 1.day
+    get_scalar( conn, sprintf( "select * from index_history where type=%s and date='%s'", index, date ) )
   end
 end
 
@@ -89,6 +139,7 @@ class Assets
   attr_accessor :risk_arb
   attr_accessor :trade_fin
   attr_accessor :quick
+  attr_accessor :portfolios
   attr_accessor :cash
   attr_accessor :debt
   attr_accessor :roe_total
@@ -165,6 +216,12 @@ class Assets
     @risk_arb = Portfolio2.new( conn, @date, "Risk Arb", 24, 24, 24 )
     @trade_fin = Portfolio2.new( conn, @date, "Trade Fin", 25, 25, 25 )
     @quick = Portfolio2.new( conn, @date, "Quick", 26, 26, 26 )
+    @portfolios = Array.new
+    [self.portfolio,self.play,self.oak,self.managed,self.other,self.risk_arb,self.trade_fin,self.quick].each do |portfolio|
+      if !portfolio.nil? && !portfolio.positions.blank?
+        self.portfolios << portfolio
+      end
+    end
 
     # Load the scalars
     @cash = get_scalar( conn, sprintf( "select value from portfolio_history where date='%s' and type=3 and symbol='CASH'", @date.to_s(:db) ) )
@@ -235,8 +292,7 @@ class Assets
 
   def get_portfolio_allocations
     allocations = Array.new
-    portfolios = [self.portfolio,self.play,self.oak,self.managed,self.other,self.risk_arb,self.trade_fin,self.quick]
-    portfolios.each do |portfolio|
+    self.portfolios.each do |portfolio|
       if !portfolio.nil? && !portfolio.positions.blank?
         allocations << Allocation.new( nil, portfolio.name, portfolio.total, @roe_total )
       end

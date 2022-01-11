@@ -33,39 +33,29 @@ td.confidence_red {
 </style>
 <button type="button" id="link_main">Main</button>
 <button type="button" id="link_change">Returns</button>
-<button type="button" id="link_play">Play</button>
 <script type="text/javascript">
 $(document).ready(function(){
 
   $('#div_change').hide();
-  $('#div_play').hide();
 
   $('#link_change').click(function(){
       $('#div_main').hide();
       $('#div_change').show();
-      $('#div_play').hide();
   });
 
   $('#link_main').click(function(){
       $('#div_change').hide();
       $('#div_main').show();
-      $('#div_play').hide();
-  });
-
-  $('#link_play').click(function(){
-      $('#div_change').hide();
-      $('#div_main').hide();
-      $('#div_play').show();
   });
 
 });
 </script>
 <div id="div_main">
-  <%= render :partial => "portfolio", :locals => {:portfolio_id => Togabou::PORTFOLIOS_SELF} %>
+  <%= render :partial => "portfolio", :locals => {:portfolio_id => Togabou::PORTFOLIOS_PLAY} %>
 </div>
 <div id="div_change">
 <table>
-  <tr><td class="symbol">Total</td><td class="number"><%= number_with_precision( controller.portfolio_total( Togabou::PORTFOLIOS_SELF ), :precision => 2, :delimiter => "," ) %></td><td class="number"><%= number_with_precision( controller.portfolio_total_percent( Togabou::PORTFOLIOS_SELF ) * 100, :precision => 2, :delimiter => ",") %>%</td></tr>
+  <tr><td class="symbol">Total</td><td class="number"><%= number_with_precision( controller.portfolio_total( Togabou::PORTFOLIOS_PLAY ), :precision => 2, :delimiter => "," ) %></td><td class="number"><%= number_with_precision( controller.portfolio_total_percent( Togabou::PORTFOLIOS_PLAY ) * 100, :precision => 2, :delimiter => ",") %>%</td></tr>
   <tr>
     <th>Symbol</th>
     <th>Day</th>
@@ -77,7 +67,7 @@ $(document).ready(function(){
     <th>Ten Years</th>
   </tr>
   <%
-    symbol_lists = [ [ controller.portfolio_stocks( Togabou::PORTFOLIOS_SELF ), true, 3 ], [ controller.watch_stocks( Togabou::PORTFOLIOS_SELF ), true, 1 ], [ controller.monitor_stocks, false, 1 ] ]
+    symbol_lists = [ [ controller.portfolio_stocks( Togabou::PORTFOLIOS_PLAY ), true, 3 ], [ controller.watch_stocks( Togabou::PORTFOLIOS_PLAY ), true, 1 ], [ controller.monitor_stocks, false, 1 ] ]
     symbol_lists.each do |list|
       list[0].each do |stock|
   %>
@@ -152,8 +142,5 @@ $(document).ready(function(){
 	  <td class="number" title="<%= ( as.date - 10.years ).to_s %>"><%= number_with_precision( as.ret_ten_year_managed * 100, :precision => 2, :delimiter => ",") %>%</td>
 	</tr>
 </table>
-</div>
-<div id="div_play">
-  <%= render :partial => "portfolio", :locals => {:portfolio_id => Togabou::PORTFOLIOS_PLAY} %>
 </div>
 <p/>
