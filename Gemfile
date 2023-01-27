@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Javascript runtime
-gem 'therubyracer'
+# gem 'therubyracer' # MS 2022/06/13 - Issues compiling, so commenting out and trying to remove
 
 # Lazy High Charts
 gem 'lazy_high_charts'
