@@ -103,7 +103,7 @@ GEM
     loofah (2.19.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
-    mail (2.8.0.1)
+    mail (2.8.1)
       mini_mime (>= 0.1.1)
       net-imap
       net-pop
@@ -123,10 +123,10 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.8)
-    nokogiri (1.14.1-x86_64-linux)
+    nokogiri (1.14.2-x86_64-linux)
       racc (~> 1.4)
     pg (1.4.5)
-    psych (5.0.2)
+    psych (5.1.0)
       stringio
     racc (1.6.2)
     rack (2.2.6.2)
@@ -174,7 +174,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    sdoc (2.6.0)
+    sdoc (2.6.1)
       rdoc (>= 5.0)
     sprockets (4.2.0)
       concurrent-ruby (~> 1.0)
@@ -183,7 +183,7 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    stringio (3.0.4)
+    stringio (3.0.5)
     thor (1.2.1)
     tilt (2.0.11)
     timeout (0.3.1)
@@ -197,7 +197,7 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.6.6)
+    zeitwerk (2.6.7)
 
 PLATFORMS
   x86_64-linux
@@ -218,4 +218,4 @@ DEPENDENCIES
   uglifier
 
 BUNDLED WITH
-   2.2.22
+   2.3.5
