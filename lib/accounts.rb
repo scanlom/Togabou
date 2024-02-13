@@ -55,7 +55,7 @@ class Accounts
     # If no date is passed in, use max date
     date_sql = "select max(b.date) date from balances_history b"
     if date != nil and date != ""
-      date_sql += " where b.date <= '" + date.to_s(:db) + "'"
+      date_sql += " where b.date <= '" + date.to_fs(:db) + "'"
     end
     res = conn.execute( date_sql ) 
     @date = Date.parse( res.first['date'] )
@@ -67,7 +67,7 @@ class Accounts
     from balances b, balances_history h 
     where h.date='%s' and
       b.type = h.type
-    order by value desc", @date.to_s(:db) ) )
+    order by value desc", @date.to_fs(:db) ) )
     res.values().each do |row|
       @balances << Balance.new( row[0], row[1], row[2], row[3], row[4], row[5] )
     end

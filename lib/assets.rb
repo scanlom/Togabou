@@ -69,17 +69,17 @@ class Portfolio2
 
     # Download positions
     @positions = Array.new
-    res = conn.execute( sprintf( "select symbol, value, quantity, price from portfolio_history where date='%s' and type=%s and symbol<>'CASH' order by value desc", date.to_s(:db), portfolio_type.to_s ) )
+    res = conn.execute( sprintf( "select symbol, value, quantity, price from portfolio_history where date='%s' and type=%s and symbol<>'CASH' order by value desc", date.to_fs(:db), portfolio_type.to_s ) )
     res.values().each do |row|
       @positions << Position.new( row[0], row[1], row[2], row[3] )
     end
 
     # Download scalars
     if balance_type > 0
-      @cash = get_scalar( conn, sprintf( "select value from portfolio_history where date='%s' and type=%s and symbol='CASH'", date.to_s(:db), portfolio_type.to_s ) )
-      @total = get_scalar( conn, sprintf( "select value from balances_history where date='%s' and type=%s", date.to_s(:db), balance_type.to_s ) )
-      @divisor = get_scalar( conn, sprintf( "select value from divisors_history where date='%s' and type=%s", date.to_s(:db), index_type.to_s ) )
-      @index = get_scalar( conn, sprintf( "select value from index_history where date='%s' and type=%s", date.to_s(:db), index_type.to_s ) )
+      @cash = get_scalar( conn, sprintf( "select value from portfolio_history where date='%s' and type=%s and symbol='CASH'", date.to_fs(:db), portfolio_type.to_s ) )
+      @total = get_scalar( conn, sprintf( "select value from balances_history where date='%s' and type=%s", date.to_fs(:db), balance_type.to_s ) )
+      @divisor = get_scalar( conn, sprintf( "select value from divisors_history where date='%s' and type=%s", date.to_fs(:db), index_type.to_s ) )
+      @index = get_scalar( conn, sprintf( "select value from index_history where date='%s' and type=%s", date.to_fs(:db), index_type.to_s ) )
     end
 
     # Calculate returns
@@ -98,7 +98,7 @@ class Portfolio2
 
   def get_base( conn, index, date )
     get_scalar( conn, sprintf( "select * from index_history where type=%s and
-      date = ( select max(date) from index_history where date <= '%s' )", index, date.to_s(:db) ) )
+      date = ( select max(date) from index_history where date <= '%s' )", index, date.to_fs(:db) ) )
   end
 
   def get_ytd_base( conn, index )
@@ -202,7 +202,7 @@ class Assets
     # If no date is passed in, use max date
     date_sql = "select max(p.date) date from portfolio_history p"
     if date != nil and date != ""
-      date_sql += " where p.date <= '" + date.to_s(:db) + "'"
+      date_sql += " where p.date <= '" + date.to_fs(:db) + "'"
     end
     res = conn.execute( date_sql )
     @date = Date.parse( res.first['date'] )
@@ -224,14 +224,14 @@ class Assets
     end
 
     # Load the scalars
-    @cash = get_scalar( conn, sprintf( "select value from portfolio_history where date='%s' and type=3 and symbol='CASH'", @date.to_s(:db) ) )
-    @debt = get_scalar( conn, sprintf( "select value from portfolio_history where date='%s' and type=3 and symbol='DEBT'", @date.to_s(:db) ) )
-    @roe_total = get_scalar( conn, sprintf( "select value from balances_history where date='%s' and type=12", @date.to_s(:db ) ) )
-    @roe_divisor = get_scalar( conn, sprintf( "select value from divisors_history where date='%s' and type=2", @date.to_s(:db) ) )
-    @roe_index = get_scalar( conn, sprintf( "select value from index_history where date='%s' and type=2", @date.to_s(:db) ) )
-    @rotc_total = get_scalar( conn, sprintf( "select value from balances_history where date='%s' and type=18", @date.to_s(:db ) ) )
-    @rotc_divisor = get_scalar( conn, sprintf( "select value from divisors_history where date='%s' and type=3", @date.to_s(:db) ) )
-    @rotc_index = get_scalar( conn, sprintf( "select value from index_history where date='%s' and type=3", @date.to_s(:db) ) )
+    @cash = get_scalar( conn, sprintf( "select value from portfolio_history where date='%s' and type=3 and symbol='CASH'", @date.to_fs(:db) ) )
+    @debt = get_scalar( conn, sprintf( "select value from portfolio_history where date='%s' and type=3 and symbol='DEBT'", @date.to_fs(:db) ) )
+    @roe_total = get_scalar( conn, sprintf( "select value from balances_history where date='%s' and type=12", @date.to_fs(:db ) ) )
+    @roe_divisor = get_scalar( conn, sprintf( "select value from divisors_history where date='%s' and type=2", @date.to_fs(:db) ) )
+    @roe_index = get_scalar( conn, sprintf( "select value from index_history where date='%s' and type=2", @date.to_fs(:db) ) )
+    @rotc_total = get_scalar( conn, sprintf( "select value from balances_history where date='%s' and type=18", @date.to_fs(:db ) ) )
+    @rotc_divisor = get_scalar( conn, sprintf( "select value from divisors_history where date='%s' and type=3", @date.to_fs(:db) ) )
+    @rotc_index = get_scalar( conn, sprintf( "select value from index_history where date='%s' and type=3", @date.to_fs(:db) ) )
 
     # Calculate returns
     @ret_ytd_roe = calculate_return( self.roe_index, get_ytd_base( conn, 2 ) )
@@ -249,7 +249,7 @@ class Assets
     @ret_day_portfolio = calculate_return( self.portfolio.index, get_day_base( conn, 1 ) )
     @ret_day_managed = calculate_return( self.managed.index, get_day_base( conn, 4 ) )
     @ret_day_play = calculate_return( self.play.index, get_day_base( conn, 5 ) )
-    savings = get_scalar( conn, sprintf( "select value from balances_history where date='%s' and type=17", @date.to_s(:db) ) )
+    savings = get_scalar( conn, sprintf( "select value from balances_history where date='%s' and type=17", @date.to_fs(:db) ) )
     @roe_base = get_ytd_balance_base( conn, Togabou::BALANCES_TOTAL_ROE ).to_f
     if @roe_base <= 0
       @profit = 0
@@ -412,7 +412,7 @@ class Assets
 
   def get_base( conn, index, date )
     get_scalar( conn, sprintf( "select * from index_history where type=%s and
-      date = ( select max(date) from index_history where date <= '%s' )", index, date.to_s(:db) ) )
+      date = ( select max(date) from index_history where date <= '%s' )", index, date.to_fs(:db) ) )
   end
 
   def get_ytd_base( conn, index )
