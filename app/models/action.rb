@@ -77,6 +77,16 @@ class Action < ApplicationRecord
       execute_set_balance( Togabou::BALANCES_GS_IRA )
     when Togabou::ACTIONS_TYPE_E_SET_JPY
       execute_set_balance( Togabou::BALANCES_JPY )
+    when Togabou::ACTIONS_TYPE_E_SET_HOPPER
+      execute_set_balance( Togabou::BALANCES_HOPPER )
+    when Togabou::ACTIONS_TYPE_E_SET_CARRY
+      execute_set_balance( Togabou::BALANCES_CARRY )
+    when Togabou::ACTIONS_TYPE_E_SET_FUMI
+      execute_set_balance( Togabou::BALANCES_FUMI )
+    when Togabou::ACTIONS_TYPE_E_SET_JPY_VS_HOPPER
+      execute_set_balance( Togabou::BALANCES_JPY_VS_HOPPER )
+    when Togabou::ACTIONS_TYPE_E_SET_GOLD_VS_HOPPER
+      execute_set_balance( Togabou::BALANCES_GOLD_VS_HOPPER )
     when Togabou::ACTIONS_TYPE_C_PAID
       execute_c_paid
     else
@@ -302,13 +312,7 @@ class Action < ApplicationRecord
   end
 
   def execute_set_balance( balance_type )
-    fx_rate = 1
-    if balance_type == Togabou::BALANCES_AMEX_CX || balance_type == Togabou::BALANCES_HSBC || balance_type == Togabou::BALANCES_HSBC_VISA || balance_type == Togabou::BALANCES_GS_HKD
-      fx_rate = Togabou::HKD_FX
-    elsif balance_type == Togabou::BALANCES_JPY
-      fx_rate = Togabou::JPY_FX
-    end
-    set_balance( self.value1 / fx_rate, balance_type )
+    set_balance( self.value1, balance_type )
   end
 
   def execute_c_paid

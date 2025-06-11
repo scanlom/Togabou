@@ -14,7 +14,6 @@ td.symbol {
     font-weight: bold;
 }
 </style>
-<p>Remember to run Portfolio.py after each action, and eyeball Togabou for any unexpected differences</p>
 <%= link_to 'New', new_action_path %> | <%= link_to 'Rollback', action_path( @actions.first ), :confirm => 'Are you sure?', :method => :delete %>
 <table>
   <tr>
@@ -27,7 +26,7 @@ td.symbol {
   <% @actions.each do |action| %>
     <tr>
       <td><%= action.date %></td>
-      <td><%= action.actions_type.description %></td>
+      <td><%= action.actions_type.description if !action.actions_type.nil? %></td>
       <td class="number"><%= number_with_precision( action.value1, :precision => 2, :delimiter => ",") %></td>
       <td><%= action.symbol.to_s %></td>
       <td><%= action.created_at.to_s %></td>

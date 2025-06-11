@@ -28,6 +28,7 @@ module Togabou
    BALANCES_HSBC_VISA  = 4
    BALANCES_VIRTUALBANK = 5
    BALANCES_JPY        = 6
+   BALANCES_OWE_PORTFOLIO = 7
    BALANCES_GS         = 9
    BALANCES_GS_HKD     = 10
    BALANCES_GS_IRA     = 11
@@ -35,6 +36,11 @@ module Togabou
    BALANCES_PAID       = 15
    BALANCES_TAX        = 16
    BALANCES_SAVINGS    = 17
+   BALANCES_HOPPER     = 20
+   BALANCES_CARRY      = 21
+   BALANCES_GOLD_VS_HOPPER       = 22
+   BALANCES_JPY_VS_HOPPER       = 27
+   BALANCES_FUMI       = 28
  
    ACTIONS_TYPE_UNKNOWN  = 0
    ACTIONS_TYPE_PORT_DIV = 1
@@ -74,6 +80,11 @@ module Togabou
    ACTIONS_TYPE_E_SET_GS_HKD       = 57
    ACTIONS_TYPE_E_SET_SYMBOL_VALUE_HKD = 58
    ACTIONS_TYPE_E_SET_JPY          = 59
+   ACTIONS_TYPE_E_SET_HOPPER          = 60
+   ACTIONS_TYPE_E_SET_CARRY          = 61
+   ACTIONS_TYPE_E_SET_FUMI          = 62
+   ACTIONS_TYPE_E_SET_JPY_VS_HOPPER          = 63
+   ACTIONS_TYPE_E_SET_GOLD_VS_HOPPER          = 64
    ACTIONS_TYPE_C_PAID             = 70
      
   class Application < Rails::Application

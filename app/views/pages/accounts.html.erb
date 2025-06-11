@@ -17,33 +17,15 @@ td.symbol {
 <% a = controller.get_accounts( nil ) %>
 <% as = controller.get_assets( nil ) %>
 <table>
-<tr><td class="heading">Cash Pos</td><td class = "heading">Cash Neg</td><td class="heading">Budget Pos</td><td class="heading">Budget Neg</td></tr>
+<tr><td class="heading">Cash Pos</td><td class="heading">Budget Pos</td><td class="heading">Budget Neg</td></tr>
 <tr>
   <td style="vertical-align:top"><table>
     <% a.balances_recon_cash.each do |balance| %>
     <tr>
       <td><%= balance.description %></td>
-      <td class="number"><%= number_with_precision( balance.value, :precision => 2, :delimiter => ",") %></td>
+      <td class="number"><%= balance.type == Togabou::BALANCES_OWE_PORTFOLIO ? number_with_precision( balance.value * -1, :precision => 2, :delimiter => ",") : number_with_precision( balance.value, :precision => 2, :delimiter => ",") %></td>
     </tr>
     <% end %>
-  </table></td>
-  <td style="vertical-align:top"><table>
-    <tr>
-      <td>Cash Total</td>
-      <td class="number"><%= number_with_precision( as.cash, :precision => 2, :delimiter => ",") %></td>
-    </tr>
-    <tr>
-      <td>Cash Portfolio</td>
-      <td class="number"><%= number_with_precision( as.play.cash, :precision => 2, :delimiter => ",") %></td>
-    </tr>
-    <tr>
-      <td>Cash Managed</td>
-      <td class="number"><%= number_with_precision( as.managed.cash, :precision => 2, :delimiter => ",") %></td>
-    </tr>
-    <tr>
-      <td>Debt</td>
-      <td class="number"><%= number_with_precision( as.debt*-1.0, :precision => 2, :delimiter => ",") %></td>
-    </tr>
   </table></td>
   <td style="vertical-align:top"><table>
     <% a.balances_recon_budget_pos.each do |balance| %>
@@ -67,15 +49,7 @@ td.symbol {
   <td class = "symbol">Total</td>
   <td class="number"><%= number_with_precision( a.total_cash, :precision => 2, :delimiter => ",") %></td>
 </tr>
-<tr>
-  <td class = "symbol">Recon</td>
-  <td class="number"><%= number_with_precision( a.total_cash.to_f - as.cash.to_f - as.play.cash.to_f - as.managed.cash.to_f + as.debt, :precision => 2, :delimiter => ",") %></td>
-</tr>
 </table></td>
-<td style="vertical-align:top"><table><tr>
-  <td class = "symbol">Total</td>
-  <td class="number"><%= number_with_precision( as.cash.to_f + as.play.cash.to_f + as.managed.cash.to_f - as.debt, :precision => 2, :delimiter => ",") %></td>
-</tr></table></td>
 <td><table>
 <tr>
   <td class = "symbol">Total</td>

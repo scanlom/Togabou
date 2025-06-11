@@ -96,7 +96,7 @@ order by s.date desc" )
   end
 
   def total_cash
-    total = balances_recon_cash.inject(0){|sum,x| sum += x.value}
+    total = balances_recon_cash.inject(0){|sum,x| sum += x.type == Togabou::BALANCES_OWE_PORTFOLIO ? x.value * -1 : x.value}
     total.to_f
   end
   
